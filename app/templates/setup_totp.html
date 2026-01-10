@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step active">1. Set up TOTP</div>
+    <div class="step">2. Verify TOTP</div>
+    <div class="step">3. Device approval</div>
+  </div>
+  <h1>Set up TOTP</h1>
+  <p class="note">Scan the QR with ZT-Authenticator to enroll your device.</p>
+  <p id="totp-reason" class="warn"></p>
+  <div id="totp-setup-container" class="qr auth-qr">
+    <div class="loading">Loading QR code...</div>
+  </div>
+  <p class="note">Manual enrollment link</p>
+  <code id="manual-key" class="manual-key">Loading...</code>
+  <button id="copy-manual-key" class="ghost" type="button">Copy link</button>
+  <div class="actions">
+    <a id="continue-btn" class="primary" href="/mfa/verify">Continue to verification</a>
+  </div>
+</section>
+<script>
+  const reason = new URLSearchParams(window.location.search).get('reason');
+  const reasonEl = document.getElementById('totp-reason');
+  if (reason === 'required') {
+    reasonEl.textContent = 'MFA is required before you can finish login.';
+  } else if (reason === 'setup') {
+    reasonEl.textContent = 'TOTP setup is required for this account.';
+  } else if (reason === 'rp_changed') {
+    reasonEl.textContent = 'Your MFA enrollment is tied to a previous relying party. Please re-enroll.';
+  }
+
+  const container = document.getElementById('totp-setup-container');
+  const manualKey = document.getElementById('manual-key');
+  const copyBtn = document.getElementById('copy-manual-key');
+
+  fetch('/api/mfa/setup', { credentials: 'include' })
+    .then(res => res.json())
+    .then(data => {
+      if (data.qr_code) {
+        const img = document.createElement('img');
+        img.src = data.qr_code;
+        img.alt = 'TOTP QR Code';
+        container.innerHTML = '';
+        container.appendChild(img);
+        manualKey.dataset.raw = data.manual_key || '';
+        manualKey.textContent = data.manual_key || '-';
+        return;
+      }
+      container.innerHTML = '<p>MFA already configured.</p>';
+      manualKey.textContent = '-';
+    })
+    .catch(() => {
+      container.innerHTML = '<p class="warn">Unable to load setup data.</p>';
+      manualKey.textContent = '-';
+    });
+
+  copyBtn?.addEventListener('click', async () => {
+    const raw = manualKey?.dataset?.raw || '';
+    if (!raw) return;
+    try {
+      await navigator.clipboard.writeText(raw);
+      copyBtn.textContent = 'Copied';
+      setTimeout(() => (copyBtn.textContent = 'Copy link'), 1500);
+    } catch (_) {
+      copyBtn.textContent = 'Copy failed';
+      setTimeout(() => (copyBtn.textContent = 'Copy link'), 1500);
+    }
+  });
+</script>
+{% endblock %}

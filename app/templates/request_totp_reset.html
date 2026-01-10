@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <h1>Reset TOTP</h1>
+  <p class="note">Enter your email to generate a TOTP reset link.</p>
+  {% if message %}<p class="note">{{ message }}</p>{% endif %}
+  <form class="form" method="post" action="/request-totp-reset">
+    <label>
+      Email
+      <input type="email" name="email" required />
+    </label>
+    <button class="primary" type="submit">Send reset link</button>
+  </form>
+  {% if reset_link %}
+    <p class="note">Demo reset link:</p>
+    <code class="manual-key">{{ reset_link }}</code>
+  {% endif %}
+</section>
+{% endblock %}

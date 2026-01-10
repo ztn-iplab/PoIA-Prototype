@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+{% set base_query = "account_id=" ~ filters.account_id ~ "&txn_type=" ~ filters.txn_type ~ "&date_from=" ~ filters.date_from ~ "&date_to=" ~ filters.date_to ~ "&page_size=" ~ filters.page_size %}
+{% set prev_page = filters.page - 1 %}
+{% set next_page = filters.page + 1 %}
+<section class="panel">
+  <div class="panel-header">
+    <div>
+      <h1>Statements</h1>
+      <p>Review activity, filter by account or date, and export when needed.</p>
+    </div>
+    <a class="ghost" href="/statements.csv?{{ base_query }}">Export CSV</a>
+  </div>
+  <form class="filters" method="get" action="/statements">
+    <label>
+      Account
+      <select name="account_id">
+        <option value="">All accounts</option>
+        {% for account in accounts %}
+          <option value="{{ account.id }}" {% if filters.account_id == account.id ~ "" %}selected{% endif %}>
+            {{ account.account_type | title }} ({{ account.account_number }})
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Type
+      <select name="txn_type">
+        <option value="">All types</option>
+        <option value="transfer" {% if filters.txn_type == "transfer" %}selected{% endif %}>Transfer</option>
+        <option value="withdrawal" {% if filters.txn_type == "withdrawal" %}selected{% endif %}>Withdrawal</option>
+        <option value="deposit" {% if filters.txn_type == "deposit" %}selected{% endif %}>Deposit</option>
+      </select>
+    </label>
+    <label>
+      From
+      <input type="date" name="date_from" value="{{ filters.date_from }}" />
+    </label>
+    <label>
+      To
+      <input type="date" name="date_to" value="{{ filters.date_to }}" />
+    </label>
+    <label>
+      Rows
+      <select name="page_size">
+        {% for size in [10, 20, 30, 50] %}
+          <option value="{{ size }}" {% if filters.page_size == size %}selected{% endif %}>{{ size }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <button class="primary" type="submit">Apply filters</button>
+  </form>
+  {% if transactions %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Account</th>
+          <th>Type</th>
+          <th>Counterparty</th>
+          <th>Reference</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+          <tr>
+            <td>{{ txn.created_at }}</td>
+            <td>{{ txn.account_type | title }}</td>
+            <td>{{ txn.txn_type | title }}</td>
+            <td>{{ txn.counterparty }}</td>
+            <td>{{ txn.reference }}</td>
+            <td>{{ "%.2f"|format(txn.amount) }} {{ txn.currency }}</td>
+            <td>{{ txn.status | title }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination">
+      <div>
+        {% if filters.page > 1 %}
+          <a class="ghost" href="/statements?{{ base_query }}&page={{ prev_page }}">Previous</a>
+        {% else %}
+          <span class="note">Previous</span>
+        {% endif %}
+        {% if filters.page < filters.total_pages %}
+          <a class="ghost" href="/statements?{{ base_query }}&page={{ next_page }}">Next</a>
+        {% else %}
+          <span class="note">Next</span>
+        {% endif %}
+      </div>
+      <div class="note">Page {{ filters.page }} of {{ filters.total_pages }}</div>
+    </div>
+  {% else %}
+    <p class="note">No transactions found for the selected filters.</p>
+  {% endif %}
+</section>
+{% endblock %}

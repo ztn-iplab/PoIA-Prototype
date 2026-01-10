@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Add beneficiary</h1>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/beneficiaries/add">
+    <label>
+      Name
+      <input type="text" name="name" required />
+    </label>
+    <label>
+      Bank
+      <input type="text" name="bank" required />
+    </label>
+    <label>
+      Account number
+      <input type="text" name="account_number" required />
+    </label>
+    <button class="primary" type="submit">Request PoIA approval</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <h1>Set up passkey</h1>
+  <p class="note">Register a passkey for MFA.</p>
+  <button id="start-passkey" class="primary" type="button">Register passkey</button>
+  <p id="passkey-status" class="note"></p>
+</section>
+<script>
+  function base64urlToBuffer(value) {
+    const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4 ? '='.repeat(4 - (base64.length % 4)) : '';
+    const binary = atob(base64 + pad);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  function bufferToBase64url(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let str = '';
+    for (const byte of bytes) {
+      str += String.fromCharCode(byte);
+    }
+    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  const statusEl = document.getElementById('passkey-status');
+  const startBtn = document.getElementById('start-passkey');
+  const parseJson = (text) => {
+    try {
+      return text ? JSON.parse(text) : {};
+    } catch (err) {
+      const snippet = text ? text.slice(0, 200) : 'Empty response';
+      return { error: `Server error: ${snippet}` };
+    }
+  };
+
+  if (!window.PublicKeyCredential || !window.isSecureContext) {
+    const reason = !window.isSecureContext
+      ? `Passkeys require HTTPS. Open ${window.location.origin.replace('http://', 'https://')}`
+      : 'Passkeys are not supported in this browser.';
+    statusEl.textContent = reason;
+    statusEl.style.color = '#c24b41';
+    startBtn.disabled = true;
+  }
+
+  startBtn.addEventListener('click', async () => {
+    try {
+      statusEl.textContent = 'Preparing registration...';
+      statusEl.style.color = '#2c2c2c';
+      const beginRes = await fetch('/webauthn/register-begin', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' },
+      });
+      const beginText = await beginRes.text();
+      const beginData = parseJson(beginText);
+      if (!beginRes.ok) {
+        if (beginData.error && beginData.detail) {
+          statusEl.textContent = `${beginData.error}: ${beginData.detail}`;
+        } else {
+          statusEl.textContent = beginData.detail || beginData.error || 'Unable to start passkey registration.';
+        }
+        statusEl.style.color = '#c24b41';
+        return;
+      }
+      const publicKey = beginData.public_key;
+      if (!publicKey) {
+        statusEl.textContent = beginData.error || beginData.detail || 'Missing WebAuthn options from server.';
+        statusEl.style.color = '#c24b41';
+        return;
+      }
+      publicKey.challenge = base64urlToBuffer(publicKey.challenge);
+      publicKey.user.id = base64urlToBuffer(publicKey.user.id);
+      if (publicKey.excludeCredentials) {
+        publicKey.excludeCredentials = publicKey.excludeCredentials.map(cred => ({
+          ...cred,
+          id: base64urlToBuffer(cred.id),
+        }));
+      }
+      const credential = await navigator.credentials.create({ publicKey });
+      const attestation = {
+        id: bufferToBase64url(credential.rawId),
+        rawId: bufferToBase64url(credential.rawId),
+        type: credential.type,
+        response: {
+          clientDataJSON: bufferToBase64url(credential.response.clientDataJSON),
+          attestationObject: bufferToBase64url(credential.response.attestationObject),
+        },
+        transports: credential.response.getTransports ? credential.response.getTransports() : [],
+      };
+      const completeRes = await fetch('/webauthn/register-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(attestation),
+      });
+      const completeText = await completeRes.text();
+      const completeData = parseJson(completeText);
+      if (!completeRes.ok) {
+        if (completeData.error && completeData.detail) {
+          statusEl.textContent = `${completeData.error}: ${completeData.detail}`;
+        } else {
+          statusEl.textContent = completeData.detail || completeData.error || 'Passkey registration failed.';
+        }
+        statusEl.style.color = '#c24b41';
+        return;
+      }
+      statusEl.textContent = 'Passkey registered successfully.';
+      statusEl.style.color = '#1d6b4f';
+    } catch (err) {
+      statusEl.textContent = err.message || 'Passkey registration failed.';
+      statusEl.style.color = '#c24b41';
+    }
+  });
+</script>
+{% endblock %}

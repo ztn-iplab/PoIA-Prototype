@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Transfer funds</h1>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/transfer">
+    <label>
+      From account
+      <select name="from_account">
+        {% for account in accounts %}
+          <option value="{{ account.id }}">{{ account.account_type | title }} ({{ "%.2f"|format(account.balance) }})</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Destination type
+      <select name="to_type" id="to_type">
+        <option value="beneficiary">Beneficiary</option>
+        <option value="external">External account</option>
+      </select>
+    </label>
+    <label>
+      Beneficiary
+      <select name="beneficiary_id">
+        {% if beneficiaries %}
+          {% for beneficiary in beneficiaries %}
+            <option value="{{ beneficiary.id }}">{{ beneficiary.name }} ({{ beneficiary.bank }})</option>
+          {% endfor %}
+        {% else %}
+          <option value="">No beneficiaries yet</option>
+        {% endif %}
+      </select>
+    </label>
+    <label>
+      External account
+      <input type="text" name="external_account" placeholder="EXT-9841" />
+    </label>
+    <label>
+      Amount
+      <input type="number" name="amount" step="0.01" min="1" required />
+    </label>
+    <label>
+      Currency
+      <select name="currency">
+        <option>USD</option>
+        <option>EUR</option>
+        <option>JPY</option>
+      </select>
+    </label>
+    <button class="primary" type="submit">Continue</button>
+  </form>
+  <p class="note">PoIA can be enabled for high-value transfers (threshold {{ POIA_TRANSFER_THRESHOLD }}).</p>
+</section>
+{% endblock %}

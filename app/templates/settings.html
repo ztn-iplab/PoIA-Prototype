@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Settings</h1>
+  <p class="note">Manage your password and security settings.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  {% if success %}<p class="note">{{ success }}</p>{% endif %}
+  <div class="grid">
+    <div class="card">
+      <h2>Change password</h2>
+      <form class="form" method="post" action="/settings/password">
+        <label>
+          Current password
+          <input type="password" name="current_password" required />
+        </label>
+        <label>
+          New password
+          <input type="password" name="new_password" required />
+        </label>
+        <label>
+          Confirm password
+          <input type="password" name="confirm_password" required />
+        </label>
+        <button class="primary" type="submit">Update password</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Reset MFA</h2>
+      <p class="note">Use these links if you lose access to your authenticator.</p>
+      <a class="ghost" href="/request-totp-reset">Reset TOTP setup</a>
+      <a class="ghost" href="/forgot-password">Forgot password</a>
+      <a class="ghost" href="/reset-passkey">Reset passkey</a>
+    </div>
+    <div class="card">
+      <h2>Passkey</h2>
+      <p class="note">Register a passkey for phishing-resistant MFA.</p>
+      <a class="ghost" href="/webauthn/setup">Set up passkey</a>
+    </div>
+    <div class="card">
+      <h2>PoIA approvals</h2>
+      <p class="note">Choose whether to allow PoIA approvals from ZT-Authenticator.</p>
+      <form class="form" method="post" action="/settings/poia">
+        <label class="checkbox">
+          <input type="checkbox" name="poia_zt_enabled" {% if user and user["poia_zt_enabled"] %}checked{% endif %} />
+          Enable ZT-Authenticator for PoIA approvals
+        </label>
+        <button class="primary" type="submit">Save PoIA preference</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

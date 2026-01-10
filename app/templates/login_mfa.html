@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <div class="stepper">
+    <div class="step done">1. Login</div>
+    <div class="step active">2. MFA</div>
+  </div>
+  <h1>Multi-factor verification</h1>
+  <p>Enter the OTP from ZT-Authenticator.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/login/mfa">
+    <label>
+      One-time password (OTP)
+      <input type="text" name="otp" inputmode="numeric" />
+    </label>
+    <button class="primary" type="submit">Verify MFA</button>
+  </form>
+  <div class="actions">
+    <a class="ghost" href="/login">Back to login</a>
+  </div>
+</section>
+{% endblock %}
