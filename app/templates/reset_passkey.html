@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <h1>Reset passkey</h1>
+  <p class="note">Confirm with password or TOTP to remove the current passkey.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  {% if success %}<p class="note">{{ success }}</p>{% endif %}
+  <form class="form" method="post" action="/reset-passkey">
+    <label>
+      Password (optional if using TOTP)
+      <input type="password" name="password" />
+    </label>
+    <label>
+      TOTP code (optional if using password)
+      <input type="text" name="otp" inputmode="numeric" />
+    </label>
+    <button class="primary" type="submit">Reset passkey</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+services:
+  poia-bank:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8000:8000"
+    environment:
+      POIA_DATA_DIR: /data
+      POIA_SESSION_SECRET: "change-me-in-prod"
+      POIA_ENABLED: "true"
+      PUBLIC_BASE_URL: "${PUBLIC_BASE_URL}"
+      SMTP_HOST: "mailpit"
+      SMTP_PORT: "1025"
+      SMTP_FROM: "no-reply@poia.demo"
+      WEB_RP_ID: "${WEB_RP_ID}"
+      WEB_ORIGIN: "${WEB_ORIGIN}"
+    volumes:
+      - poia_data:/data
+      - ./app:/app/app:ro
+    depends_on:
+      - mailpit
+
+  mailpit:
+    image: docker.io/axllent/mailpit:latest
+    ports:
+      - "1027:1025"
+      - "8027:8025"
+
+  nginx:
+    image: docker.io/library/nginx:alpine
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/sites-enabled:/etc/nginx/conf.d:ro
+      - ./certs:/etc/ssl/certs:ro
+      - ./private:/etc/ssl/private:ro
+    depends_on:
+      - poia-bank
+
+volumes:
+  poia_data:

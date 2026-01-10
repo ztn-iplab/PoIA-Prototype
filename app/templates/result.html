@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>{{ status }}</h1>
+  <p>{{ message }}</p>
+  {% if intent %}
+    <div class="intent">
+      <pre>{{ intent | tojson(indent=2) }}</pre>
+    </div>
+  {% endif %}
+  <div class="actions">
+    <a href="/dashboard">Back to dashboard</a>
+    <a href="/transfer">Make another transfer</a>
+  </div>
+</section>
+{% endblock %}

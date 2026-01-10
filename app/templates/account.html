@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>{{ account.account_type | title }} Account</h1>
+  <p class="balance">Balance: {{ "%.2f"|format(account.balance) }}</p>
+  <h2>Recent activity</h2>
+  {% if transactions %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Currency</th>
+          <th>Counterparty</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for txn in transactions %}
+          <tr>
+            <td>{{ txn.created_at }}</td>
+            <td>{{ txn.txn_type }}</td>
+            <td>{{ "%.2f"|format(txn.amount) }}</td>
+            <td>{{ txn.currency }}</td>
+            <td>{{ txn.counterparty }}</td>
+            <td>{{ txn.status }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No activity yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

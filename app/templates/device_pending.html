@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step done">1. Set up TOTP</div>
+    <div class="step done">2. Verify TOTP</div>
+    <div class="step active">3. Device approval</div>
+  </div>
+  <h1>Waiting for device approval</h1>
+  <p class="note">Approve the login request on ZT-Authenticator.</p>
+  <div id="status" class="note">Checking device status...</div>
+</section>
+<script>
+  async function pollStatus() {
+    const res = await fetch('/api/mfa/device-status', { credentials: 'include' });
+    if (!res.ok) {
+      document.getElementById('status').textContent = 'Unable to check device status.';
+      return;
+    }
+    const data = await res.json();
+    if (data.status === 'pending') {
+      document.getElementById('status').textContent = 'Pending device approval...';
+      return;
+    }
+    if (data.status === 'ok') {
+      window.location.href = data.redirect_url || '/dashboard';
+      return;
+    }
+    document.getElementById('status').textContent = `Denied: ${data.reason || 'unknown'}`;
+  }
+  setInterval(pollStatus, 1500);
+  pollStatus();
+</script>
+{% endblock %}

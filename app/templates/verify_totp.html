@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step done">1. Set up TOTP</div>
+    <div class="step active">2. Verify TOTP</div>
+    <div class="step">3. Device approval</div>
+  </div>
+  <h1>Verify TOTP</h1>
+  <p class="note">Enter the code from ZT-Authenticator.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/mfa/verify">
+    <label>
+      One-time password (OTP)
+      <input type="text" name="otp" inputmode="numeric" required />
+    </label>
+    <button class="primary" type="submit">Verify code</button>
+  </form>
+  <div class="note">
+    <a href="/request-totp-reset">Reset TOTP</a>
+    ·
+    <a href="/mfa/passkey">Use passkey instead</a>
+  </div>
+</section>
+{% endblock %}

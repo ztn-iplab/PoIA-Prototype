@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Approve intent</h1>
+  <p>Confirm this intent to authorize the action. Approval is cryptographically bound to the details below.</p>
+  <div class="intent">
+    <pre>{{ intent | tojson(indent=2) }}</pre>
+  </div>
+  <div class="meta">
+    <div><strong>Nonce:</strong> {{ nonce }}</div>
+    <div><strong>Expires at:</strong> {{ expires_at }}</div>
+  </div>
+  <div class="actions">
+    <button id="poia-approve" class="primary" type="button">Approve with passkey</button>
+    <a class="ghost" href="/dashboard">Cancel</a>
+  </div>
+  <p id="poia-status" class="note"></p>
+</section>
+<script>
+  function base64urlToBuffer(value) {
+    const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4 ? '='.repeat(4 - (base64.length % 4)) : '';
+    const binary = atob(base64 + pad);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  function bufferToBase64url(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let str = '';
+    for (const byte of bytes) {
+      str += String.fromCharCode(byte);
+    }
+    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  const statusEl = document.getElementById('poia-status');
+  const approveBtn = document.getElementById('poia-approve');
+
+  approveBtn.addEventListener('click', async () => {
+    try {
+      statusEl.textContent = 'Waiting for passkey approval...';
+      const beginRes = await fetch('/poia/assertion-begin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ intent_id: '{{ intent_id }}' }),
+      });
+      const beginText = await beginRes.text();
+      const beginData = beginText ? JSON.parse(beginText) : {};
+      if (!beginRes.ok) {
+        statusEl.textContent = beginData.detail || beginData.error || 'Unable to start PoIA approval.';
+        statusEl.style.color = '#c24b41';
+        return;
+      }
+      const publicKey = beginData.public_key;
+      publicKey.challenge = base64urlToBuffer(publicKey.challenge);
+      if (publicKey.allowCredentials) {
+        publicKey.allowCredentials = publicKey.allowCredentials.map(cred => ({
+          ...cred,
+          id: base64urlToBuffer(cred.id),
+        }));
+      }
+      const assertion = await navigator.credentials.get({ publicKey });
+      const payload = {
+        credentialId: bufferToBase64url(assertion.rawId),
+        clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
+        authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+        signature: bufferToBase64url(assertion.response.signature),
+        userHandle: assertion.response.userHandle ? bufferToBase64url(assertion.response.userHandle) : null,
+      };
+      const completeRes = await fetch('/poia/assertion-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+      const contentType = completeRes.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const data = await completeRes.json();
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+        if (data.error) {
+          statusEl.textContent = data.detail || data.error;
+          statusEl.style.color = '#c24b41';
+          return;
+        }
+      }
+      const html = await completeRes.text();
+      document.open();
+      document.write(html);
+      document.close();
+    } catch (err) {
+      statusEl.textContent = err.message || 'PoIA approval failed.';
+      statusEl.style.color = '#c24b41';
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Set up MFA</h1>
+  <p>Scan this QR code with ZT-Authenticator to enroll your device.</p>
+  {% if message %}<p class="warn">{{ message }}</p>{% endif %}
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+
+  {% if reset_required %}
+    <div class="qr">
+      <img src="{{ qr_data_uri }}" alt="Enrollment QR" />
+    </div>
+    <div class="intent">
+      <pre>Manual key: {{ manual_key }}</pre>
+    </div>
+    <p class="note">After scanning, enter the OTP below to confirm enrollment.</p>
+    <form class="form" method="post" action="/mfa/setup/confirm">
+      <label>
+        One-time password (OTP)
+        <input type="text" name="otp" inputmode="numeric" required />
+      </label>
+      <button class="primary" type="submit">Confirm MFA Setup</button>
+    </form>
+  {% else %}
+    <p class="note">MFA is already configured for this account.</p>
+    <div class="actions">
+      <a class="primary" href="/login/mfa">Continue to MFA</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

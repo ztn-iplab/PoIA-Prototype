@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Beneficiaries</h1>
+  <p>Adding a beneficiary is a sensitive action and will use PoIA when enabled.</p>
+  <div class="actions">
+    <a class="primary" href="/beneficiaries/add">Add beneficiary</a>
+  </div>
+  {% if beneficiaries %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Bank</th>
+          <th>Account</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for beneficiary in beneficiaries %}
+          <tr>
+            <td>{{ beneficiary.name }}</td>
+            <td>{{ beneficiary.bank }}</td>
+            <td>{{ beneficiary.account_number }}</td>
+            <td>{{ beneficiary.created_at }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No beneficiaries yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

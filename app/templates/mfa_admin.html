@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>MFA Metrics</h1>
+  <div class="grid">
+    <div class="card">
+      <h2>Approved</h2>
+      <p class="balance">{{ summary.ok }}</p>
+    </div>
+    <div class="card">
+      <h2>Denied</h2>
+      <p class="balance">{{ summary.denied }}</p>
+    </div>
+    <div class="card">
+      <h2>Pending</h2>
+      <p class="balance">{{ summary.pending }}</p>
+    </div>
+  </div>
+
+  <h2>Recent MFA events</h2>
+  {% if events %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>User</th>
+          <th>Status</th>
+          <th>Reason</th>
+          <th>Duration (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for event in events %}
+          <tr>
+            <td>{{ event.created_at }}</td>
+            <td>{{ event.user_id }}</td>
+            <td>{{ event.status }}</td>
+            <td>{{ event.reason or '' }}</td>
+            <td>{{ event.duration_ms or '' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No MFA events recorded yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

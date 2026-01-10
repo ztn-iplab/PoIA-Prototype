@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="bank-hero">
+  <div class="bank-hero-content">
+    <div class="kicker">Welcome to PoIA Bank</div>
+    <h1>Your digital banking, made calm, fast, and secure.</h1>
+    <p class="lead">
+      Manage accounts, send transfers, and verify access with layered security.
+      Designed for clarity, speed, and trust.
+    </p>
+    <div class="actions">
+      <a class="primary" href="/signup">Open account</a>
+      <a class="ghost" href="/login">Login</a>
+    </div>
+    <div class="badge-row">
+      <span>Smart transfers</span>
+      <span>Secure sign‑in</span>
+      <span>Audit trails</span>
+    </div>
+  </div>
+  <div class="bank-hero-visual">
+    <img src="/static/hello-bank.svg" alt="Hello from your bank" />
+    <div class="hero-tag">Hello, 👋</div>
+  </div>
+</section>
+
+<section class="section-grid services">
+  <div class="card">
+    <h2>Everyday accounts</h2>
+    <p>Checking and savings with instant balance visibility.</p>
+  </div>
+  <div class="card">
+    <h2>Transfers in seconds</h2>
+    <p>Send funds to beneficiaries or external accounts with confidence.</p>
+  </div>
+  <div class="card">
+    <h2>Cash operations</h2>
+    <p>Deposit and withdraw with high‑risk safeguards.</p>
+  </div>
+</section>
+
+<section class="panel highlight">
+  <div>
+    <h2>Security that feels effortless</h2>
+    <p>
+      Multi‑factor enrollment, device verification, and action approvals ensure
+      high‑risk requests are always intentional.
+    </p>
+  </div>
+  <div class="stats">
+    <div>
+      <strong>24/7</strong>
+      <span>Account visibility</span>
+    </div>
+    <div>
+      <strong>2‑Step</strong>
+      <span>Login verification</span>
+    </div>
+    <div>
+      <strong>100%</strong>
+      <span>Audit coverage</span>
+    </div>
+  </div>
+</section>
+
+<section class="bank-flow">
+  <h2>How banking works here</h2>
+  <div class="flow-grid">
+    <div class="flow-card">
+      <strong>Sign in</strong>
+      <p>Use a strong password and a verified device.</p>
+    </div>
+    <div class="flow-card">
+      <strong>Manage accounts</strong>
+      <p>See balances, activity, and statements in one place.</p>
+    </div>
+    <div class="flow-card">
+      <strong>Send funds</strong>
+      <p>Approve transfers with clear scope and context.</p>
+    </div>
+    <div class="flow-card">
+      <strong>Review logs</strong>
+      <p>Audit every action for visibility and compliance.</p>
+    </div>
+  </div>
+</section>
+
+<section class="panel cta-panel">
+  <h2>Ready to get started?</h2>
+  <p>Open a demo account and explore secure banking flows.</p>
+  <div class="actions">
+    <a class="primary" href="/signup">Create account</a>
+    <a class="ghost" href="/login">Login now</a>
+  </div>
+</section>
+{% endblock %}

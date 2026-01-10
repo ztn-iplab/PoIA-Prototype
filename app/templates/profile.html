@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Your profile</h1>
+  <p class="note">Signed in as {{ user.email }}</p>
+  <div class="accounts">
+    <div class="account-card">
+      <h2>Accounts</h2>
+      <p class="balance">{{ account_count }}</p>
+      <p class="note">Active bank accounts.</p>
+    </div>
+    <div class="account-card">
+      <h2>MFA status</h2>
+      {% if user.mfa_enrolled %}
+        <p class="balance">Enrolled</p>
+        <p class="note">TOTP and device approval enabled.</p>
+      {% else %}
+        <p class="warn">Not enrolled</p>
+        <p class="note">Complete MFA enrollment on your next login.</p>
+      {% endif %}
+    </div>
+    <div class="account-card">
+      <h2>Trusted devices</h2>
+      <p class="balance">{{ device_count }}</p>
+      <p class="note">Devices registered to your account.</p>
+    </div>
+  </div>
+  <div class="panel-header">
+    <div>
+      <h2>Session info</h2>
+      <p class="note">Last login: {{ last_login_at or "Not available" }}</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

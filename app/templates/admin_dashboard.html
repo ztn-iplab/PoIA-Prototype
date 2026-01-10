@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Admin Dashboard</h1>
+  <p class="note">Operational overview for PoIA Bank.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Total users</h3>
+      <p class="metric">{{ totals["user_count"] }}</p>
+    </div>
+    <div class="card">
+      <h3>Customer accounts</h3>
+      <p class="metric">{{ totals["customer_count"] }}</p>
+    </div>
+    <div class="card">
+      <h3>Bank accounts</h3>
+      <p class="metric">{{ totals["account_count"] }}</p>
+    </div>
+    <div class="card">
+      <h3>Total balance</h3>
+      <p class="metric">${{ '%.2f' | format(totals["total_balance"]) }}</p>
+    </div>
+    <div class="card">
+      <h3>Transactions</h3>
+      <p class="metric">{{ totals["transaction_count"] }}</p>
+    </div>
+    <div class="card">
+      <h3>MFA events</h3>
+      <p class="metric">{{ totals["mfa_events"] }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <h2>Recent audit activity</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>User</th>
+        <th>Action</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in recent_audit %}
+        <tr>
+          <td>{{ row["created_at"] }}</td>
+          <td>{{ row["user_id"] or "system" }}</td>
+          <td>{{ row["action"] }}</td>
+          <td>{{ row["details"] }}</td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="4">No recent audit events.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

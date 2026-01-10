@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Welcome back</h1>
+  <p>Your accounts and balances are ready for review.</p>
+  {% if user and user["mfa_enrolled"] %}
+    <p class="note">MFA status: enrolled</p>
+  {% else %}
+    <p class="warn">MFA status: not enrolled. Visit MFA Setup to enroll.</p>
+  {% endif %}
+  <div class="accounts">
+    {% for account in accounts %}
+      <div class="account-card">
+        <h2>{{ account.account_type | title }} Account</h2>
+        <p class="balance">Balance: {{ "%.2f"|format(account.balance) }}</p>
+        <a class="ghost" href="/accounts/{{ account.id }}">View activity</a>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+<section class="grid">
+  <div class="card">
+    <h2>Transfers</h2>
+    <p>Send funds with PoIA protection for high-value actions.</p>
+    <a href="/transfer">Make a transfer</a>
+  </div>
+  <div class="card">
+    <h2>Beneficiaries</h2>
+    <p>Manage trusted recipients for external payments.</p>
+    <a href="/beneficiaries">Manage beneficiaries</a>
+  </div>
+  <div class="card">
+    <h2>Cash Operations</h2>
+    <p>Simulate deposits and withdrawals.</p>
+    <a href="/cash">Go to cash desk</a>
+  </div>
+</section>
+{% endblock %}

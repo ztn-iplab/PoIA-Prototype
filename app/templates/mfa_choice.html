@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step active">1. Login</div>
+    <div class="step">2. Choose MFA</div>
+    <div class="step">3. Complete</div>
+  </div>
+  <h1>Choose your MFA method</h1>
+  <p class="note">Use TOTP with device approval, or sign in with your passkey.</p>
+  <div class="actions">
+    <a class="primary" href="/mfa/verify">Use TOTP</a>
+    <a class="ghost" href="/mfa/passkey">Use Passkey</a>
+  </div>
+</section>
+{% endblock %}

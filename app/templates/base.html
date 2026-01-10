@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PoIA Banking Demo</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    {% if flash_message %}
+      <div class="toast" role="status" aria-live="polite" data-message="{{ flash_message }}"></div>
+    {% endif %}
+    {% if poia_intent_id %}
+      <div class="poia-backdrop" data-intent="{{ poia_intent_id }}" data-user="{{ user_id or '' }}" data-zt-enabled="{{ 1 if user and user['poia_zt_enabled'] else 0 }}">
+        <div class="poia-modal">
+          <h2>Authorize intent</h2>
+          <p class="note">Confirm the exact action below, then approve with passkey or ZT-Authenticator.</p>
+          <div class="intent">
+            <div id="poia-summary">Loading intent...</div>
+          </div>
+          <div class="meta">
+            <div><strong>Expires in:</strong> <span id="poia-expiry">-</span></div>
+          </div>
+          <div class="actions">
+            <button id="poia-passkey" class="primary" type="button">Approve with passkey</button>
+            <button id="poia-device" class="ghost" type="button" {% if not user or not user["poia_zt_enabled"] %}style="display:none"{% endif %}>Approve on ZT-Authenticator</button>
+            <a class="ghost" href="{{ request.url.replace_query_params(poia_intent='') }}">Cancel</a>
+          </div>
+          <p id="poia-status" class="note">Passkey approval is ready.</p>
+        </div>
+      </div>
+    {% endif %}
+    <header class="site-header">
+      {% if user %}
+        {% if user["is_admin"] %}
+          <a class="brand" href="/admin/dashboard">PoIA Bank</a>
+        {% else %}
+          <a class="brand" href="/dashboard">PoIA Bank</a>
+        {% endif %}
+      {% else %}
+        <a class="brand" href="/">PoIA Bank</a>
+      {% endif %}
+      <nav class="nav">
+        {% if user %}
+          {% if user["is_admin"] %}
+            <a href="/admin/dashboard">Admin</a>
+            <a href="/admin/audit">Audit</a>
+            <a href="/admin/mfa">MFA Metrics</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+          {% else %}
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            <a href="/transfer">Transfer</a>
+            <a href="/beneficiaries">Beneficiaries</a>
+            <a href="/cash">Cash</a>
+            <a href="/statements">Statements</a>
+          {% endif %}
+          <a href="/logout">Logout</a>
+        {% else %}
+          <a href="/login">Login</a>
+          <a href="/signup">Sign up</a>
+        {% endif %}
+      </nav>
+    </header>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+    {% if flash_message %}
+      <script>
+        const toast = document.querySelector('.toast');
+        if (toast) {
+          toast.textContent = toast.dataset.message || 'Action completed.';
+          toast.classList.add('toast--visible');
+          setTimeout(() => toast.classList.remove('toast--visible'), 4200);
+        }
+      </script>
+    {% endif %}
+    {% if poia_intent_id %}
+      <script>
+        const poiaBackdrop = document.querySelector('.poia-backdrop');
+        const poiaStatus = document.getElementById('poia-status');
+        const poiaSummary = document.getElementById('poia-summary');
+        const poiaExpiry = document.getElementById('poia-expiry');
+        const poiaPasskey = document.getElementById('poia-passkey');
+        const poiaDevice = document.getElementById('poia-device');
+        const poiaModal = document.querySelector('.poia-modal');
+        let passkeyTriggered = false;
+        let poiaPublicKey = null;
+        let poiaIntentData = null;
+        const intentId = poiaBackdrop ? poiaBackdrop.dataset.intent : '';
+        const userId = poiaBackdrop ? poiaBackdrop.dataset.user : '';
+        const ztEnabled = poiaBackdrop ? poiaBackdrop.dataset.ztEnabled === '1' : false;
+
+        function base64urlToBuffer(value) {
+          const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+          const pad = base64.length % 4 ? '='.repeat(4 - (base64.length % 4)) : '';
+          const binary = atob(base64 + pad);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          return bytes.buffer;
+        }
+
+        function bufferToBase64url(buffer) {
+          const bytes = new Uint8Array(buffer);
+          let str = '';
+          for (const byte of bytes) {
+            str += String.fromCharCode(byte);
+          }
+          return btoa(str).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+        }
+
+        function formatCurrency(amount, currency) {
+          const safeAmount = Number(amount || 0);
+          try {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(safeAmount);
+          } catch (err) {
+            return `${safeAmount.toFixed(2)} ${currency || 'USD'}`;
+          }
+        }
+
+        function renderIntent(intent) {
+          if (!intent) {
+            poiaSummary.textContent = 'Unable to load intent.';
+            return;
+          }
+          const action = intent.action;
+          const scope = intent.scope || {};
+          const context = intent.context || {};
+          let title = 'Authorize action';
+          let lines = [];
+          if (action === 'transfer') {
+            title = `Transfer ${formatCurrency(scope.amount, scope.currency)}`;
+            lines.push(`From account #${scope.from_account}`);
+            if (scope.beneficiary_id) {
+              lines.push(`To beneficiary #${scope.beneficiary_id}`);
+            } else if (scope.external_account) {
+              lines.push(`To external account ${scope.external_account}`);
+            }
+          } else if (action === 'withdrawal') {
+            title = `Withdraw ${formatCurrency(scope.amount, scope.currency)}`;
+            lines.push(`From account #${scope.account_id}`);
+          } else if (action === 'deposit') {
+            title = `Deposit ${formatCurrency(scope.amount, scope.currency)}`;
+            lines.push(`To account #${scope.account_id}`);
+          } else if (action === 'beneficiary_add') {
+            title = 'Add beneficiary';
+            lines.push(`Name: ${scope.name}`);
+            lines.push(`Bank: ${scope.bank}`);
+            lines.push(`Account: ${scope.account_number}`);
+          } else if (action === 'statement_export') {
+            title = 'Export statements';
+            if (scope.account_id) lines.push(`Account filter: ${scope.account_id}`);
+            if (scope.txn_type) lines.push(`Type: ${scope.txn_type}`);
+            if (scope.date_from) lines.push(`From: ${scope.date_from}`);
+            if (scope.date_to) lines.push(`To: ${scope.date_to}`);
+          } else if (action === 'admin_audit_view') {
+            title = 'View audit log';
+          } else if (action === 'admin_mfa_view') {
+            title = 'View MFA metrics';
+          }
+          if (context.rp_id) {
+            lines.push(`Relying party: ${context.rp_id}`);
+          }
+          const html = [
+            `<strong>${title}</strong>`,
+            '<ul>' + lines.map(item => `<li>${item}</li>`).join('') + '</ul>',
+          ].join('');
+          poiaSummary.innerHTML = html;
+        }
+
+        async function loadIntent() {
+          const res = await fetch(`/poia/intent/${intentId}`, { credentials: 'include' });
+          const data = await res.json();
+          if (!res.ok) {
+            poiaStatus.textContent = data.error || 'Unable to load intent.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          poiaIntentData = data.intent;
+          renderIntent(poiaIntentData);
+          const expiresAt = data.expires_at;
+          const updateCountdown = () => {
+            const remaining = Math.max(0, expiresAt - Math.floor(Date.now() / 1000));
+            poiaExpiry.textContent = `${remaining}s`;
+            if (remaining === 0) {
+              handleExpiry();
+            }
+          };
+          updateCountdown();
+          countdownTimer = setInterval(updateCountdown, 1000);
+          poiaPublicKey = await preparePasskey();
+        }
+
+        async function preparePasskey() {
+          const beginRes = await fetch('/poia/assertion-begin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ intent_id: intentId }),
+          });
+          const beginData = await beginRes.json();
+          if (!beginRes.ok) {
+            poiaStatus.textContent = beginData.detail || beginData.error || 'Unable to start passkey approval.';
+            poiaStatus.style.color = '#c24b41';
+            return null;
+          }
+          const publicKey = beginData.public_key;
+          publicKey.challenge = base64urlToBuffer(publicKey.challenge);
+          if (publicKey.allowCredentials) {
+            publicKey.allowCredentials = publicKey.allowCredentials.map(cred => ({
+              ...cred,
+              id: base64urlToBuffer(cred.id),
+            }));
+          }
+          return publicKey;
+        }
+
+        async function startPasskey() {
+          poiaStatus.textContent = 'Waiting for passkey...';
+          if (!poiaPublicKey) {
+            poiaStatus.textContent = 'Preparing secure prompt. Please wait...';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          let assertion;
+          try {
+            assertion = await navigator.credentials.get({ publicKey: poiaPublicKey });
+          } catch (err) {
+            poiaStatus.textContent = 'Passkey prompt blocked. Tap the panel again to continue.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          const payload = {
+            credentialId: bufferToBase64url(assertion.rawId),
+            clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
+            authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+            signature: bufferToBase64url(assertion.response.signature),
+            userHandle: assertion.response.userHandle ? bufferToBase64url(assertion.response.userHandle) : null,
+          };
+          const completeRes = await fetch('/poia/assertion-complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+          });
+          const contentType = completeRes.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await completeRes.json();
+            if (data.redirect_url) {
+              window.location.href = data.redirect_url;
+              return;
+            }
+            poiaStatus.textContent = data.detail || data.error || 'PoIA approval failed.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          const text = await completeRes.text();
+          poiaStatus.textContent = text ? `PoIA approval failed: ${text.slice(0, 200)}` : 'PoIA approval failed.';
+          poiaStatus.style.color = '#c24b41';
+        }
+
+        async function pollDevice() {
+          const res = await fetch(`/poia/status?intent_id=${encodeURIComponent(intentId)}`, { credentials: 'include' });
+          const data = await res.json();
+          if (data.status === 'approved') {
+            window.location.href = `/poia/execute/${intentId}`;
+            return;
+          }
+          if (data.status === 'denied') {
+            poiaStatus.textContent = 'Approval denied.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          setTimeout(pollDevice, 1500);
+        }
+
+        poiaPasskey?.addEventListener('click', startPasskey);
+        poiaDevice?.addEventListener('click', async () => {
+          if (!ztEnabled) {
+            poiaStatus.textContent = 'ZT-Authenticator approvals are disabled in Settings.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          poiaStatus.textContent = 'Waiting for ZT-Authenticator approval...';
+          poiaStatus.style.color = '#2c2c2c';
+          if (userId) {
+            await fetch(`/api/poia/pending?user_id=${encodeURIComponent(userId)}`, { credentials: 'include' });
+          }
+          pollDevice();
+        });
+
+        loadIntent();
+        poiaStatus.style.color = '#2c2c2c';
+        poiaModal?.addEventListener('click', (event) => {
+          if (passkeyTriggered) {
+            return;
+          }
+          if (event.target.closest('#poia-device') || event.target.closest('a')) {
+            return;
+          }
+          passkeyTriggered = true;
+          startPasskey();
+        });
+
+        let countdownTimer = null;
+        async function handleExpiry() {
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+          }
+          poiaStatus.textContent = 'Intent expired. Returning to the previous page.';
+          poiaStatus.style.color = '#c24b41';
+          await fetch('/api/poia/deny', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ intent_id: intentId }),
+          });
+          setTimeout(() => {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('poia_intent');
+            window.location.href = url.toString();
+          }, 1200);
+        }
+      </script>
+    {% endif %}
+  </body>
+</html>

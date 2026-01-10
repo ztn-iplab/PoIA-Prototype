@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Create an account</h1>
+  <p>Accounts include a checking and savings balance for demo purposes.</p>
+  <p class="note">Password must be 12+ chars with upper, lower, number, and symbol.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/signup">
+    <label>
+      Email
+      <input type="email" name="email" placeholder="you@example.com" required />
+    </label>
+    <label>
+      Password
+      <input type="password" name="password" required />
+    </label>
+    <button class="primary" type="submit">Sign up</button>
+  </form>
+</section>
+{% endblock %}
