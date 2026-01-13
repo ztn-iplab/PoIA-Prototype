@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PoIA Banking Demo</title>
     <link rel="stylesheet" href="/static/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
   </head>
   <body>
-    {% if flash_message %}
-      <div class="toast" role="status" aria-live="polite" data-message="{{ flash_message }}"></div>
-    {% endif %}
     {% if poia_intent_id %}
       <div class="poia-backdrop" data-intent="{{ poia_intent_id }}" data-user="{{ user_id or '' }}" data-zt-enabled="{{ 1 if user and user['poia_zt_enabled'] else 0 }}">
         <div class="poia-modal">
           <h2>Authorize intent</h2>
-          <p class="note">Confirm the exact action below, then approve with passkey or ZT-Authenticator.</p>
+          <p class="note">Confirm the exact action below. Tap the panel to approve with your passkey.</p>
           <div class="intent">
             <div id="poia-summary">Loading intent...</div>
           </div>
@@ -22,8 +23,6 @@
             <div><strong>Expires in:</strong> <span id="poia-expiry">-</span></div>
           </div>
           <div class="actions">
-            <button id="poia-passkey" class="primary" type="button">Approve with passkey</button>
-            <button id="poia-device" class="ghost" type="button" {% if not user or not user["poia_zt_enabled"] %}style="display:none"{% endif %}>Approve on ZT-Authenticator</button>
             <a class="ghost" href="{{ request.url.replace_query_params(poia_intent='') }}">Cancel</a>
           </div>
           <p id="poia-status" class="note">Passkey approval is ready.</p>
@@ -67,14 +66,20 @@
     <main class="content">
       {% block content %}{% endblock %}
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     {% if flash_message %}
       <script>
-        const toast = document.querySelector('.toast');
-        if (toast) {
-          toast.textContent = toast.dataset.message || 'Action completed.';
-          toast.classList.add('toast--visible');
-          setTimeout(() => toast.classList.remove('toast--visible'), 4200);
-        }
+        Toastify({
+          text: "{{ flash_message }}",
+          duration: 4200,
+          gravity: "top",
+          position: "right",
+          close: true,
+          stopOnFocus: true,
+          style: {
+            background: "linear-gradient(135deg, #1f2a4f, #2c4a7a)",
+          },
+        }).showToast();
       </script>
     {% endif %}
     {% if poia_intent_id %}
@@ -87,7 +92,29 @@
         const poiaDevice = document.getElementById('poia-device');
         const poiaModal = document.querySelector('.poia-modal');
         let passkeyTriggered = false;
+        let autoPasskeyArmed = true;
+        let approvalInFlight = false;
+        let approvalComplete = false;
         let poiaPublicKey = null;
+
+        function showToast(message, ok = true) {
+          if (typeof Toastify !== 'function') {
+            return;
+          }
+          Toastify({
+            text: message,
+            duration: 4000,
+            gravity: "top",
+            position: "right",
+            close: true,
+            stopOnFocus: true,
+            style: {
+              background: ok
+                ? "linear-gradient(135deg, #1f5b4f, #2d8a6e)"
+                : "linear-gradient(135deg, #7a2c2c, #a94442)",
+            },
+          }).showToast();
+        }
         let poiaIntentData = null;
         const intentId = poiaBackdrop ? poiaBackdrop.dataset.intent : '';
         const userId = poiaBackdrop ? poiaBackdrop.dataset.user : '';
@@ -110,7 +137,7 @@
           for (const byte of bytes) {
             str += String.fromCharCode(byte);
           }
-          return btoa(str).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');
+          return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
         }
 
         function formatCurrency(amount, currency) {
@@ -173,6 +200,7 @@
         }
 
         async function loadIntent() {
+          poiaPasskey?.setAttribute('disabled', 'true');
           const res = await fetch(`/poia/intent/${intentId}`, { credentials: 'include' });
           const data = await res.json();
           if (!res.ok) {
@@ -190,9 +218,18 @@
               handleExpiry();
             }
           };
-          updateCountdown();
-          countdownTimer = setInterval(updateCountdown, 1000);
           poiaPublicKey = await preparePasskey();
+          if (poiaPublicKey) {
+            poiaStatus.textContent = 'Tap the intent panel to approve with passkey.';
+            poiaStatus.style.color = '#2c2c2c';
+          }
+          poiaModal?.addEventListener('click', () => {
+            if (countdownTimer || approvalComplete) {
+              return;
+            }
+            updateCountdown();
+            countdownTimer = setInterval(updateCountdown, 1000);
+          }, { once: true });
         }
 
         async function preparePasskey() {
@@ -220,20 +257,28 @@
         }
 
         async function startPasskey() {
+          if (approvalInFlight || approvalComplete) {
+            return;
+          }
+          approvalInFlight = true;
           poiaStatus.textContent = 'Waiting for passkey...';
           if (!poiaPublicKey) {
-            poiaStatus.textContent = 'Preparing secure prompt. Please wait...';
+            poiaStatus.textContent = 'Preparing passkey prompt. Please try again in a moment.';
             poiaStatus.style.color = '#c24b41';
+            approvalInFlight = false;
             return;
           }
           let assertion;
           try {
             assertion = await navigator.credentials.get({ publicKey: poiaPublicKey });
           } catch (err) {
-            poiaStatus.textContent = 'Passkey prompt blocked. Tap the panel again to continue.';
+            poiaStatus.textContent = 'Passkey prompt blocked. Tap the intent panel to try again.';
             poiaStatus.style.color = '#c24b41';
+            approvalInFlight = false;
             return;
           }
+          poiaStatus.textContent = 'Verifying approval...';
+          poiaStatus.style.color = '#2c2c2c';
           const payload = {
             credentialId: bufferToBase64url(assertion.rawId),
             clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
@@ -241,26 +286,61 @@
             signature: bufferToBase64url(assertion.response.signature),
             userHandle: assertion.response.userHandle ? bufferToBase64url(assertion.response.userHandle) : null,
           };
-          const completeRes = await fetch('/poia/assertion-complete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify(payload),
-          });
-          const contentType = completeRes.headers.get('content-type') || '';
-          if (contentType.includes('application/json')) {
-            const data = await completeRes.json();
-            if (data.redirect_url) {
-              window.location.href = data.redirect_url;
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const completePromise = fetch('/poia/assertion-complete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify(payload),
+              signal: controller.signal,
+            });
+            // Poll for approval in parallel in case the response is delayed.
+            pollDevice();
+            const completeRes = await completePromise;
+            clearTimeout(timeoutId);
+            if (!completeRes.ok) {
+              const text = await completeRes.text();
+              poiaStatus.textContent = text ? `PoIA approval failed: ${text.slice(0, 200)}` : 'PoIA approval failed.';
+              poiaStatus.style.color = '#c24b41';
+              showToast('Approval failed. Please try again.', false);
+              approvalInFlight = false;
               return;
             }
-            poiaStatus.textContent = data.detail || data.error || 'PoIA approval failed.';
+            const contentType = completeRes.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+              const data = await completeRes.json();
+              if (data.redirect_url) {
+                approvalComplete = true;
+                approvalInFlight = false;
+                if (countdownTimer) {
+                  clearInterval(countdownTimer);
+                }
+                poiaStatus.textContent = 'Approval recorded. Completing action...';
+                poiaStatus.style.color = '#2c2c2c';
+                showToast('Approval confirmed. Completing action...', true);
+                poiaBackdrop?.classList.add('poia-hidden');
+                window.location.href = data.redirect_url;
+                return;
+              }
+            }
+            approvalComplete = true;
+            approvalInFlight = false;
+            if (countdownTimer) {
+              clearInterval(countdownTimer);
+            }
+            poiaStatus.textContent = 'Approval recorded. Completing action...';
+            poiaStatus.style.color = '#2c2c2c';
+            showToast('Approval confirmed. Completing action...', true);
+            poiaBackdrop?.classList.add('poia-hidden');
+            window.location.href = `/poia/execute/${intentId}`;
+          } catch (err) {
+            poiaStatus.textContent = 'Approval timed out. Tap the panel to retry.';
             poiaStatus.style.color = '#c24b41';
-            return;
+            showToast('Approval timed out. Tap the panel to retry.', false);
+            approvalInFlight = false;
           }
-          const text = await completeRes.text();
-          poiaStatus.textContent = text ? `PoIA approval failed: ${text.slice(0, 200)}` : 'PoIA approval failed.';
-          poiaStatus.style.color = '#c24b41';
         }
 
         async function pollDevice() {
@@ -278,20 +358,7 @@
           setTimeout(pollDevice, 1500);
         }
 
-        poiaPasskey?.addEventListener('click', startPasskey);
-        poiaDevice?.addEventListener('click', async () => {
-          if (!ztEnabled) {
-            poiaStatus.textContent = 'ZT-Authenticator approvals are disabled in Settings.';
-            poiaStatus.style.color = '#c24b41';
-            return;
-          }
-          poiaStatus.textContent = 'Waiting for ZT-Authenticator approval...';
-          poiaStatus.style.color = '#2c2c2c';
-          if (userId) {
-            await fetch(`/api/poia/pending?user_id=${encodeURIComponent(userId)}`, { credentials: 'include' });
-          }
-          pollDevice();
-        });
+        // Passkey prompt is triggered from the modal tap only.
 
         loadIntent();
         poiaStatus.style.color = '#2c2c2c';
@@ -299,10 +366,30 @@
           if (passkeyTriggered) {
             return;
           }
-          if (event.target.closest('#poia-device') || event.target.closest('a')) {
+          if (event.target.closest('a')) {
             return;
           }
+          if (!poiaPublicKey) {
+            poiaStatus.textContent = 'Preparing passkey prompt. Please try again in a moment.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          if (!countdownTimer) {
+            const expiresAt = Number(poiaModal?.dataset?.poiaExpiresAt || 0);
+            if (expiresAt) {
+              const updateCountdown = () => {
+                const remaining = Math.max(0, expiresAt - Math.floor(Date.now() / 1000));
+                poiaExpiry.textContent = `${remaining}s`;
+                if (remaining === 0) {
+                  handleExpiry();
+                }
+              };
+              updateCountdown();
+              countdownTimer = setInterval(updateCountdown, 1000);
+            }
+          }
           passkeyTriggered = true;
+          autoPasskeyArmed = false;
           startPasskey();
         });
 
@@ -310,6 +397,9 @@
         async function handleExpiry() {
           if (countdownTimer) {
             clearInterval(countdownTimer);
+          }
+          if (approvalComplete) {
+            return;
           }
           poiaStatus.textContent = 'Intent expired. Returning to the previous page.';
           poiaStatus.style.color = '#c24b41';

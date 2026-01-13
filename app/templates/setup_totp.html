@@ -28,6 +28,8 @@
     reasonEl.textContent = 'TOTP setup is required for this account.';
   } else if (reason === 'rp_changed') {
     reasonEl.textContent = 'Your MFA enrollment is tied to a previous relying party. Please re-enroll.';
+  } else if (reason === 'reset') {
+    reasonEl.textContent = 'Your TOTP was reset. Please re-enroll your device to continue.';
   }
 
   const container = document.getElementById('totp-setup-container');

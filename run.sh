@@ -30,14 +30,25 @@ fi
 
 detect_host_ip() {
   local ip=""
-  for iface in en0 en1 en2 en3 en4; do
-    ip=$(ipconfig getifaddr "${iface}" 2>/dev/null || true)
-    if [[ -n "${ip}" ]]; then
-      echo "${ip}"
-      return 0
+  local iface=""
+  if command -v route >/dev/null 2>&1; then
+    iface=$(route get default 2>/dev/null | awk '/interface:/{print $2}' | tail -n 1)
+    if [[ -n "${iface}" ]]; then
+      ip=$(ipconfig getifaddr "${iface}" 2>/dev/null || true)
     fi
-  done
-  return 1
+  fi
+  if [[ -z "${ip}" ]]; then
+    for iface in en0 en1 en2 en3 en4 en5 en6 en7 en8; do
+      ip=$(ipconfig getifaddr "${iface}" 2>/dev/null || true)
+      if [[ -n "${ip}" ]]; then
+        echo "${ip}"
+        return 0
+      fi
+    done
+    return 1
+  fi
+  echo "${ip}"
+  return 0
 }
 
 update_dns_mapping() {
@@ -56,16 +67,22 @@ update_dns_mapping() {
   mkdir -p "${conf_dir}"
 
   rm -f "${conf_dir}/poia.local.conf"
+  rm -f "${conf_dir}/zt-iam.conf"
+  rm -f "${conf_dir}/localhost.localdomain.com.conf"
   if [[ -f "$(brew --prefix)/etc/dnsmasq.conf" ]]; then
     sed -i.bak -E "/poia\.local/d" "$(brew --prefix)/etc/dnsmasq.conf"
+    sed -i.bak -E "/localhost\\.localdomain(\\.com)?/d" "$(brew --prefix)/etc/dnsmasq.conf"
     rm -f "$(brew --prefix)/etc/dnsmasq.conf.bak"
   fi
 
   {
     echo "address=/poia.local/${ip}"
+    echo "address=/localhost.localdomain/0.0.0.0"
+    echo "address=/localhost.localdomain.com/0.0.0.0"
   } | sudo tee "${conf_dir}/poia.local.conf" >/dev/null
 
   sudo mkdir -p /etc/resolver
+  sudo rm -f /etc/resolver/localhost.localdomain /etc/resolver/localhost.localdomain.com >/dev/null 2>&1 || true
   echo "nameserver 127.0.0.1" | sudo tee /etc/resolver/poia.local >/dev/null
 
   if command -v sudo >/dev/null 2>&1; then
@@ -79,8 +96,13 @@ update_hosts_mapping() {
     return 0
   fi
   sudo sh -c "grep -v ' poia.local' /etc/hosts > /tmp/poia-hosts"
+  sudo sh -c "grep -v ' localhost.localdomain' /etc/hosts > /tmp/poia-hosts.clean"
+  if [[ -f /tmp/poia-hosts.clean ]]; then
+    sudo mv /tmp/poia-hosts.clean /tmp/poia-hosts
+  fi
   echo "${ip} poia.local" | sudo tee -a /tmp/poia-hosts >/dev/null
   sudo mv /tmp/poia-hosts /etc/hosts
+  echo "Mapped poia.local to ${ip} in /etc/hosts"
 }
 
 ensure_cert() {
