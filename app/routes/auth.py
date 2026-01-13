@@ -92,6 +92,9 @@ def login_submit(
     request.session["pre_mfa_email"] = user["email"]
     has_totp = bool(user["otp_secret"]) and device_enrolled(user["id"]) and not (user["otp_rp_id"] and user["otp_rp_id"] != APP_RP_ID)
     has_webauthn = user_has_webauthn(user["id"])
+    reset_reason = request.session.pop("mfa_reset_reason", "")
+    if reset_reason:
+        return RedirectResponse(url=f"/mfa/setup?reason={reset_reason}", status_code=303)
     if not has_totp and not has_webauthn:
         reason = "rp_changed" if user["otp_rp_id"] and user["otp_rp_id"] != APP_RP_ID else "required"
         return RedirectResponse(url=f"/mfa/setup?reason={reason}", status_code=303)
@@ -188,6 +191,7 @@ def reset_password_submit(
     clear_reset_token(user["id"])
     request.session.pop("reset_password_webauthn_ok", None)
     log_audit(user["id"], "password_reset", "Password reset completed")
+    request.session["flash_message"] = "Password reset complete. Please sign in with your new password."
     return RedirectResponse(url="/login", status_code=303)
 
 
@@ -257,6 +261,8 @@ def reset_totp_submit(request: Request, token: str = Form(""), password: str = F
     clear_reset_token(user["id"])
     request.session.pop("reset_totp_webauthn_ok", None)
     log_audit(user["id"], "totp_reset", "TOTP reset completed")
+    request.session["flash_message"] = "TOTP reset. Please sign in to re-enroll your device."
+    request.session["mfa_reset_reason"] = "reset"
     return RedirectResponse(url="/login", status_code=303)
 
 
