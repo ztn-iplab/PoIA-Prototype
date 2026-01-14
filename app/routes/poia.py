@@ -257,6 +257,7 @@ def api_poia_pending(user_id: int) -> Response:
         "intent": intent_record.intent_body,
         "nonce": challenge.nonce,
         "rp_id": intent_record.intent_body.get("context", {}).get("rp_id"),
+        "expires_at": int(challenge.expires_at),
         "expires_in": max(0, int(challenge.expires_at) - now),
     }
     return Response(content=json.dumps(payload), media_type="application/json")
@@ -269,6 +270,7 @@ def api_poia_approve(payload: dict) -> Response:
     rp_id = (payload.get("rp_id") or "").strip()
     nonce = (payload.get("nonce") or "").strip()
     signature = (payload.get("signature") or "").strip()
+    intent_hash_override = (payload.get("intent_hash") or "").strip()
     if not intent_id or not device_id_raw or not rp_id or not nonce or not signature:
         return Response(content=json.dumps({"status": "denied", "reason": "missing_fields"}), media_type="application/json", status_code=400)
     try:
@@ -290,7 +292,10 @@ def api_poia_approve(payload: dict) -> Response:
     from ..security import verify_p256_signature
     proof_payload = build_proof_payload(intent_record.intent_body, challenge.nonce, challenge.expires_at)
     intent_hash = hashlib.sha256(proof_payload).hexdigest()
-    message = f"{intent_hash}|{device_id}|{rp_id}|{nonce}".encode("utf-8")
+    if intent_hash_override and intent_hash_override != intent_hash:
+        return Response(content=json.dumps({"status": "denied", "reason": "hash_mismatch"}), media_type="application/json", status_code=400)
+    primary_message = f"{intent_hash}|{device_id}|{rp_id}|{nonce}".encode("utf-8")
+    fallback_message = f"{nonce}|{device_id}|{rp_id}|{intent_hash}".encode("utf-8")
 
     from ..db import db_connect
 
@@ -301,8 +306,9 @@ def api_poia_approve(payload: dict) -> Response:
         ).fetchone()
     if not device_key or device_key["key_type"] != "p256":
         return Response(content=json.dumps({"status": "denied", "reason": "device_not_enrolled"}), media_type="application/json", status_code=400)
-    if not verify_p256_signature(device_key["public_key"], message, signature):
-        return Response(content=json.dumps({"status": "denied", "reason": "invalid_signature"}), media_type="application/json", status_code=400)
+    if not verify_p256_signature(device_key["public_key"], primary_message, signature):
+        if not verify_p256_signature(device_key["public_key"], fallback_message, signature):
+            return Response(content=json.dumps({"status": "denied", "reason": "invalid_signature"}), media_type="application/json", status_code=400)
 
     proof = poia_store.proofs.get(intent_id)
     latency_ms = int((time.time() - intent_record.created_at) * 1000)

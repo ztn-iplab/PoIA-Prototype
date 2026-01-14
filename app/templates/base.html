@@ -218,10 +218,18 @@
               handleExpiry();
             }
           };
-          poiaPublicKey = await preparePasskey();
-          if (poiaPublicKey) {
-            poiaStatus.textContent = 'Tap the intent panel to approve with passkey.';
+          if (ztEnabled) {
+            poiaStatus.textContent = 'Waiting for ZT-Authenticator approval...';
             poiaStatus.style.color = '#2c2c2c';
+            updateCountdown();
+            countdownTimer = setInterval(updateCountdown, 1000);
+            startDeviceApproval();
+          } else {
+            poiaPublicKey = await preparePasskey();
+            if (poiaPublicKey) {
+              poiaStatus.textContent = 'Tap the intent panel to approve with passkey.';
+              poiaStatus.style.color = '#2c2c2c';
+            }
           }
           poiaModal?.addEventListener('click', () => {
             if (countdownTimer || approvalComplete) {
@@ -347,18 +355,44 @@
           const res = await fetch(`/poia/status?intent_id=${encodeURIComponent(intentId)}`, { credentials: 'include' });
           const data = await res.json();
           if (data.status === 'approved') {
+            approvalComplete = true;
+            if (countdownTimer) {
+              clearInterval(countdownTimer);
+            }
+            poiaBackdrop?.classList.add('poia-hidden');
             window.location.href = `/poia/execute/${intentId}`;
             return;
           }
           if (data.status === 'denied') {
             poiaStatus.textContent = 'Approval denied.';
             poiaStatus.style.color = '#c24b41';
+            approvalComplete = true;
+            poiaBackdrop?.classList.add('poia-hidden');
+            if (countdownTimer) {
+              clearInterval(countdownTimer);
+            }
+            setTimeout(() => {
+              const url = new URL(window.location.href);
+              url.searchParams.delete('poia_intent');
+              window.location.href = url.toString();
+            }, 700);
             return;
           }
           setTimeout(pollDevice, 1500);
         }
 
-        // Passkey prompt is triggered from the modal tap only.
+        async function startDeviceApproval() {
+          if (approvalInFlight || approvalComplete) {
+            return;
+          }
+          approvalInFlight = true;
+          poiaStatus.textContent = 'Waiting for ZT-Authenticator approval...';
+          poiaStatus.style.color = '#2c2c2c';
+          if (userId) {
+            await fetch(`/api/poia/pending?user_id=${encodeURIComponent(userId)}`, { credentials: 'include' });
+          }
+          pollDevice();
+        }
 
         loadIntent();
         poiaStatus.style.color = '#2c2c2c';
@@ -367,6 +401,12 @@
             return;
           }
           if (event.target.closest('a')) {
+            return;
+          }
+          if (ztEnabled) {
+            passkeyTriggered = true;
+            autoPasskeyArmed = false;
+            startDeviceApproval();
             return;
           }
           if (!poiaPublicKey) {
