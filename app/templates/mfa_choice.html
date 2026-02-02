@@ -9,7 +9,9 @@
   <h1>Choose your MFA method</h1>
   <p class="note">Use TOTP with device approval, or sign in with your passkey.</p>
   <div class="actions">
-    <a class="primary" href="/mfa/verify">Use TOTP</a>
+    <a class="primary" href="{{ '/mfa/setup' if totp_setup_required else '/mfa/verify' }}">
+      {{ 'Set up TOTP' if totp_setup_required else 'Use TOTP' }}
+    </a>
     <a class="ghost" href="/mfa/passkey">Use Passkey</a>
   </div>
 </section>

@@ -1,0 +1,71 @@
+/**
+ * PoIA protocol model (abstracted)
+ * - Intent issuance binds (uid, action, scope, nonce)
+ * - User approves by signing intent tuple with device key
+ * - Server accepts only with matching intent and valid signature
+ */
+
+theory PoIA_Protocol begin
+
+builtins: signing
+
+rule Init_User:
+  [ Fr(uid), Fr(sk) ]
+  --[ InitUser(uid) ]->
+  [ !UserKey(uid, sk), !UserPub(uid, pk(sk)) ]
+
+rule Issue_Intent:
+  [ Fr(action), Fr(scope), Fr(nonce), !UserPub(uid, pk) ]
+  --[ IssueIntent(uid, action, scope, nonce) ]->
+  [ Intent(uid, action, scope, nonce), !IntentIssued(uid, action, scope, nonce),
+    Out(<uid, action, scope, nonce>) ]
+
+rule User_Approve:
+  [ !UserKey(uid, sk), !IntentIssued(uid, action, scope, nonce),
+    In(<uid, action, scope, nonce>) ]
+  --[ ApproveIntent(uid, action, scope, nonce) ]->
+  [ Out(<uid, action, scope, nonce, sign(<uid, action, scope, nonce>, sk)>),
+    Approval(uid, action, scope, nonce)
+  ]
+
+rule Server_Accept:
+  [ Intent(uid, action, scope, nonce),
+    In(<uid, action, scope, nonce, sig>),
+    !UserPub(uid, pk),
+    Eq(verify(sig, <uid, action, scope, nonce>, pk), true)
+  ]
+  --[ ServerAccept(uid, action, scope, nonce) ]->
+  [ ]
+
+rule Reveal_Key:
+  [ !UserKey(uid, sk) ] --[ KeyReveal(uid) ]-> [ Out(sk) ]
+
+// Security lemmas
+
+lemma intent_non_transferability:
+  all-traces
+  "All uid action scope nonce #i.
+     (ServerAccept(uid, action, scope, nonce) @ #i)
+     ==> ( (Ex #j. ApproveIntent(uid, action, scope, nonce) @ #j)
+           | (Ex #k. KeyReveal(uid) @ #k) )"
+
+lemma intent_integrity:
+  all-traces
+  "All uid action scope nonce #i.
+     (ServerAccept(uid, action, scope, nonce) @ #i)
+     ==> (Ex #j. IssueIntent(uid, action, scope, nonce) @ #j)"
+
+lemma freshness:
+  all-traces
+  "All uid action scope nonce #i #j.
+     (ServerAccept(uid, action, scope, nonce) @ #i)
+     & (ServerAccept(uid, action, scope, nonce) @ #j)
+     ==> (#i = #j)"
+
+lemma context_confinement:
+  all-traces
+  "All uid action scope nonce #i.
+     (ApproveIntent(uid, action, scope, nonce) @ #i)
+     ==> (Ex #j. IssueIntent(uid, action, scope, nonce) @ #j)"
+
+end

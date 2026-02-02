@@ -149,8 +149,10 @@ def transfer_submit(
     request: Request,
     from_account: int = Form(...),
     amount: float = Form(...),
-    beneficiary_id: Optional[int] = Form(None),
+    to_type: str = Form("beneficiary"),
+    beneficiary_id: Optional[str] = Form(None),
     external_account: Optional[str] = Form(None),
+    currency: str = Form("USD"),
 ) -> HTMLResponse:
     user = get_current_user(request)
     if not require_login(user):
@@ -162,14 +164,21 @@ def transfer_submit(
     if amount <= 0:
         return render_transfer_form(request, user, "Amount must be greater than 0.")
 
-    if beneficiary_id is None and not external_account:
-        return render_transfer_form(request, user, "Select a beneficiary or choose external transfer.")
-
-    scope = {"from_account": from_account, "amount": amount, "currency": "USD"}
-    if beneficiary_id:
-        scope.update({"beneficiary_id": beneficiary_id})
+    beneficiary_value = (beneficiary_id or "").strip()
+    beneficiary_int = int(beneficiary_value) if beneficiary_value.isdigit() else None
+    external_value = (external_account or "").strip()
+    if to_type == "beneficiary":
+        if not beneficiary_int:
+            return render_transfer_form(request, user, "Add a beneficiary before continuing.")
     else:
-        scope.update({"external_account": external_account})
+        if not external_value:
+            return render_transfer_form(request, user, "Enter an external account to continue.")
+
+    scope = {"from_account": from_account, "amount": amount, "currency": currency}
+    if to_type == "beneficiary":
+        scope.update({"beneficiary_id": beneficiary_int})
+    else:
+        scope.update({"external_account": external_value})
 
     if poia_required("transfer", amount):
         intent_id = create_poia_intent(
@@ -297,7 +306,7 @@ def export_statements(request: Request) -> Response:
         "date_from": request.query_params.get("date_from", ""),
         "date_to": request.query_params.get("date_to", ""),
     }
-    if poia_required("statement_export"):
+    if poia_required("statement_export") and request.query_params.get("poia") != "1":
         intent_id = create_poia_intent(
             action="statement_export",
             scope=scope,

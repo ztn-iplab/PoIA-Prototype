@@ -4,3 +4,6 @@ __pycache__/
 app/data/
 *.db
 .env
+tamarin/results/
+certs/*.pem
+certs/*.key

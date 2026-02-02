@@ -12,7 +12,7 @@
   </head>
   <body>
     {% if poia_intent_id %}
-      <div class="poia-backdrop" data-intent="{{ poia_intent_id }}" data-user="{{ user_id or '' }}" data-zt-enabled="{{ 1 if user and user['poia_zt_enabled'] else 0 }}">
+      <div class="poia-backdrop" data-intent="{{ poia_intent_id }}" data-user="{{ user_id or '' }}" data-zt-enabled="{{ 1 if user and user['poia_zt_enabled'] else 0 }}" data-admin="{{ 1 if user and user['is_admin'] else 0 }}">
         <div class="poia-modal">
           <h2>Authorize intent</h2>
           <p class="note">Confirm the exact action below. Tap the panel to approve with your passkey.</p>
@@ -23,7 +23,11 @@
             <div><strong>Expires in:</strong> <span id="poia-expiry">-</span></div>
           </div>
           <div class="actions">
-            <a class="ghost" href="{{ request.url.replace_query_params(poia_intent='') }}">Cancel</a>
+            <a
+              class="ghost"
+              id="poia-cancel"
+              href="{{ '/admin/dashboard' if user and user['is_admin'] else '/dashboard' }}"
+            >Cancel</a>
           </div>
           <p id="poia-status" class="note">Passkey approval is ready.</p>
         </div>
@@ -91,6 +95,7 @@
         const poiaPasskey = document.getElementById('poia-passkey');
         const poiaDevice = document.getElementById('poia-device');
         const poiaModal = document.querySelector('.poia-modal');
+        const poiaCancel = document.getElementById('poia-cancel');
         let passkeyTriggered = false;
         let autoPasskeyArmed = true;
         let approvalInFlight = false;
@@ -119,6 +124,30 @@
         const intentId = poiaBackdrop ? poiaBackdrop.dataset.intent : '';
         const userId = poiaBackdrop ? poiaBackdrop.dataset.user : '';
         const ztEnabled = poiaBackdrop ? poiaBackdrop.dataset.ztEnabled === '1' : false;
+        const isAdmin = poiaBackdrop ? poiaBackdrop.dataset.admin === '1' : false;
+        const poiaScenario = new URLSearchParams(window.location.search).get('scenario') || '';
+
+        function sendPoiaTelemetry(event, extra = {}) {
+          if (!intentId) {
+            return;
+          }
+          const payload = {
+            event,
+            intent_id: intentId,
+            user_id: userId || null,
+            rp_id: poiaIntentData?.context?.rp_id || null,
+            method: ztEnabled ? 'zt_authenticator' : 'webauthn',
+            scenario: poiaScenario,
+            client_ts: Date.now() / 1000,
+            ...extra,
+          };
+          fetch('/api/poia/telemetry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+          }).catch(() => {});
+        }
 
         function base64urlToBuffer(value) {
           const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
@@ -199,6 +228,44 @@
           poiaSummary.innerHTML = html;
         }
 
+        function handleApprovedRedirect(redirectUrl = '') {
+          approvalComplete = true;
+          approvalInFlight = false;
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+          }
+          poiaBackdrop?.classList.add('poia-hidden');
+          const action = poiaIntentData?.action;
+          if (action === 'statement_export') {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = `/poia/execute/${intentId}`;
+            document.body.appendChild(iframe);
+            setTimeout(() => {
+              window.location.href = '/statements';
+            }, 900);
+            return;
+          }
+          const destination = redirectUrl || `/poia/execute/${intentId}`;
+          window.location.href = destination;
+        }
+
+        if (poiaCancel) {
+          poiaCancel.addEventListener('click', async (event) => {
+            event.preventDefault();
+            if (intentId) {
+              await fetch('/api/poia/deny', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ intent_id: intentId, reason: 'user_cancelled' }),
+              }).catch(() => {});
+            }
+            const target = isAdmin ? '/admin/dashboard' : '/dashboard';
+            window.location.href = target;
+          });
+        }
+
         async function loadIntent() {
           poiaPasskey?.setAttribute('disabled', 'true');
           const res = await fetch(`/poia/intent/${intentId}`, { credentials: 'include' });
@@ -210,6 +277,7 @@
           }
           poiaIntentData = data.intent;
           renderIntent(poiaIntentData);
+          sendPoiaTelemetry('intent_loaded');
           const expiresAt = data.expires_at;
           const updateCountdown = () => {
             const remaining = Math.max(0, expiresAt - Math.floor(Date.now() / 1000));
@@ -223,6 +291,7 @@
             poiaStatus.style.color = '#2c2c2c';
             updateCountdown();
             countdownTimer = setInterval(updateCountdown, 1000);
+            sendPoiaTelemetry('zt_auto_start');
             startDeviceApproval();
           } else {
             poiaPublicKey = await preparePasskey();
@@ -282,11 +351,13 @@
           } catch (err) {
             poiaStatus.textContent = 'Passkey prompt blocked. Tap the intent panel to try again.';
             poiaStatus.style.color = '#c24b41';
+            sendPoiaTelemetry('passkey_blocked');
             approvalInFlight = false;
             return;
           }
           poiaStatus.textContent = 'Verifying approval...';
           poiaStatus.style.color = '#2c2c2c';
+          sendPoiaTelemetry('passkey_assertion');
           const payload = {
             credentialId: bufferToBase64url(assertion.rawId),
             clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
@@ -313,6 +384,7 @@
               poiaStatus.textContent = text ? `PoIA approval failed: ${text.slice(0, 200)}` : 'PoIA approval failed.';
               poiaStatus.style.color = '#c24b41';
               showToast('Approval failed. Please try again.', false);
+              sendPoiaTelemetry('approval_failed', { status: 'denied' });
               approvalInFlight = false;
               return;
             }
@@ -320,33 +392,24 @@
             if (contentType.includes('application/json')) {
               const data = await completeRes.json();
               if (data.redirect_url) {
-                approvalComplete = true;
-                approvalInFlight = false;
-                if (countdownTimer) {
-                  clearInterval(countdownTimer);
-                }
                 poiaStatus.textContent = 'Approval recorded. Completing action...';
                 poiaStatus.style.color = '#2c2c2c';
                 showToast('Approval confirmed. Completing action...', true);
-                poiaBackdrop?.classList.add('poia-hidden');
-                window.location.href = data.redirect_url;
+                sendPoiaTelemetry('approval_success', { status: 'approved' });
+                handleApprovedRedirect(data.redirect_url);
                 return;
               }
-            }
-            approvalComplete = true;
-            approvalInFlight = false;
-            if (countdownTimer) {
-              clearInterval(countdownTimer);
             }
             poiaStatus.textContent = 'Approval recorded. Completing action...';
             poiaStatus.style.color = '#2c2c2c';
             showToast('Approval confirmed. Completing action...', true);
-            poiaBackdrop?.classList.add('poia-hidden');
-            window.location.href = `/poia/execute/${intentId}`;
+            sendPoiaTelemetry('approval_success', { status: 'approved' });
+            handleApprovedRedirect();
           } catch (err) {
             poiaStatus.textContent = 'Approval timed out. Tap the panel to retry.';
             poiaStatus.style.color = '#c24b41';
             showToast('Approval timed out. Tap the panel to retry.', false);
+            sendPoiaTelemetry('approval_timeout', { status: 'timeout' });
             approvalInFlight = false;
           }
         }
@@ -355,12 +418,8 @@
           const res = await fetch(`/poia/status?intent_id=${encodeURIComponent(intentId)}`, { credentials: 'include' });
           const data = await res.json();
           if (data.status === 'approved') {
-            approvalComplete = true;
-            if (countdownTimer) {
-              clearInterval(countdownTimer);
-            }
-            poiaBackdrop?.classList.add('poia-hidden');
-            window.location.href = `/poia/execute/${intentId}`;
+            sendPoiaTelemetry('zt_status_approved', { status: 'approved' });
+            handleApprovedRedirect();
             return;
           }
           if (data.status === 'denied') {
@@ -371,10 +430,24 @@
             if (countdownTimer) {
               clearInterval(countdownTimer);
             }
+            sendPoiaTelemetry('zt_status_denied', { status: 'denied' });
             setTimeout(() => {
-              const url = new URL(window.location.href);
-              url.searchParams.delete('poia_intent');
-              window.location.href = url.toString();
+              const target = isAdmin ? '/admin/dashboard' : '/dashboard';
+              window.location.href = target;
+            }, 700);
+            return;
+          }
+          if (data.status === 'expired') {
+            poiaStatus.textContent = 'Intent expired.';
+            poiaStatus.style.color = '#c24b41';
+            approvalComplete = true;
+            if (countdownTimer) {
+              clearInterval(countdownTimer);
+            }
+            sendPoiaTelemetry('zt_status_expired', { status: 'expired' });
+            setTimeout(() => {
+              const target = isAdmin ? '/admin/dashboard' : '/dashboard';
+              window.location.href = target;
             }, 700);
             return;
           }
@@ -389,7 +462,19 @@
           poiaStatus.textContent = 'Waiting for ZT-Authenticator approval...';
           poiaStatus.style.color = '#2c2c2c';
           if (userId) {
-            await fetch(`/api/poia/pending?user_id=${encodeURIComponent(userId)}`, { credentials: 'include' });
+            const pendingRes = await fetch(`/api/poia/pending?user_id=${encodeURIComponent(userId)}&force=1`, { credentials: 'include' });
+            if (pendingRes.ok) {
+              const pendingData = await pendingRes.json();
+              if (pendingData.status === 'disabled') {
+                approvalInFlight = false;
+                poiaStatus.textContent = 'ZT-Authenticator is disabled. Tap to approve with passkey.';
+                poiaStatus.style.color = '#2c2c2c';
+                if (!poiaPublicKey) {
+                  poiaPublicKey = await preparePasskey();
+                }
+                return;
+              }
+            }
           }
           pollDevice();
         }
@@ -443,6 +528,7 @@
           }
           poiaStatus.textContent = 'Intent expired. Returning to the previous page.';
           poiaStatus.style.color = '#c24b41';
+          sendPoiaTelemetry('intent_expired', { status: 'expired' });
           await fetch('/api/poia/deny', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -450,9 +536,8 @@
             body: JSON.stringify({ intent_id: intentId }),
           });
           setTimeout(() => {
-            const url = new URL(window.location.href);
-            url.searchParams.delete('poia_intent');
-            window.location.href = url.toString();
+            const target = isAdmin ? '/admin/dashboard' : '/dashboard';
+            window.location.href = target;
           }, 1200);
         }
       </script>

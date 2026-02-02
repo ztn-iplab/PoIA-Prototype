@@ -46,7 +46,11 @@ def audit_log(request: Request) -> HTMLResponse:
 
     if not user["is_admin"]:
         return RedirectResponse(url="/dashboard", status_code=302)
-    if poia_required("admin_audit_view") and request.query_params.get("poia") != "1":
+    if (
+        poia_required("admin_audit_view")
+        and request.query_params.get("poia") != "1"
+        and request.query_params.get("poia_intent") is None
+    ):
         intent_id = create_poia_intent(
             action="admin_audit_view",
             scope={"resource": "audit_logs"},
@@ -70,7 +74,11 @@ def mfa_metrics(request: Request) -> HTMLResponse:
 
     if not user["is_admin"]:
         return RedirectResponse(url="/dashboard", status_code=302)
-    if poia_required("admin_mfa_view") and request.query_params.get("poia") != "1":
+    if (
+        poia_required("admin_mfa_view")
+        and request.query_params.get("poia") != "1"
+        and request.query_params.get("poia_intent") is None
+    ):
         intent_id = create_poia_intent(
             action="admin_mfa_view",
             scope={"resource": "mfa_events"},

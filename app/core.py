@@ -15,6 +15,7 @@ from fastapi.templating import Jinja2Templates
 
 from .db import db_connect
 from .model import ChallengeRecord, InMemoryPoIA, IntentRecord, ProofRecord
+from .poia_metrics import log_poia_event
 from .settings import (
     BASE_DIR,
     INTENT_TTL_SECONDS,
@@ -156,6 +157,19 @@ def create_poia_intent(
         intent_id=intent_id,
         nonce=nonce,
         expires_at=expires_at,
+    )
+    user_id = context.get("user_id") if isinstance(context, dict) else None
+    rp_id = context.get("rp_id") if isinstance(context, dict) else None
+    log_poia_event(
+        event="intent_created",
+        intent_id=intent_id,
+        user_id=user_id,
+        rp_id=rp_id,
+        action=action,
+        status="pending",
+        created_at=poia_store.intents[intent_id].created_at,
+        expires_at=expires_at,
+        payload={"scope": scope},
     )
     return intent_id
 

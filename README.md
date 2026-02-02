@@ -56,6 +56,67 @@ ZT-Authenticator mobile app (or any standard TOTP app) to enroll.
 - Admin views (audit + MFA metrics) are protected by PoIA
 - PoIA approvals are recorded in audit logs
 
+## Research instrumentation (PoIA experiments)
+
+The PoIA prototype logs experiment telemetry to support reproducible security,
+performance, and usability evaluation. Logs are written to:
+
+- `app/data/poia_experiments.csv`
+
+### What is captured
+- Intent creation, approval, denial, and execution events
+- WebAuthn vs ZT-Authenticator approval method
+- Approval latency (ms)
+- TTL/expiry outcomes and replay attempts
+- UX steps (modal loaded, passkey prompt, approval outcome)
+
+### Scenario tagging
+To attribute events to an attack scenario, include a `scenario` query
+parameter when launching the PoIA intent modal. Example:
+
+```
+https://poia.local/transfer?poia_intent=...&scenario=replay
+```
+
+The scenario label is stored in the metrics CSV for analysis.
+
+### Analysis script
+Run the bundled analyzer to produce success rates and latency summaries:
+
+```
+python3 scripts/analyze_poia_metrics.py --poia app/data/poia_experiments.csv
+```
+
+Provide a baseline CSV (if collected separately) to compute comparison tables:
+
+```
+python3 scripts/analyze_poia_metrics.py \
+  --poia app/data/poia_experiments.csv \
+  --baseline app/data/baseline_experiments.csv
+```
+
+## Experiment protocol (recommended)
+
+1) **Security effectiveness**
+   - Run attack scenarios (replay, relay_phishing, session_misuse, intent_substitution).
+   - Record attempts by adding `scenario=` to the intent URL.
+
+2) **Functional correctness**
+   - Trigger action/scope mismatch and expired intent cases.
+   - Verify that all mismatches are rejected.
+
+3) **Performance overhead**
+   - Measure baseline actions without PoIA.
+   - Measure PoIA approvals and compare median/p95/max latency.
+
+4) **Usability impact**
+   - Track completion time and error rate (from telemetry).
+   - Collect perceived clarity scores via short surveys.
+
+5) **Auditability**
+   - Verify each executed action has intent linkage (intent_id, rp_id, device_id).
+   - Compare with baseline session-only logging.
+
 ## Notes
 
 - Data is stored in `/data/bank.db` (volume-backed)

@@ -3,7 +3,8 @@
 <section class="panel">
   <h1>Transfer funds</h1>
   {% if error %}<p class="warn">{{ error }}</p>{% endif %}
-  <form class="form" method="post" action="/transfer">
+  <p class="warn" id="transfer-error" style="display:none;"></p>
+  <form class="form" method="post" action="/transfer" id="transfer-form">
     <label>
       From account
       <select name="from_account">
@@ -51,4 +52,32 @@
   </form>
   <p class="note">PoIA can be enabled for high-value transfers (threshold {{ POIA_TRANSFER_THRESHOLD }}).</p>
 </section>
+<script>
+  const transferForm = document.getElementById('transfer-form');
+  const transferError = document.getElementById('transfer-error');
+  const toType = document.getElementById('to_type');
+  const beneficiarySelect = document.querySelector('select[name="beneficiary_id"]');
+  const externalInput = document.querySelector('input[name="external_account"]');
+
+  if (transferForm && toType && beneficiarySelect && externalInput) {
+    transferForm.addEventListener('submit', (event) => {
+      const mode = toType.value;
+      const beneficiaryValue = (beneficiarySelect.value || '').trim();
+      const externalValue = (externalInput.value || '').trim();
+      let message = '';
+      if (mode === 'beneficiary' && !beneficiaryValue) {
+        message = 'Add a beneficiary before continuing.';
+      } else if (mode === 'external' && !externalValue) {
+        message = 'Enter an external account to continue.';
+      }
+      if (message) {
+        event.preventDefault();
+        transferError.textContent = message;
+        transferError.style.display = 'block';
+      } else {
+        transferError.style.display = 'none';
+      }
+    });
+  }
+</script>
 {% endblock %}

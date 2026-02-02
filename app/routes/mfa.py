@@ -51,12 +51,16 @@ def mfa_choose(request: Request) -> HTMLResponse:
         return RedirectResponse(url="/login", status_code=302)
     with db_connect() as conn:
         user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
-    has_totp = bool(user and user["otp_secret"]) and device_enrolled(user_id)
+    has_device = device_enrolled(user_id)
+    reset_required = totp_needs_reset(user, has_device)
+    can_use_totp = bool(user and user["otp_secret"]) and not reset_required and has_device
     has_passkey = user_has_webauthn(user_id)
-    if has_totp and has_passkey:
-        return render(request, "mfa_choice.html", {})
+    if (can_use_totp or reset_required) and has_passkey:
+        return render(request, "mfa_choice.html", {"totp_setup_required": reset_required})
     if has_passkey:
         return RedirectResponse(url="/mfa/passkey", status_code=302)
+    if reset_required:
+        return RedirectResponse(url="/mfa/setup", status_code=302)
     return RedirectResponse(url="/mfa/verify", status_code=302)
 
 

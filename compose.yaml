@@ -9,6 +9,7 @@ services:
       POIA_DATA_DIR: /data
       POIA_SESSION_SECRET: "change-me-in-prod"
       POIA_ENABLED: "true"
+      POIA_TEST_MODE: "true"
       PUBLIC_BASE_URL: "${PUBLIC_BASE_URL}"
       SMTP_HOST: "mailpit"
       SMTP_PORT: "1025"

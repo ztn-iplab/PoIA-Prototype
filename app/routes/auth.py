@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from ..core import get_current_user, log_audit, render, require_login
 from ..db import db_connect
 from ..mfa_utils import device_enrolled, resolve_public_base_url
+from ..mfa_utils import totp_needs_reset
 from ..webauthn_utils import user_has_webauthn
 from ..settings import APP_RP_ID
 from ..reset import clear_reset_token, issue_reset_token, validate_reset_token
@@ -90,18 +91,22 @@ def login_submit(
 
     request.session["pre_mfa_user_id"] = user["id"]
     request.session["pre_mfa_email"] = user["email"]
-    has_totp = bool(user["otp_secret"]) and device_enrolled(user["id"]) and not (user["otp_rp_id"] and user["otp_rp_id"] != APP_RP_ID)
+    has_device = device_enrolled(user["id"])
+    reset_required = totp_needs_reset(user, has_device)
+    can_use_totp = bool(user["otp_secret"]) and not reset_required and has_device
     has_webauthn = user_has_webauthn(user["id"])
     reset_reason = request.session.pop("mfa_reset_reason", "")
     if reset_reason:
         return RedirectResponse(url=f"/mfa/setup?reason={reset_reason}", status_code=303)
-    if not has_totp and not has_webauthn:
+    if not can_use_totp and not has_webauthn:
         reason = "rp_changed" if user["otp_rp_id"] and user["otp_rp_id"] != APP_RP_ID else "required"
         return RedirectResponse(url=f"/mfa/setup?reason={reason}", status_code=303)
-    if has_totp and has_webauthn:
+    if (can_use_totp or reset_required) and has_webauthn:
         return RedirectResponse(url="/mfa/choose", status_code=303)
     if has_webauthn:
         return RedirectResponse(url="/mfa/passkey", status_code=303)
+    if reset_required:
+        return RedirectResponse(url="/mfa/setup", status_code=303)
     return RedirectResponse(url="/mfa/verify", status_code=303)
 
 
