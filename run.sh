@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 usage() {
   echo "Usage: ./run.sh [--build]"
   echo "  --build   rebuild images before starting"
@@ -106,10 +108,10 @@ update_hosts_mapping() {
 }
 
 ensure_cert() {
-  local cert_dir="/Users/<user>/Documents/poia-prototype/certs"
-  local key_dir="/Users/<user>/Documents/poia-prototype/private"
-  local ca_cert="/Users/<user>/Documents/ZT-IAM-fastapi/certs/zt-iam-ca.crt"
-  local ca_key="/Users/<user>/Documents/ZT-IAM-fastapi/private/zt-iam-ca.key"
+  local cert_dir="${ROOT_DIR}/certs"
+  local key_dir="${ROOT_DIR}/private"
+  local ca_cert="${ROOT_DIR}/certs/zt-iam-ca.crt"
+  local ca_key="${ROOT_DIR}/private/zt-iam-ca.key"
   local cert_path="${cert_dir}/poia.local.pem"
   local key_path="${key_dir}/poia.local-key.pem"
 
