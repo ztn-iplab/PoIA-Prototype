@@ -95,7 +95,7 @@ python3 scripts/analyze_poia_metrics.py \
   --baseline app/data/baseline_experiments.csv
 ```
 
-## Experiment protocol (recommended)
+## Experiment protocol
 
 1) **Security effectiveness**
    - Run attack scenarios (replay, relay_phishing, session_misuse, intent_substitution).
