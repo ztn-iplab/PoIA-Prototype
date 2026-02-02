@@ -117,9 +117,3 @@ python3 scripts/analyze_poia_metrics.py \
    - Verify each executed action has intent linkage (intent_id, rp_id, device_id).
    - Compare with baseline session-only logging.
 
-## Notes
-
-- Data is stored in `/data/bank.db` (volume-backed)
-- Passkeys require `https://poia.local`
-- PoIA TTL is 60 seconds by default
-- ZT-Authenticator PoIA approvals can be enabled per-user in Settings
