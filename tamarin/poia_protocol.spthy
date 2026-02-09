@@ -1,5 +1,5 @@
 /**
- * PoIA protocol model (abstracted)
+ * PoIA protocol model
  * - Intent issuance binds (uid, action, scope, nonce)
  * - User approves by signing intent tuple with device key
  * - Server accepts only with matching intent and valid signature
