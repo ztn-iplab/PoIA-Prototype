@@ -1,0 +1,4202 @@
+[
+  {
+    "event_id": "evt-1",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000001,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-1",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "b75a2286b8426da40340694a16c00faacc8dbeed51e46697f97c88340c97264b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-1"
+    },
+    "scope": {
+      "amount": 101,
+      "currency": "USD",
+      "from_account": "CHK-0001",
+      "to_account": "EXT-0001"
+    },
+    "status": "executed",
+    "timestamp": 1800000001,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-2",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000002,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-2",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "b52e80dc51a65876aa554bcc35f03d325052ab4d8d5e8d9a06a40f128dc19e88",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-2"
+    },
+    "scope": {
+      "amount": 102,
+      "currency": "USD",
+      "from_account": "CHK-0002",
+      "to_account": "EXT-0002"
+    },
+    "status": "executed",
+    "timestamp": 1800000002,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-3",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000003,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-3",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "bff2a3308eefe3d9a98d05d0b7fe2c7083294b0c088ef48ed60f67db7426cb87",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-3"
+    },
+    "scope": {
+      "amount": 103,
+      "currency": "USD",
+      "from_account": "CHK-0003",
+      "to_account": "EXT-0003"
+    },
+    "status": "executed",
+    "timestamp": 1800000003,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-4",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000004,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-4",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "effef828e431aeb73877d775000b07ed319a24f22a11923cc492725722b4bc89",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-4"
+    },
+    "scope": {
+      "amount": 104,
+      "currency": "USD",
+      "from_account": "CHK-0004",
+      "to_account": "EXT-0004"
+    },
+    "status": "rejected",
+    "timestamp": 1800000004,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-5",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000005,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-5",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "f8ced04027ab063966d4c3b14594dc1ef344a3e26a4a50c6da9c2e5ced8b2b48",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-5"
+    },
+    "scope": {
+      "amount": 105,
+      "currency": "USD",
+      "from_account": "CHK-0005",
+      "to_account": "EXT-0005"
+    },
+    "status": "executed",
+    "timestamp": 1800000005,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-6",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000006,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-6",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "c0b3b7d660c8c15e75aa817429faf1b2118b069b8ad76d4389cb707c5184c6a9",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-6"
+    },
+    "scope": {
+      "amount": 106,
+      "currency": "USD",
+      "from_account": "CHK-0006",
+      "to_account": "EXT-0006"
+    },
+    "status": "executed",
+    "timestamp": 1800000006,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-7",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000007,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-7",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "2cc7332c31781bdf3586c883c18c415056881fd6144803d4e563c9f22ba5d10b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-7"
+    },
+    "scope": {
+      "amount": 107,
+      "currency": "USD",
+      "from_account": "CHK-0007",
+      "to_account": "EXT-0007"
+    },
+    "status": "executed",
+    "timestamp": 1800000007,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-8",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000008,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-8",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "ad4283b265e320f8a6e24587294d1551bcefa2070f665cf3526e72f34964061f",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-8"
+    },
+    "scope": {
+      "amount": 108,
+      "currency": "USD",
+      "from_account": "CHK-0008",
+      "to_account": "EXT-0008"
+    },
+    "status": "rejected",
+    "timestamp": 1800000008,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-9",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000009,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-9",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "84cacc0f0643f6b9e914fb7b28be981bd5a72556486a8ef4b598b8b831bf371d",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-9"
+    },
+    "scope": {
+      "amount": 109,
+      "currency": "USD",
+      "from_account": "CHK-0009",
+      "to_account": "EXT-0009"
+    },
+    "status": "executed",
+    "timestamp": 1800000009,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-10",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000010,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-10",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "619587f0a60f09a4c4a1d39c4cc180500dadfcd9c737b87e3dae1503ff637842",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-10"
+    },
+    "scope": {
+      "amount": 110,
+      "currency": "USD",
+      "from_account": "CHK-0010",
+      "to_account": "EXT-0010"
+    },
+    "status": "executed",
+    "timestamp": 1800000010,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-11",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000011,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-11",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "39d3c77fca91d554e666f27649b68887ba14816ba73e8917947966ced890f42d",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-11"
+    },
+    "scope": {
+      "amount": 111,
+      "currency": "USD",
+      "from_account": "CHK-0011",
+      "to_account": "EXT-0011"
+    },
+    "status": "executed",
+    "timestamp": 1800000011,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-12",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000012,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-12",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "d1748ed2882c3ff34a68aa55e1aed904bf20ff9f3ec1c4286f444f10695f96ec",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-12"
+    },
+    "scope": {
+      "amount": 112,
+      "currency": "USD",
+      "from_account": "CHK-0012",
+      "to_account": "EXT-0012"
+    },
+    "status": "rejected",
+    "timestamp": 1800000012,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-13",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000013,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-13",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "782602384b0b4b8bee24870d2084ad56b9ea9456edc4975bc19010e1ed9ee621",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-13"
+    },
+    "scope": {
+      "amount": 113,
+      "currency": "USD",
+      "from_account": "CHK-0013",
+      "to_account": "EXT-0013"
+    },
+    "status": "executed",
+    "timestamp": 1800000013,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-14",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000014,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-14",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "78f3be906dff7e65c4e93315e62b7335e66c34eec22c8f1e28a2d82cd0df7979",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-14"
+    },
+    "scope": {
+      "amount": 114,
+      "currency": "USD",
+      "from_account": "CHK-0014",
+      "to_account": "EXT-0014"
+    },
+    "status": "executed",
+    "timestamp": 1800000014,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-15",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000015,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-15",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "997bec805306c51a9721c47fda2008ac7f83027da0b175137ad77b611cf298c9",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-15"
+    },
+    "scope": {
+      "amount": 115,
+      "currency": "USD",
+      "from_account": "CHK-0015",
+      "to_account": "EXT-0015"
+    },
+    "status": "executed",
+    "timestamp": 1800000015,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-16",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000016,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-16",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "c7bf03cdddddf07a7b0c0d7a919790a39709c0989035989bcfe24c19d4a623de",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-16"
+    },
+    "scope": {
+      "amount": 116,
+      "currency": "USD",
+      "from_account": "CHK-0016",
+      "to_account": "EXT-0016"
+    },
+    "status": "rejected",
+    "timestamp": 1800000016,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-17",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000017,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-17",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "adc7f530c663cc7cb746a2e177c081ed00d0ea69a3937e7b583a608ef4bbb86a",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-17"
+    },
+    "scope": {
+      "amount": 117,
+      "currency": "USD",
+      "from_account": "CHK-0017",
+      "to_account": "EXT-0017"
+    },
+    "status": "executed",
+    "timestamp": 1800000017,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-18",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000018,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-18",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "ecc291871f636fa3e283c0bf4c30794c7bd7287589701fe41b2cca3269e39508",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-18"
+    },
+    "scope": {
+      "amount": 118,
+      "currency": "USD",
+      "from_account": "CHK-0018",
+      "to_account": "EXT-0018"
+    },
+    "status": "executed",
+    "timestamp": 1800000018,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-19",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000019,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-19",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "807cf33a102eb5b1b229774a87745ae53d39a62ce6ea54860d6f8444792386ca",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-19"
+    },
+    "scope": {
+      "amount": 119,
+      "currency": "USD",
+      "from_account": "CHK-0019",
+      "to_account": "EXT-0019"
+    },
+    "status": "executed",
+    "timestamp": 1800000019,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-20",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000020,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-20",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "7de11a968f60fc1e25ff242989c0e77fae581905939b136df2430c26dadc3413",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-20"
+    },
+    "scope": {
+      "amount": 120,
+      "currency": "USD",
+      "from_account": "CHK-0020",
+      "to_account": "EXT-0020"
+    },
+    "status": "rejected",
+    "timestamp": 1800000020,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-21",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000021,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-21",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "6b19328dc73a4b5a1dd70b86354d66062adf5a9be80108d806860f39f6c1dc89",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-21"
+    },
+    "scope": {
+      "amount": 121,
+      "currency": "USD",
+      "from_account": "CHK-0021",
+      "to_account": "EXT-0021"
+    },
+    "status": "executed",
+    "timestamp": 1800000021,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-22",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000022,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-22",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "a39c8ab3909eaf51693f64a81ca7eadd87642cd5ecea1c4e5213b261db0bf353",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-22"
+    },
+    "scope": {
+      "amount": 122,
+      "currency": "USD",
+      "from_account": "CHK-0022",
+      "to_account": "EXT-0022"
+    },
+    "status": "executed",
+    "timestamp": 1800000022,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-23",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000023,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-23",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "55416d3c1827a7728691724a934c611db69d38bc6d844aa73ad420ee76f74f66",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-23"
+    },
+    "scope": {
+      "amount": 123,
+      "currency": "USD",
+      "from_account": "CHK-0023",
+      "to_account": "EXT-0023"
+    },
+    "status": "executed",
+    "timestamp": 1800000023,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-24",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000024,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-24",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "41848905f51be7f662ba77b011725f096b357b89ef147c8f8927f05d02d8028b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-24"
+    },
+    "scope": {
+      "amount": 124,
+      "currency": "USD",
+      "from_account": "CHK-0024",
+      "to_account": "EXT-0024"
+    },
+    "status": "rejected",
+    "timestamp": 1800000024,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-25",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000025,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-25",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "40f200327a052dc8a4ec66806ac7091ea104d514dd0cb48fe0ee0aa767809cc3",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-25"
+    },
+    "scope": {
+      "amount": 125,
+      "currency": "USD",
+      "from_account": "CHK-0025",
+      "to_account": "EXT-0025"
+    },
+    "status": "executed",
+    "timestamp": 1800000025,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-26",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000026,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-26",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "b48d03f54a1d844c55e7ea6bd83760ddc0646c460a12da39141d51660a05a904",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-26"
+    },
+    "scope": {
+      "amount": 126,
+      "currency": "USD",
+      "from_account": "CHK-0026",
+      "to_account": "EXT-0026"
+    },
+    "status": "executed",
+    "timestamp": 1800000026,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-27",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000027,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-27",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "988e3a1b7a49b3d39e5268869c6a53e851a87c075f69be811e23464481c65347",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-27"
+    },
+    "scope": {
+      "amount": 127,
+      "currency": "USD",
+      "from_account": "CHK-0027",
+      "to_account": "EXT-0027"
+    },
+    "status": "executed",
+    "timestamp": 1800000027,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-28",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000028,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-28",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "c39297c5f341eb8dd4cf2ac44a33dde0a5caee56a15f5fd0ed2df9a087835b4c",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-28"
+    },
+    "scope": {
+      "amount": 128,
+      "currency": "USD",
+      "from_account": "CHK-0028",
+      "to_account": "EXT-0028"
+    },
+    "status": "rejected",
+    "timestamp": 1800000028,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-29",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000029,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-29",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "9ae238be5b42e8bc2f4914ac8ced2478c9d2ca7861117e66def81e25e8afb088",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-29"
+    },
+    "scope": {
+      "amount": 129,
+      "currency": "USD",
+      "from_account": "CHK-0029",
+      "to_account": "EXT-0029"
+    },
+    "status": "executed",
+    "timestamp": 1800000029,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-30",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000030,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-30",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "ce19695ad9449cdf5be9734d9caca4db0db6b7b0454a57beebeddf7fabcb5a71",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-30"
+    },
+    "scope": {
+      "amount": 130,
+      "currency": "USD",
+      "from_account": "CHK-0030",
+      "to_account": "EXT-0030"
+    },
+    "status": "executed",
+    "timestamp": 1800000030,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-31",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000031,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-31",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "43b79b2d3a71bd20e869b11e9464273ae61f2e148532156ed64a5e9a2da3f21f",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-31"
+    },
+    "scope": {
+      "amount": 131,
+      "currency": "USD",
+      "from_account": "CHK-0031",
+      "to_account": "EXT-0031"
+    },
+    "status": "executed",
+    "timestamp": 1800000031,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-32",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000032,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-32",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "35f4328141b1fd20519b09aa1a437dfa4ed9697e57b511615bbadac29d67f2f0",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-32"
+    },
+    "scope": {
+      "amount": 132,
+      "currency": "USD",
+      "from_account": "CHK-0032",
+      "to_account": "EXT-0032"
+    },
+    "status": "rejected",
+    "timestamp": 1800000032,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-33",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000033,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-33",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "ef9ef2b8f5d2a50ec008ec818432d1efabbf72e803cadbba62bc0d16d6a254db",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-33"
+    },
+    "scope": {
+      "amount": 133,
+      "currency": "USD",
+      "from_account": "CHK-0033",
+      "to_account": "EXT-0033"
+    },
+    "status": "executed",
+    "timestamp": 1800000033,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-34",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000034,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-34",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "5b59fa575ff53bfaa6019665c7551b30fb6d42a5ce8594adb60996a908c3dc32",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-34"
+    },
+    "scope": {
+      "amount": 134,
+      "currency": "USD",
+      "from_account": "CHK-0034",
+      "to_account": "EXT-0034"
+    },
+    "status": "executed",
+    "timestamp": 1800000034,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-35",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000035,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-35",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "98368615c3338bba7704831a55947965923d01b4e65a5817f576c1a8a2c6e7c1",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-35"
+    },
+    "scope": {
+      "amount": 135,
+      "currency": "USD",
+      "from_account": "CHK-0035",
+      "to_account": "EXT-0035"
+    },
+    "status": "executed",
+    "timestamp": 1800000035,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-36",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000036,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-36",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "bcb2d793a1e7c3f8761cb562c4ef94066c48b83273de63fa4a4e90d17a4c56b2",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-36"
+    },
+    "scope": {
+      "amount": 136,
+      "currency": "USD",
+      "from_account": "CHK-0036",
+      "to_account": "EXT-0036"
+    },
+    "status": "rejected",
+    "timestamp": 1800000036,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-37",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000037,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-37",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "1fd371b30603fdf3017aa2958be12579984865580d08a50c702efe45adbe0bf9",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-37"
+    },
+    "scope": {
+      "amount": 137,
+      "currency": "USD",
+      "from_account": "CHK-0037",
+      "to_account": "EXT-0037"
+    },
+    "status": "executed",
+    "timestamp": 1800000037,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-38",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000038,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-38",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "d0ea97275ca1aa6b28fae5f602c0a6994a88e13375a341916c101b9739b21760",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-38"
+    },
+    "scope": {
+      "amount": 138,
+      "currency": "USD",
+      "from_account": "CHK-0038",
+      "to_account": "EXT-0038"
+    },
+    "status": "executed",
+    "timestamp": 1800000038,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-39",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000039,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-39",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "1ebf3b6d0ff7b109caf9034f81d8891ea5308da498f9c6feb876fc4709c2a97e",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-39"
+    },
+    "scope": {
+      "amount": 139,
+      "currency": "USD",
+      "from_account": "CHK-0039",
+      "to_account": "EXT-0039"
+    },
+    "status": "executed",
+    "timestamp": 1800000039,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-40",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000040,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-40",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "cc759ed286db4b6e5ef800c62463c979c2e407ced724daafdd480497c9e1efe3",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-40"
+    },
+    "scope": {
+      "amount": 140,
+      "currency": "USD",
+      "from_account": "CHK-0040",
+      "to_account": "EXT-0040"
+    },
+    "status": "rejected",
+    "timestamp": 1800000040,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-41",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000041,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-41",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "551136eb16d71ce205e46f99c0b5356f3de7841cbb66d4b229ca15c245527658",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-41"
+    },
+    "scope": {
+      "amount": 141,
+      "currency": "USD",
+      "from_account": "CHK-0041",
+      "to_account": "EXT-0041"
+    },
+    "status": "executed",
+    "timestamp": 1800000041,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-42",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000042,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-42",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "6f30f83d4afdc522c134f9885015566d6377d08f2c854f965bffe6fd683723e0",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-42"
+    },
+    "scope": {
+      "amount": 142,
+      "currency": "USD",
+      "from_account": "CHK-0042",
+      "to_account": "EXT-0042"
+    },
+    "status": "executed",
+    "timestamp": 1800000042,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-43",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000043,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-43",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "7eb316abe98320aed301b88907385c5e2f2e0849146b20012e72ebc72748daed",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-43"
+    },
+    "scope": {
+      "amount": 143,
+      "currency": "USD",
+      "from_account": "CHK-0043",
+      "to_account": "EXT-0043"
+    },
+    "status": "executed",
+    "timestamp": 1800000043,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-44",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000044,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-44",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "e029918ead6928cc4ffdc0401865771234c2a9eb0689f52563aabf3e678ec94f",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-44"
+    },
+    "scope": {
+      "amount": 144,
+      "currency": "USD",
+      "from_account": "CHK-0044",
+      "to_account": "EXT-0044"
+    },
+    "status": "rejected",
+    "timestamp": 1800000044,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-45",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000045,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-45",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "158650143fab8b491e831012e63fb8e4039bde44dc89d89bedf418ef716a8ea2",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-45"
+    },
+    "scope": {
+      "amount": 145,
+      "currency": "USD",
+      "from_account": "CHK-0045",
+      "to_account": "EXT-0045"
+    },
+    "status": "executed",
+    "timestamp": 1800000045,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-46",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000046,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-46",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "cb36332f7bf7886cc01fa08c7d98a46aeefe3bf179ac51e174540e62b652d943",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-46"
+    },
+    "scope": {
+      "amount": 146,
+      "currency": "USD",
+      "from_account": "CHK-0046",
+      "to_account": "EXT-0046"
+    },
+    "status": "executed",
+    "timestamp": 1800000046,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-47",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000047,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-47",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "572fa0200348698f9d8ee620515dbb2ce432ad85e02a06719f310979d0b76535",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-47"
+    },
+    "scope": {
+      "amount": 147,
+      "currency": "USD",
+      "from_account": "CHK-0047",
+      "to_account": "EXT-0047"
+    },
+    "status": "executed",
+    "timestamp": 1800000047,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-48",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000048,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-48",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "350e097f5093938e293edc181c7734b93fd49cc5628a0eeb6ce349dec5fa5eea",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-48"
+    },
+    "scope": {
+      "amount": 148,
+      "currency": "USD",
+      "from_account": "CHK-0048",
+      "to_account": "EXT-0048"
+    },
+    "status": "rejected",
+    "timestamp": 1800000048,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-49",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000049,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-49",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "e1260e8bf94da0f0d0fe483f89059ceb380476ae33514a2acd89337492768dcd",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-49"
+    },
+    "scope": {
+      "amount": 149,
+      "currency": "USD",
+      "from_account": "CHK-0049",
+      "to_account": "EXT-0049"
+    },
+    "status": "executed",
+    "timestamp": 1800000049,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-50",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000050,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-50",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "dfc70e82ce0e83f32064caed860665bbe0be985d5deafbfbc33f902b1d851ee2",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-50"
+    },
+    "scope": {
+      "amount": 150,
+      "currency": "USD",
+      "from_account": "CHK-0050",
+      "to_account": "EXT-0050"
+    },
+    "status": "executed",
+    "timestamp": 1800000050,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-51",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000051,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-51",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "39f9b403fbdbe77a032fe282975ffe3d012eddec9f7416a46db569ae8ff029df",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-51"
+    },
+    "scope": {
+      "amount": 151,
+      "currency": "USD",
+      "from_account": "CHK-0051",
+      "to_account": "EXT-0051"
+    },
+    "status": "executed",
+    "timestamp": 1800000051,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-52",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000052,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-52",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "ae7cbaaebf3c6230aeadaeafffd832ad4f4cb011857428ded651d104c09ebd67",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-52"
+    },
+    "scope": {
+      "amount": 152,
+      "currency": "USD",
+      "from_account": "CHK-0052",
+      "to_account": "EXT-0052"
+    },
+    "status": "rejected",
+    "timestamp": 1800000052,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-53",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000053,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-53",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "072f01ad81ece787025ab69ed48d75725ef07a1debfb8c83f4556758d6df79f7",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-53"
+    },
+    "scope": {
+      "amount": 153,
+      "currency": "USD",
+      "from_account": "CHK-0053",
+      "to_account": "EXT-0053"
+    },
+    "status": "executed",
+    "timestamp": 1800000053,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-54",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000054,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-54",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "e414533f0371edd56eb4f978e7bfb555c305a7625fe581ae6bd007268727b332",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-54"
+    },
+    "scope": {
+      "amount": 154,
+      "currency": "USD",
+      "from_account": "CHK-0054",
+      "to_account": "EXT-0054"
+    },
+    "status": "executed",
+    "timestamp": 1800000054,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-55",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000055,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-55",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "6293ffb461ddac03179ea28eaac236806e866aaf9f82b9ae154c3f5055e95c24",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-55"
+    },
+    "scope": {
+      "amount": 155,
+      "currency": "USD",
+      "from_account": "CHK-0055",
+      "to_account": "EXT-0055"
+    },
+    "status": "executed",
+    "timestamp": 1800000055,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-56",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000056,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-56",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "48cd054702efca958f9d51f5e9424ed182ead1a854005e2a85549d9d746e75d0",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-56"
+    },
+    "scope": {
+      "amount": 156,
+      "currency": "USD",
+      "from_account": "CHK-0056",
+      "to_account": "EXT-0056"
+    },
+    "status": "rejected",
+    "timestamp": 1800000056,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-57",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000057,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-57",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "005140ca2feca6a3e0eb86fcec7d16966e99eec5eddae2d15130c19ec68c0b5f",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-57"
+    },
+    "scope": {
+      "amount": 157,
+      "currency": "USD",
+      "from_account": "CHK-0057",
+      "to_account": "EXT-0057"
+    },
+    "status": "executed",
+    "timestamp": 1800000057,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-58",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000058,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-58",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "a570844166fba84eb1f77dc455745ea6a226a2a130d4977e3a2e404b11795302",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-58"
+    },
+    "scope": {
+      "amount": 158,
+      "currency": "USD",
+      "from_account": "CHK-0058",
+      "to_account": "EXT-0058"
+    },
+    "status": "executed",
+    "timestamp": 1800000058,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-59",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000059,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-59",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "535abba236211c3c3d908db7e208c97684eb02cc74e97fd053cf2db097247706",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-59"
+    },
+    "scope": {
+      "amount": 159,
+      "currency": "USD",
+      "from_account": "CHK-0059",
+      "to_account": "EXT-0059"
+    },
+    "status": "executed",
+    "timestamp": 1800000059,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-60",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000060,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-60",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "63ce7d4abae7ee7342bc997c0bf84829bb72913357e700077a6472b52926807b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-60"
+    },
+    "scope": {
+      "amount": 160,
+      "currency": "USD",
+      "from_account": "CHK-0060",
+      "to_account": "EXT-0060"
+    },
+    "status": "rejected",
+    "timestamp": 1800000060,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-61",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000061,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-61",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "da0eab484c4490ce4710cf333dddeca59f79c728966e85cc70281321cfafac3b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-61"
+    },
+    "scope": {
+      "amount": 161,
+      "currency": "USD",
+      "from_account": "CHK-0061",
+      "to_account": "EXT-0061"
+    },
+    "status": "executed",
+    "timestamp": 1800000061,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-62",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000062,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-62",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "04d6093e1e2de69044b96cab624547f34ccf3c5a3dc3a0d93aa2634cb9775e94",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-62"
+    },
+    "scope": {
+      "amount": 162,
+      "currency": "USD",
+      "from_account": "CHK-0062",
+      "to_account": "EXT-0062"
+    },
+    "status": "executed",
+    "timestamp": 1800000062,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-63",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000063,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-63",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "3c5fe4236f2b9591dfb22b23aa834e763863309c93e7f4c4735670c98c424615",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-63"
+    },
+    "scope": {
+      "amount": 163,
+      "currency": "USD",
+      "from_account": "CHK-0063",
+      "to_account": "EXT-0063"
+    },
+    "status": "executed",
+    "timestamp": 1800000063,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-64",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000064,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-64",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "682fc73ba7144cc8328cbada6acdfda096cc7128840bae30d287f087d0769930",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-64"
+    },
+    "scope": {
+      "amount": 164,
+      "currency": "USD",
+      "from_account": "CHK-0064",
+      "to_account": "EXT-0064"
+    },
+    "status": "rejected",
+    "timestamp": 1800000064,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-65",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000065,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-65",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "280b4e4147641df60f4ec33c0a8a7a48ef6cb69b9f3b22ad9ba894657ccf29b3",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-65"
+    },
+    "scope": {
+      "amount": 165,
+      "currency": "USD",
+      "from_account": "CHK-0065",
+      "to_account": "EXT-0065"
+    },
+    "status": "executed",
+    "timestamp": 1800000065,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-66",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000066,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-66",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "a7a381bbf77f015eda92b11c83eab63b267cb4d01eb666850338540c598ac921",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-66"
+    },
+    "scope": {
+      "amount": 166,
+      "currency": "USD",
+      "from_account": "CHK-0066",
+      "to_account": "EXT-0066"
+    },
+    "status": "executed",
+    "timestamp": 1800000066,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-67",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000067,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-67",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "84b43cd84b0f417bbf8d378e99010c0c172ee4e0a03cfe3e7d0b0e9505236cfa",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-67"
+    },
+    "scope": {
+      "amount": 167,
+      "currency": "USD",
+      "from_account": "CHK-0067",
+      "to_account": "EXT-0067"
+    },
+    "status": "executed",
+    "timestamp": 1800000067,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-68",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000068,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-68",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "07bfc922444f8848ce5d2abb5e0124e0c85b3f220a458a53b9746b2c7690a87e",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-68"
+    },
+    "scope": {
+      "amount": 168,
+      "currency": "USD",
+      "from_account": "CHK-0068",
+      "to_account": "EXT-0068"
+    },
+    "status": "rejected",
+    "timestamp": 1800000068,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-69",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000069,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-69",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "410dfc9376837114a26a9d307e40c14403c0980ae5a838423c9888839b148dfc",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-69"
+    },
+    "scope": {
+      "amount": 169,
+      "currency": "USD",
+      "from_account": "CHK-0069",
+      "to_account": "EXT-0069"
+    },
+    "status": "executed",
+    "timestamp": 1800000069,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-70",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000070,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-70",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "c422e763342194b94a6d19345ef42fc920ade0d0ee5d8e41c90218b3b149e921",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-70"
+    },
+    "scope": {
+      "amount": 170,
+      "currency": "USD",
+      "from_account": "CHK-0070",
+      "to_account": "EXT-0070"
+    },
+    "status": "executed",
+    "timestamp": 1800000070,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-71",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000071,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-71",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "85a0ff6141026e225c131ef68145f8ad376e707f19b3f54bf7edf2cb1ff2d1fb",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-71"
+    },
+    "scope": {
+      "amount": 171,
+      "currency": "USD",
+      "from_account": "CHK-0071",
+      "to_account": "EXT-0071"
+    },
+    "status": "executed",
+    "timestamp": 1800000071,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-72",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000072,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-72",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "17306f8a1fea37ff60f5b75c9cb73bfcc7b983ad85be50821f7a270b3815cc60",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-72"
+    },
+    "scope": {
+      "amount": 172,
+      "currency": "USD",
+      "from_account": "CHK-0072",
+      "to_account": "EXT-0072"
+    },
+    "status": "rejected",
+    "timestamp": 1800000072,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-73",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000073,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-73",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "4ad4c623ca012b1083d6741e41436f9602e7f1d3ea952ee7e1b4eafdc79598be",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-73"
+    },
+    "scope": {
+      "amount": 173,
+      "currency": "USD",
+      "from_account": "CHK-0073",
+      "to_account": "EXT-0073"
+    },
+    "status": "executed",
+    "timestamp": 1800000073,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-74",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000074,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-74",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "21fe3fffbc2e4c59398eab6bd393d6575d3028c1c24135e2d0dc7b6e2cab321a",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-74"
+    },
+    "scope": {
+      "amount": 174,
+      "currency": "USD",
+      "from_account": "CHK-0074",
+      "to_account": "EXT-0074"
+    },
+    "status": "executed",
+    "timestamp": 1800000074,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-75",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000075,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-75",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "4838a9e620d86c337f1687dc2a46bff9d470bbf6742f8961a7319c63741ade11",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-75"
+    },
+    "scope": {
+      "amount": 175,
+      "currency": "USD",
+      "from_account": "CHK-0075",
+      "to_account": "EXT-0075"
+    },
+    "status": "executed",
+    "timestamp": 1800000075,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-76",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000076,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-76",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "c706832e02da01ad6778635c5ca6f2411326848d49346166d48a33998af7078d",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-76"
+    },
+    "scope": {
+      "amount": 176,
+      "currency": "USD",
+      "from_account": "CHK-0076",
+      "to_account": "EXT-0076"
+    },
+    "status": "rejected",
+    "timestamp": 1800000076,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-77",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000077,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-77",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "a5d923295d88eaf807f00926bc50067e4b63a4cdab6c15ffabf13f316f2e2413",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-77"
+    },
+    "scope": {
+      "amount": 177,
+      "currency": "USD",
+      "from_account": "CHK-0077",
+      "to_account": "EXT-0077"
+    },
+    "status": "executed",
+    "timestamp": 1800000077,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-78",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000078,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-78",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "137c78eebf77f27a76a2c5c72c3cbc8a9fcaa4ef58eb7d7b1c2bf4bc78ee0b05",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-78"
+    },
+    "scope": {
+      "amount": 178,
+      "currency": "USD",
+      "from_account": "CHK-0078",
+      "to_account": "EXT-0078"
+    },
+    "status": "executed",
+    "timestamp": 1800000078,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-79",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000079,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-79",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "55b906237d6710854bbeb6b059a0bf9dac7d54a0ecc690a1fb37efcc6a579e0e",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-79"
+    },
+    "scope": {
+      "amount": 179,
+      "currency": "USD",
+      "from_account": "CHK-0079",
+      "to_account": "EXT-0079"
+    },
+    "status": "executed",
+    "timestamp": 1800000079,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-80",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000080,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-80",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "397859594cfa665800691d4f47a02f2caf4991c27bdb5fe42b2fc043d0b1b9b2",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-80"
+    },
+    "scope": {
+      "amount": 180,
+      "currency": "USD",
+      "from_account": "CHK-0080",
+      "to_account": "EXT-0080"
+    },
+    "status": "rejected",
+    "timestamp": 1800000080,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-81",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000081,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-81",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "1e5086bfa872bf478695ada90af0e8ec1d1187c1981694b48e12512caaae5836",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-81"
+    },
+    "scope": {
+      "amount": 181,
+      "currency": "USD",
+      "from_account": "CHK-0081",
+      "to_account": "EXT-0081"
+    },
+    "status": "executed",
+    "timestamp": 1800000081,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-82",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000082,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-82",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "eb83522ec34f3a1c9c960b1717a333b2b5df0e7ccbb68ce96f4fa5e873aa153c",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-82"
+    },
+    "scope": {
+      "amount": 182,
+      "currency": "USD",
+      "from_account": "CHK-0082",
+      "to_account": "EXT-0082"
+    },
+    "status": "executed",
+    "timestamp": 1800000082,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-83",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000083,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-83",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "43aef92e15f3608af2be4a8a7bdf5627c5caebac000824a8025d0ff08bab9bb1",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-83"
+    },
+    "scope": {
+      "amount": 183,
+      "currency": "USD",
+      "from_account": "CHK-0083",
+      "to_account": "EXT-0083"
+    },
+    "status": "executed",
+    "timestamp": 1800000083,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-84",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000084,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-84",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "3f9cbaa8376debb2b2ce57e003ed7343225f55cfcc854c2eecf0433956cc4e1e",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-84"
+    },
+    "scope": {
+      "amount": 184,
+      "currency": "USD",
+      "from_account": "CHK-0084",
+      "to_account": "EXT-0084"
+    },
+    "status": "rejected",
+    "timestamp": 1800000084,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-85",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000085,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-85",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "0f22bc0dccb9bdd45b594868c5f88e8ae6d3d2e903980ed7cf5ff06ba2500c6b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-85"
+    },
+    "scope": {
+      "amount": 185,
+      "currency": "USD",
+      "from_account": "CHK-0085",
+      "to_account": "EXT-0085"
+    },
+    "status": "executed",
+    "timestamp": 1800000085,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-86",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000086,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-86",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "c1390c6becb190dee62074df117070a3677855e9203cf7e96d7b86bc79a62a48",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-86"
+    },
+    "scope": {
+      "amount": 186,
+      "currency": "USD",
+      "from_account": "CHK-0086",
+      "to_account": "EXT-0086"
+    },
+    "status": "executed",
+    "timestamp": 1800000086,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-87",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000087,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-87",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "b66bdbc69cbde48737e389d9bd3e8a4403da5eeb0f681fc30c0337fecb671394",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-87"
+    },
+    "scope": {
+      "amount": 187,
+      "currency": "USD",
+      "from_account": "CHK-0087",
+      "to_account": "EXT-0087"
+    },
+    "status": "executed",
+    "timestamp": 1800000087,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-88",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000088,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-88",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "433325f6471f6b54600d781d2c54081581e143930ccad5f9a1a658d3206d2c36",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-88"
+    },
+    "scope": {
+      "amount": 188,
+      "currency": "USD",
+      "from_account": "CHK-0088",
+      "to_account": "EXT-0088"
+    },
+    "status": "rejected",
+    "timestamp": 1800000088,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-89",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000089,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-89",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "ce5859ef3756a0a67eed88a6b3fdf58c4551a5a205167fee5c7224bd958ace8e",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-89"
+    },
+    "scope": {
+      "amount": 189,
+      "currency": "USD",
+      "from_account": "CHK-0089",
+      "to_account": "EXT-0089"
+    },
+    "status": "executed",
+    "timestamp": 1800000089,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-90",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000090,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-90",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "12ebe7c2e5842f41962cc3ea4d05d4dfddc7d85b2c3c2b8ba76bf8c5e25b9248",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-90"
+    },
+    "scope": {
+      "amount": 190,
+      "currency": "USD",
+      "from_account": "CHK-0090",
+      "to_account": "EXT-0090"
+    },
+    "status": "executed",
+    "timestamp": 1800000090,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-91",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000091,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-91",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "9e6d30edd39d418940c6d4ce59e8abbb94c3bb7d9f5ecbe8f017c8cb6c481f7c",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-91"
+    },
+    "scope": {
+      "amount": 191,
+      "currency": "USD",
+      "from_account": "CHK-0091",
+      "to_account": "EXT-0091"
+    },
+    "status": "executed",
+    "timestamp": 1800000091,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-92",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000092,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-92",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "0476f215fa6b20ebf0abba8d8fa2d77904d39b71b7187fab7728646f5ff35c52",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-92"
+    },
+    "scope": {
+      "amount": 192,
+      "currency": "USD",
+      "from_account": "CHK-0092",
+      "to_account": "EXT-0092"
+    },
+    "status": "rejected",
+    "timestamp": 1800000092,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-93",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000093,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-93",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "cdeab6678eb0064a376660b74303c8701a7d7eca8a17b39d54c715710193f773",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-93"
+    },
+    "scope": {
+      "amount": 193,
+      "currency": "USD",
+      "from_account": "CHK-0093",
+      "to_account": "EXT-0093"
+    },
+    "status": "executed",
+    "timestamp": 1800000093,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-94",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000094,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-94",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "e6a1f3acbce5240c4accdd8bea947fc548fb172a0f9e0db44f6c4395f9719a2a",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-94"
+    },
+    "scope": {
+      "amount": 194,
+      "currency": "USD",
+      "from_account": "CHK-0094",
+      "to_account": "EXT-0094"
+    },
+    "status": "executed",
+    "timestamp": 1800000094,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-95",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000095,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-95",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "bbcdd42c55eee862e59fa0253eba5d03f95c922dc6c776492c5423a3b5125400",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-95"
+    },
+    "scope": {
+      "amount": 195,
+      "currency": "USD",
+      "from_account": "CHK-0095",
+      "to_account": "EXT-0095"
+    },
+    "status": "executed",
+    "timestamp": 1800000095,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-96",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000096,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-96",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "d9d596a94c542ca9b68f67de01dc8f4ebfd41b9b0cd7f6981f2b6752740e1caf",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-96"
+    },
+    "scope": {
+      "amount": 196,
+      "currency": "USD",
+      "from_account": "CHK-0096",
+      "to_account": "EXT-0096"
+    },
+    "status": "rejected",
+    "timestamp": 1800000096,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-97",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000097,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-97",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "bbaeafbf418d270f2818902232a04168dfe3f0479043a86cbf54f8858a9d16b7",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-97"
+    },
+    "scope": {
+      "amount": 197,
+      "currency": "USD",
+      "from_account": "CHK-0097",
+      "to_account": "EXT-0097"
+    },
+    "status": "executed",
+    "timestamp": 1800000097,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-98",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000098,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-98",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "c52f6c73890d19aabb2710afdeeccee9ad654f9429395fae3c3612c0975247a1",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-98"
+    },
+    "scope": {
+      "amount": 198,
+      "currency": "USD",
+      "from_account": "CHK-0098",
+      "to_account": "EXT-0098"
+    },
+    "status": "executed",
+    "timestamp": 1800000098,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-99",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000099,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-99",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "e4635606b9fb50f335b9a1bfc526f49bcfc439126f20568db336728319cc80d2",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-99"
+    },
+    "scope": {
+      "amount": 199,
+      "currency": "USD",
+      "from_account": "CHK-0099",
+      "to_account": "EXT-0099"
+    },
+    "status": "executed",
+    "timestamp": 1800000099,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-100",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000100,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-100",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "7e10a89073d1ad4dea52faf305427ade13b1d41d4438714574b8d502a9fe2fa0",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-100"
+    },
+    "scope": {
+      "amount": 200,
+      "currency": "USD",
+      "from_account": "CHK-0100",
+      "to_account": "EXT-0100"
+    },
+    "status": "rejected",
+    "timestamp": 1800000100,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-101",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000101,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-101",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "291a85ca97771a4e83016c2ee2e77604b84da133583085ee0eb5f4dc5d36927a",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-101"
+    },
+    "scope": {
+      "amount": 201,
+      "currency": "USD",
+      "from_account": "CHK-0101",
+      "to_account": "EXT-0101"
+    },
+    "status": "executed",
+    "timestamp": 1800000101,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-102",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000102,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-102",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "2de81c49b7033f83755b4de8f2dcf20b80d9ae817821432e6c8fc0bd59c7f948",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-102"
+    },
+    "scope": {
+      "amount": 202,
+      "currency": "USD",
+      "from_account": "CHK-0102",
+      "to_account": "EXT-0102"
+    },
+    "status": "executed",
+    "timestamp": 1800000102,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-103",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000103,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-103",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "65f73fe96335239b27dbf3db2d1782cd1c88859998b5bffa09fd7c400eadc5fb",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-103"
+    },
+    "scope": {
+      "amount": 203,
+      "currency": "USD",
+      "from_account": "CHK-0103",
+      "to_account": "EXT-0103"
+    },
+    "status": "executed",
+    "timestamp": 1800000103,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-104",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000104,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-104",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "4e22f92a827e2778b1bf779e379ca3ec019a3cefc9bf0e6a885c523f8906461c",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-104"
+    },
+    "scope": {
+      "amount": 204,
+      "currency": "USD",
+      "from_account": "CHK-0104",
+      "to_account": "EXT-0104"
+    },
+    "status": "rejected",
+    "timestamp": 1800000104,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-105",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000105,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-105",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "6d13f21b26f9297133e77e0e95696e552283abc6a5d4a6ef8350e1827f36c9f6",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-105"
+    },
+    "scope": {
+      "amount": 205,
+      "currency": "USD",
+      "from_account": "CHK-0105",
+      "to_account": "EXT-0105"
+    },
+    "status": "executed",
+    "timestamp": 1800000105,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-106",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000106,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-106",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "a17d2f0d0a38bac5865305b2c21427d70148bf3c426e9fe7547b67b9ba465617",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-106"
+    },
+    "scope": {
+      "amount": 206,
+      "currency": "USD",
+      "from_account": "CHK-0106",
+      "to_account": "EXT-0106"
+    },
+    "status": "executed",
+    "timestamp": 1800000106,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-107",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000107,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-107",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "9eeda6ee33170344cf6d7648042e5a848f9ba89749e2071618d7cbcb204b7191",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-107"
+    },
+    "scope": {
+      "amount": 207,
+      "currency": "USD",
+      "from_account": "CHK-0107",
+      "to_account": "EXT-0107"
+    },
+    "status": "executed",
+    "timestamp": 1800000107,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-108",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000108,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-108",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "a2f2265413ab24bb5b5471a5dae634682bb6c1c5098e48eba51fb1655a06abac",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-108"
+    },
+    "scope": {
+      "amount": 208,
+      "currency": "USD",
+      "from_account": "CHK-0108",
+      "to_account": "EXT-0108"
+    },
+    "status": "rejected",
+    "timestamp": 1800000108,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-109",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000109,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-109",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "ee283eb4292306869f6d24b955593e6075e9a01dd0cc8306b4067601bc17d882",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-109"
+    },
+    "scope": {
+      "amount": 209,
+      "currency": "USD",
+      "from_account": "CHK-0109",
+      "to_account": "EXT-0109"
+    },
+    "status": "executed",
+    "timestamp": 1800000109,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-110",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000110,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-110",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "8b58ed5ff23ff720c2a515fac0fc866f874e30bf954ea88d64c618c32ce9443b",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-110"
+    },
+    "scope": {
+      "amount": 210,
+      "currency": "USD",
+      "from_account": "CHK-0110",
+      "to_account": "EXT-0110"
+    },
+    "status": "executed",
+    "timestamp": 1800000110,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-111",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000111,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-111",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "ffaf69d6a73739fdbd7184e0a90c42b1335aeebc09d22647305ef71c1dad2c3c",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-111"
+    },
+    "scope": {
+      "amount": 211,
+      "currency": "USD",
+      "from_account": "CHK-0111",
+      "to_account": "EXT-0111"
+    },
+    "status": "executed",
+    "timestamp": 1800000111,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-112",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "rejected",
+    "timestamp": 1800000112,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-112",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "731bcb5ad93ff56207f5e4f41cdc5c6bdfc3bcab13d6b195c82b29e9ae937ab9",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-112"
+    },
+    "scope": {
+      "amount": 212,
+      "currency": "USD",
+      "from_account": "CHK-0112",
+      "to_account": "EXT-0112"
+    },
+    "status": "rejected",
+    "timestamp": 1800000112,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-113",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000113,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-113",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "3458a675cb048ef45dd2769997968a312ae6688cc8921137796bf72bfd2d3ac9",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-113"
+    },
+    "scope": {
+      "amount": 213,
+      "currency": "USD",
+      "from_account": "CHK-0113",
+      "to_account": "EXT-0113"
+    },
+    "status": "executed",
+    "timestamp": 1800000113,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-114",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000114,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-114",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "915cf1c30ddd8b1976a533f62cc9f6fafa4451d82419dbbc1f742092e0c0e442",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-114"
+    },
+    "scope": {
+      "amount": 214,
+      "currency": "USD",
+      "from_account": "CHK-0114",
+      "to_account": "EXT-0114"
+    },
+    "status": "executed",
+    "timestamp": 1800000114,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-115",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000115,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-115",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "e19417f9426cf200203b464f9cb6a0d485330fc664a32a47f6b4661b7cec09f6",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-115"
+    },
+    "scope": {
+      "amount": 215,
+      "currency": "USD",
+      "from_account": "CHK-0115",
+      "to_account": "EXT-0115"
+    },
+    "status": "executed",
+    "timestamp": 1800000115,
+    "who": "user-0"
+  },
+  {
+    "event_id": "evt-116",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "rejected",
+    "timestamp": 1800000116,
+    "user_id": "user-1"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-1"
+    },
+    "event_id": "evt-116",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "5f5b6dd3a466866546ab6e9fa443e6664dd5411f385e4f6c231663d419525958",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-116"
+    },
+    "scope": {
+      "amount": 216,
+      "currency": "USD",
+      "from_account": "CHK-0116",
+      "to_account": "EXT-0116"
+    },
+    "status": "rejected",
+    "timestamp": 1800000116,
+    "who": "user-1"
+  },
+  {
+    "event_id": "evt-117",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "executed",
+    "timestamp": 1800000117,
+    "user_id": "user-2"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-2"
+    },
+    "event_id": "evt-117",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "564d716d9e1bb5c5473d93c70cf1caf72b6eb628151d4b3e23da1ac91ef01e3d",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-117"
+    },
+    "scope": {
+      "amount": 217,
+      "currency": "USD",
+      "from_account": "CHK-0117",
+      "to_account": "EXT-0117"
+    },
+    "status": "executed",
+    "timestamp": 1800000117,
+    "who": "user-2"
+  },
+  {
+    "event_id": "evt-118",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-1",
+    "status": "executed",
+    "timestamp": 1800000118,
+    "user_id": "user-3"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-1",
+      "user_id": "user-3"
+    },
+    "event_id": "evt-118",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "8ab2890b34958a57a2a7283c74002189db0ef1c8696c06a931b5e7391acd4583",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-118"
+    },
+    "scope": {
+      "amount": 218,
+      "currency": "USD",
+      "from_account": "CHK-0118",
+      "to_account": "EXT-0118"
+    },
+    "status": "executed",
+    "timestamp": 1800000118,
+    "who": "user-3"
+  },
+  {
+    "event_id": "evt-119",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-2",
+    "status": "executed",
+    "timestamp": 1800000119,
+    "user_id": "user-4"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-2",
+      "user_id": "user-4"
+    },
+    "event_id": "evt-119",
+    "log_type": "poia",
+    "outcome_reason": "verified_intent_executed",
+    "proof": {
+      "intent_hash": "2079b1331212aaccb30c96cffb131e275486c12625c655703e4020ae0850da20",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-119"
+    },
+    "scope": {
+      "amount": 219,
+      "currency": "USD",
+      "from_account": "CHK-0119",
+      "to_account": "EXT-0119"
+    },
+    "status": "executed",
+    "timestamp": 1800000119,
+    "who": "user-4"
+  },
+  {
+    "event_id": "evt-120",
+    "log_type": "baseline",
+    "message": "session authorized request",
+    "route": "/transfer",
+    "session_id": "s-0",
+    "status": "rejected",
+    "timestamp": 1800000120,
+    "user_id": "user-0"
+  },
+  {
+    "action": "transfer",
+    "context": {
+      "rp_id": "poia-bank",
+      "session_id": "s-0",
+      "user_id": "user-0"
+    },
+    "event_id": "evt-120",
+    "log_type": "poia",
+    "outcome_reason": "semantic_mismatch",
+    "proof": {
+      "intent_hash": "1bdad5e18f85e04bebfc73bffebbec7446db20cf9841d33ee9f8d90c90a585d8",
+      "key_ref": "device-key-1",
+      "nonce": "nonce-120"
+    },
+    "scope": {
+      "amount": 220,
+      "currency": "USD",
+      "from_account": "CHK-0120",
+      "to_account": "EXT-0120"
+    },
+    "status": "rejected",
+    "timestamp": 1800000120,
+    "who": "user-0"
+  }
+]

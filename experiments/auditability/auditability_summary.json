@@ -1,0 +1,32 @@
+{
+  "events_per_mode": 120,
+  "experiment": "auditability",
+  "summary": [
+    {
+      "ambiguity_rate_mean": 28.571,
+      "events": 120,
+      "log_type": "baseline",
+      "missing_evidence_rate_mean": 28.571,
+      "reconstruction_completeness_mean": 71.429,
+      "reconstruction_time_ms": {
+        "max": 0.005417000000007555,
+        "mean": 0.0006417333333332461,
+        "median": 0.0005000000000005,
+        "n": 120
+      }
+    },
+    {
+      "ambiguity_rate_mean": 0.0,
+      "events": 120,
+      "log_type": "poia",
+      "missing_evidence_rate_mean": 0.0,
+      "reconstruction_completeness_mean": 100.0,
+      "reconstruction_time_ms": {
+        "max": 0.0017910000000009862,
+        "mean": 0.0004954166666665724,
+        "median": 0.0004579999999948514,
+        "n": 120
+      }
+    }
+  ]
+}

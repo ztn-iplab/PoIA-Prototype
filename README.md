@@ -63,6 +63,37 @@ performance, and usability evaluation. Logs are written to:
 
 - `app/data/poia_experiments.csv`
 
+### Journal experiment package
+
+The expanded journal experiment suite is documented in:
+
+```
+docs/experiments/README.md
+```
+
+That guide explains the goal, assumptions, commands, generated files, and how to
+read the results for all ten experiments. The most important deep dives are:
+
+- `docs/experiments/experiment_designs.md` — explains the research question,
+  implementation, metrics, and interpretation for each experiment.
+- `docs/experiments/oauth_api_integration.md` — explains how OAuth-only and
+  OAuth + PoIA are simulated and compared.
+- `docs/experiments/tamarin_formal_verification.md` — explains
+  `tamarin/poia_protocol.spthy`, the lemmas, batch proof reproduction, and
+  interactive Tamarin testing.
+
+The Tamarin model itself is available at:
+
+```
+tamarin/poia_protocol.spthy
+```
+
+Run the formal proof from the repository root:
+
+```
+./scripts/run_tamarin_poia.sh
+```
+
 ### What is captured
 - Intent creation, approval, denial, and execution events
 - WebAuthn vs ZT-Authenticator approval method
@@ -92,7 +123,18 @@ Provide a baseline CSV (if collected separately) to compute comparison tables:
 ```
 python3 scripts/analyze_poia_metrics.py \
   --poia app/data/poia_experiments.csv \
-  --baseline app/data/baseline_experiments.csv
+  --baseline-csv app/data/baseline_experiments.csv
+```
+
+### One-command experiment suite
+Run attack scenarios, collect baseline latency, and auto-generate comparison tables:
+
+```
+python3 scripts/run_experiment_suite.py \
+  --base-url https://poia.local \
+  --db-path .tmp_bank.db \
+  --poia-csv app/data/poia_experiments.csv \
+  --trials 30 --insecure
 ```
 
 ## Experiment protocol

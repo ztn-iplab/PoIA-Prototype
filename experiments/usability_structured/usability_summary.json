@@ -1,0 +1,64 @@
+{
+  "scenarios": [
+    {
+      "changed_field": "amount",
+      "changed_field_detectable": true,
+      "confusion_rate": 0.0,
+      "estimated_approval_time_s": 2.64,
+      "habituation_risk": "low",
+      "intent_statement": "Transfer 250 USD from CHK-1001 to beneficiary EXT-9007",
+      "required_terms_present": 5,
+      "required_terms_total": 5,
+      "scenario": "bank_transfer",
+      "understandable_score": 100,
+      "word_count": 8
+    },
+    {
+      "changed_field": "role",
+      "changed_field_detectable": true,
+      "confusion_rate": 0.0,
+      "estimated_approval_time_s": 3.18,
+      "habituation_risk": "low",
+      "intent_statement": "Grant reader role to analyst@example.com in tenant retail for 4 hours",
+      "required_terms_present": 5,
+      "required_terms_total": 5,
+      "scenario": "enterprise_role",
+      "understandable_score": 100,
+      "word_count": 11
+    },
+    {
+      "changed_field": "patient",
+      "changed_field_detectable": true,
+      "confusion_rate": 0.0,
+      "estimated_approval_time_s": 2.82,
+      "habituation_risk": "low",
+      "intent_statement": "Export lab_results for patient P-1024 to clinic-b for referral",
+      "required_terms_present": 5,
+      "required_terms_total": 5,
+      "scenario": "healthcare_export",
+      "understandable_score": 100,
+      "word_count": 9
+    },
+    {
+      "changed_field": "object",
+      "changed_field_detectable": true,
+      "confusion_rate": 0.0,
+      "estimated_approval_time_s": 2.64,
+      "habituation_risk": "low",
+      "intent_statement": "Rotate key kms-key-77 in project prod-payments region ap-northeast-1",
+      "required_terms_present": 4,
+      "required_terms_total": 4,
+      "scenario": "cloud_key_rotation",
+      "understandable_score": 100,
+      "word_count": 8
+    }
+  ],
+  "summary": {
+    "detectable_changes": 4,
+    "experiment": "usability_structured",
+    "mean_confusion_rate": 0.0,
+    "mean_estimated_approval_time_s": 2.8200000000000003,
+    "mean_understandable_score": 100,
+    "scenario_count": 4
+  }
+}

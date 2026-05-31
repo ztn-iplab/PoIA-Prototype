@@ -1,0 +1,150 @@
+{
+  "experiment": "oauth_api_integration",
+  "summary": [
+    {
+      "accepted": 60,
+      "api_tampering_rejection_rate": 0.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 100.0,
+      "mode": "oauth_only",
+      "reasons": [
+        "oauth_scope_authorized"
+      ],
+      "scenario": "api_tampering_wrong_key",
+      "verification_overhead_ms": {
+        "max": 0.009083999999992542,
+        "mean": 0.005779166666665623,
+        "median": 0.005708000000007041,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 60,
+      "api_tampering_rejection_rate": 0.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 100.0,
+      "mode": "oauth_only",
+      "reasons": [
+        "oauth_scope_authorized"
+      ],
+      "scenario": "api_tampering_wrong_project",
+      "verification_overhead_ms": {
+        "max": 0.036416999999996924,
+        "mean": 0.006333399999998203,
+        "median": 0.0057089999999995755,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 60,
+      "api_tampering_rejection_rate": 0.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 100.0,
+      "mode": "oauth_only",
+      "reasons": [
+        "oauth_scope_authorized"
+      ],
+      "scenario": "cross_action_token_misuse",
+      "verification_overhead_ms": {
+        "max": 0.012999999999999123,
+        "mean": 0.005965933333332979,
+        "median": 0.005708999999992637,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 60,
+      "api_tampering_rejection_rate": 0.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 100.0,
+      "mode": "oauth_only",
+      "reasons": [
+        "oauth_scope_authorized"
+      ],
+      "scenario": "legitimate_api_call",
+      "verification_overhead_ms": {
+        "max": 0.019916000000008705,
+        "mean": 0.006463916666665792,
+        "median": 0.005958000000000352,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 0,
+      "api_tampering_rejection_rate": 100.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 0.0,
+      "mode": "oauth_plus_poia",
+      "reasons": [
+        "intent_mismatch"
+      ],
+      "scenario": "api_tampering_wrong_key",
+      "verification_overhead_ms": {
+        "max": 0.04891699999999555,
+        "mean": 0.023037549999999535,
+        "median": 0.02202099999999707,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 0,
+      "api_tampering_rejection_rate": 100.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 0.0,
+      "mode": "oauth_plus_poia",
+      "reasons": [
+        "intent_mismatch"
+      ],
+      "scenario": "api_tampering_wrong_project",
+      "verification_overhead_ms": {
+        "max": 0.058083999999999913,
+        "mean": 0.023488133333333706,
+        "median": 0.02199950000000145,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 0,
+      "api_tampering_rejection_rate": 100.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 0.0,
+      "mode": "oauth_plus_poia",
+      "reasons": [
+        "intent_mismatch"
+      ],
+      "scenario": "cross_action_token_misuse",
+      "verification_overhead_ms": {
+        "max": 0.0927079999999969,
+        "mean": 0.024310383333333897,
+        "median": 0.022000000000001185,
+        "n": 60
+      }
+    },
+    {
+      "accepted": 60,
+      "api_tampering_rejection_rate": 0.0,
+      "attempts": 60,
+      "correct_decision_rate": 100.0,
+      "cross_action_token_misuse_success_rate": 100.0,
+      "mode": "oauth_plus_poia",
+      "reasons": [
+        "oauth_and_poia_authorized"
+      ],
+      "scenario": "legitimate_api_call",
+      "verification_overhead_ms": {
+        "max": 0.04999999999999449,
+        "mean": 0.023311799999998356,
+        "median": 0.022104000000001955,
+        "n": 60
+      }
+    }
+  ],
+  "trials": 60
+}

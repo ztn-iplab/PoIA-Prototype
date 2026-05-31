@@ -1,0 +1,103 @@
+{
+  "experiment": "functional_correctness_stress",
+  "scenario_count": 12,
+  "summary": {
+    "action": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "amount_value": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "canonicalization_order": {
+      "correct_acceptances": 60,
+      "correct_rejections": 0,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "correct_acceptance": {
+      "correct_acceptances": 60,
+      "correct_rejections": 0,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "encoding_variations": {
+      "correct_acceptances": 60,
+      "correct_rejections": 0,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "nonce": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "nonce_reuse": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "rp_context": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "target_object": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "timestamp": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "user_identity": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    },
+    "validity_window": {
+      "correct_acceptances": 0,
+      "correct_rejections": 60,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "test_cases": 60,
+      "unexpected_reasons": 0
+    }
+  },
+  "trials_per_scenario": 60
+}

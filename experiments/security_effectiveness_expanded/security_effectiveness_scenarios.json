@@ -1,0 +1,497 @@
+[
+  {
+    "name": "replay_attack",
+    "display_name": "Replay attack",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "nonce_reuse",
+    "preconsume_nonce": true,
+    "missing_proof": false,
+    "notes": "Previously accepted proof is submitted again."
+  },
+  {
+    "name": "relay_phishing",
+    "display_name": "Relay phishing",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 99
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "semantic_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "User approves one recipient while relayed request executes another."
+  },
+  {
+    "name": "session_misuse",
+    "display_name": "Session misuse",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "missing_proof",
+    "preconsume_nonce": false,
+    "missing_proof": true,
+    "notes": "Attacker has a valid session but no user-mediated proof."
+  },
+  {
+    "name": "intent_substitution",
+    "display_name": "Intent substitution",
+    "requested_intent": {
+      "action": "withdrawal",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "semantic_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "Proof over one action is reused for a different action."
+  },
+  {
+    "name": "scope_tampering",
+    "display_name": "Scope tampering",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 900.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "semantic_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "Amount/value changes after approval."
+  },
+  {
+    "name": "context_substitution",
+    "display_name": "Context substitution",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "evil.example",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "context_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "Proof is presented under the wrong relying-party context."
+  },
+  {
+    "name": "expired_proof_reuse",
+    "display_name": "Expired proof reuse",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": -1,
+    "proof_expires_delta_s": -1,
+    "poia_denial_reason": "expired",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "A stale proof is submitted after its validity window."
+  },
+  {
+    "name": "concurrent_session_misuse",
+    "display_name": "Concurrent-session misuse",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-beta",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "context_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "Proof from one authenticated session is reused in another session."
+  },
+  {
+    "name": "multi_step_workflow_abuse",
+    "display_name": "Multi-step workflow abuse",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "beneficiary_add",
+      "scope": {
+        "name": "Mallory",
+        "bank": "Example Bank",
+        "account_number": "999000111"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail",
+        "workflow_id": "wf-transfer-001"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "semantic_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "Legitimate beneficiary workflow evidence is reused for transfer execution."
+  },
+  {
+    "name": "confused_deputy_api_call",
+    "display_name": "Confused-deputy API call",
+    "requested_intent": {
+      "action": "grant_role",
+      "scope": {
+        "target_user": "analyst@example.com",
+        "role": "administrator",
+        "tenant": "retail"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "grant_role",
+      "scope": {
+        "target_user": "analyst@example.com",
+        "role": "reader",
+        "tenant": "retail"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-security-001",
+    "proof_nonce": "nonce-security-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "poia_denial_reason": "semantic_mismatch",
+    "preconsume_nonce": false,
+    "missing_proof": false,
+    "notes": "Downstream API receives a broader action than the user-approved delegated call."
+  }
+]

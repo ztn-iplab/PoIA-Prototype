@@ -1,38 +1,48 @@
-# PoIA Formal Verification (Tamarin)
+# PoIA Formal Verification Report
 
-This report summarizes the formal verification of the Proof‑of‑Intent Authentication (PoIA) protocol model in `tamarin/poia_protocol.spthy` using Tamarin Prover 1.10.0.
+This report summarizes the current Tamarin model for Proof-of-Intent
+Authentication (PoIA). The model is located at:
 
-## Model Scope (Abstraction)
+```text
+tamarin/poia_protocol.spthy
+```
 
-The model captures the core PoIA flow:
+For a step-by-step reproduction and interactive testing guide, see:
 
-1. **Intent issuance**: the server issues an intent tuple `(uid, action, scope, nonce)`.
-2. **User approval**: the user signs the same tuple with a device‑bound key.
-3. **Server acceptance**: the server accepts only when the signed intent matches the issued intent and the signature verifies under the registered public key.
+```text
+docs/experiments/tamarin_formal_verification.md
+```
 
-The model abstracts away transport and storage details while preserving the cryptographic binding between intent and authorization.
+## Model Scope
 
-## Verified Properties
+The model captures the PoIA authorization core:
 
-The following lemmas are proven in the model:
+1. The server issues an intent tuple `(uid, action, scope, ctx, nonce)`.
+2. The user approves by signing exactly that tuple with a device-bound key.
+3. The server accepts only when the proof verifies for the same tuple and the
+   corresponding issued intent exists.
 
-- **authorization**: any `ServerAccept` requires a prior `ApproveIntent` by the same user (or explicit key compromise).
-- **intent_binding**: any acceptance implies a matching `IssueIntent` for the same `(uid, action, scope, nonce)`.
-- **replay_resistance**: a given `(uid, action, scope, nonce)` can be accepted at most once.
-- **approval_requires_intent**: approvals correspond to an issued intent.
+The model abstracts away the web UI, storage, HTTP, and concrete WebAuthn
+ceremony. It preserves the cryptographic binding between user approval and
+server execution.
 
-## PoIA Tamarin Verification Results
+## Verified Lemmas
 
-| Property | Result |
+| Lemma | Result |
 |---|---|
-| Intent integrity | Verified |
-| Intent non-transferability | Verified |
-| Freshness | Verified |
-| Context confinement | Verified |
+| `no_execution_without_matching_intent` | Verified |
+| `nonce_freshness` | Verified |
+| `replay_resistance` | Verified |
+| `intent_non_transferability` | Verified |
+| `context_confinement` | Verified |
+| `session_compromise_does_not_imply_execution` | Verified |
+| `action_substitution_impossibility` | Verified |
 
-**Mapping:** intent integrity ↔ `intent_binding`; non-transferability ↔ `authorization`; freshness ↔ `replay_resistance`; context confinement ↔ `approval_requires_intent`.
+The current proof run reports:
 
-> Note: Tamarin emits a *well‑formedness warning* for the `Eq(...)` constraint used to check signature validity in `Server_Accept` (“fact `Eq` occurs on the left‑hand side only”). This is a standard warning for constraint facts; the proof obligations and results remain valid under the symbolic model. The model keeps `Eq(verify(...), true)` to explicitly encode signature verification.
+```text
+All wellformedness checks were successful.
+```
 
 ## How to Run
 
@@ -42,21 +52,25 @@ From the repository root:
 ./scripts/run_tamarin_poia.sh
 ```
 
-This writes results to:
+This writes proof output to:
 
+```text
+tamarin/results/poia_protocol.txt
 ```
-./tamarin/results/poia_protocol.txt
+
+To regenerate the formal verification experiment table:
+
+```bash
+python3 scripts/generate_formal_verification_artifacts.py --out-dir experiments/formal_verification_expansion --run-tamarin
 ```
 
-## Files
+## Interactive Mode
 
-- `tamarin/poia_protocol.spthy` — protocol model
-- `tamarin/results/poia_protocol.txt` — proof output
-- `tamarin/LEMMA_NOTES.md` — lemma explanations (manuscript‑ready)
-- `scripts/run_tamarin_poia.sh` — helper script
+To inspect proofs manually:
 
-## Appendix: Model Overview
+```bash
+tamarin-prover interactive tamarin/poia_protocol.spthy
+```
 
-- **Intent tuple**: `<uid, action, scope, nonce>`
-- **Approval proof**: `sign(<uid, action, scope, nonce>, sk)`
-- **Acceptance**: requires matching intent and valid signature for the registered public key.
+Open the URL printed by Tamarin and select individual lemmas for autoprove or
+manual trace inspection.

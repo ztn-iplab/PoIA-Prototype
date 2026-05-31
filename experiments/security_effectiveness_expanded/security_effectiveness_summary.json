@@ -1,0 +1,271 @@
+{
+  "experiment": "security_effectiveness_expanded",
+  "scenario_count": 10,
+  "summary": {
+    "baseline": {
+      "concurrent_session_misuse": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Concurrent-session misuse",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "confused_deputy_api_call": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Confused-deputy API call",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "context_substitution": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Context substitution",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "expired_proof_reuse": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Expired proof reuse",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "intent_substitution": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Intent substitution",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "multi_step_workflow_abuse": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Multi-step workflow abuse",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "relay_phishing": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Relay phishing",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "replay_attack": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Replay attack",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "scope_tampering": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Scope tampering",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "session_misuse": {
+        "attack_success_rate": 100.0,
+        "attack_successes": 60,
+        "correct_rejection_rate": 0.0,
+        "correct_rejections": 0,
+        "denial_reasons": {},
+        "display_name": "Session misuse",
+        "incorrect_acceptance_rate": 100.0,
+        "incorrect_acceptances": 60,
+        "trials": 60,
+        "unexpected_denials": 0
+      }
+    },
+    "poia": {
+      "concurrent_session_misuse": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "context_mismatch": 60
+        },
+        "display_name": "Concurrent-session misuse",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "confused_deputy_api_call": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "semantic_mismatch": 60
+        },
+        "display_name": "Confused-deputy API call",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "context_substitution": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "context_mismatch": 60
+        },
+        "display_name": "Context substitution",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "expired_proof_reuse": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "expired": 60
+        },
+        "display_name": "Expired proof reuse",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "intent_substitution": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "semantic_mismatch": 60
+        },
+        "display_name": "Intent substitution",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "multi_step_workflow_abuse": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "semantic_mismatch": 60
+        },
+        "display_name": "Multi-step workflow abuse",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "relay_phishing": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "semantic_mismatch": 60
+        },
+        "display_name": "Relay phishing",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "replay_attack": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "nonce_reuse": 60
+        },
+        "display_name": "Replay attack",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "scope_tampering": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "semantic_mismatch": 60
+        },
+        "display_name": "Scope tampering",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      },
+      "session_misuse": {
+        "attack_success_rate": 0.0,
+        "attack_successes": 0,
+        "correct_rejection_rate": 100.0,
+        "correct_rejections": 60,
+        "denial_reasons": {
+          "missing_proof": 60
+        },
+        "display_name": "Session misuse",
+        "incorrect_acceptance_rate": 0.0,
+        "incorrect_acceptances": 0,
+        "trials": 60,
+        "unexpected_denials": 0
+      }
+    }
+  },
+  "trials_per_scenario_per_mode": 60
+}

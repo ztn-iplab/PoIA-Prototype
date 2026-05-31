@@ -1,0 +1,190 @@
+{
+  "experiment": "signing_backend_comparison",
+  "summary": [
+    {
+      "attempts": 100,
+      "availability_note": "",
+      "available": true,
+      "backend": "webauthn_platform",
+      "configuration": "WebAuthn platform authenticator",
+      "deployment_complexity": "Medium: requires WebAuthn registration, RP ID/origin binding, browser support.",
+      "end_to_end_latency_ms": {
+        "max": 5500.558125,
+        "mean": 5500.05291796,
+        "median": 5500.024542,
+        "n": 100,
+        "p95": 5500.2107045,
+        "stdev": 0.08222798230285971
+      },
+      "failure_rate": 0.0,
+      "failures": 0,
+      "modeled_user_interaction_ms": 5500.0,
+      "security_assumptions": "Platform authenticator protects private key; user verification and origin/RP binding hold.",
+      "server_side_latency_ms": {
+        "max": 0.558125,
+        "mean": 0.05291796,
+        "median": 0.024542,
+        "n": 100,
+        "p95": 0.21070449999999985,
+        "stdev": 0.08222798230285357
+      },
+      "signing_latency_ms": {
+        "max": 0.259084,
+        "mean": 0.0072096,
+        "median": 0.002375,
+        "n": 100,
+        "p95": 0.016687499999999997,
+        "stdev": 0.026941607156960774
+      },
+      "successes": 100,
+      "user_interaction_cost": "High: user reviews intent and confirms passkey prompt.",
+      "verification_latency_ms": {
+        "max": 0.143458,
+        "mean": 0.01317242,
+        "median": 0.00775,
+        "n": 100,
+        "p95": 0.034287799999999966,
+        "stdev": 0.019997328192626136
+      }
+    },
+    {
+      "attempts": 100,
+      "availability_note": "",
+      "available": true,
+      "backend": "zt_authenticator",
+      "configuration": "ZT-Authenticator",
+      "deployment_complexity": "Medium-High: requires mobile/device enrollment, RP binding, polling or push workflow.",
+      "end_to_end_latency_ms": {
+        "max": 3400.2975,
+        "mean": 3400.02845758,
+        "median": 3400.0203954999997,
+        "n": 100,
+        "p95": 3400.0635131,
+        "stdev": 0.037544489170383236
+      },
+      "failure_rate": 0.0,
+      "failures": 0,
+      "modeled_user_interaction_ms": 3400.0,
+      "security_assumptions": "Device-bound key remains protected; RP, nonce, and intent hash are signed by enrolled device.",
+      "server_side_latency_ms": {
+        "max": 0.2975,
+        "mean": 0.02845758,
+        "median": 0.0203955,
+        "n": 100,
+        "p95": 0.0635131,
+        "stdev": 0.03754448917036427
+      },
+      "signing_latency_ms": {
+        "max": 0.019666,
+        "mean": 0.0031408,
+        "median": 0.0024165000000000002,
+        "n": 100,
+        "p95": 0.006413149999999996,
+        "stdev": 0.0030306545332650504
+      },
+      "successes": 100,
+      "user_interaction_cost": "Medium: user approves in authenticator app.",
+      "verification_latency_ms": {
+        "max": 0.087208,
+        "mean": 0.01008876,
+        "median": 0.007625,
+        "n": 100,
+        "p95": 0.016907999999999982,
+        "stdev": 0.011313212458112858
+      }
+    },
+    {
+      "attempts": 100,
+      "availability_note": "",
+      "available": true,
+      "backend": "software_signing",
+      "configuration": "Software signing baseline",
+      "deployment_complexity": "Low: application-managed secret or local software key.",
+      "end_to_end_latency_ms": {
+        "max": 150.230833,
+        "mean": 150.03350955,
+        "median": 150.016146,
+        "n": 100,
+        "p95": 150.11152470000002,
+        "stdev": 0.03954549808521099
+      },
+      "failure_rate": 0.0,
+      "failures": 0,
+      "modeled_user_interaction_ms": 150.0,
+      "security_assumptions": "Software key storage is trusted; endpoint compromise may expose key.",
+      "server_side_latency_ms": {
+        "max": 0.230833,
+        "mean": 0.03350955,
+        "median": 0.016146,
+        "n": 100,
+        "p95": 0.11152469999999996,
+        "stdev": 0.039545498085211926
+      },
+      "signing_latency_ms": {
+        "max": 0.02675,
+        "mean": 0.0044829,
+        "median": 0.0025,
+        "n": 100,
+        "p95": 0.010664899999999993,
+        "stdev": 0.004317657648540468
+      },
+      "successes": 100,
+      "user_interaction_cost": "Low: can be automated or minimally prompted.",
+      "verification_latency_ms": {
+        "max": 0.179167,
+        "mean": 0.01582248,
+        "median": 0.007625,
+        "n": 100,
+        "p95": 0.04438779999999997,
+        "stdev": 0.024842494330674605
+      }
+    },
+    {
+      "attempts": 0,
+      "availability_note": "No local hardware-backed key configured; set POIA_ENABLE_HARDWARE_KEY=1 and POIA_HARDWARE_KEY_SECRET for measured runs.",
+      "available": false,
+      "backend": "hardware_backed_key",
+      "configuration": "Hardware-backed key",
+      "deployment_complexity": "High: requires physical token, middleware/driver support, and enrollment workflow.",
+      "end_to_end_latency_ms": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "n": 0,
+        "p95": 0.0,
+        "stdev": 0.0
+      },
+      "failure_rate": 0.0,
+      "failures": 0,
+      "modeled_user_interaction_ms": 4200.0,
+      "security_assumptions": "Private key is non-exportable and token touch/PIN policy is enforced.",
+      "server_side_latency_ms": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "n": 0,
+        "p95": 0.0,
+        "stdev": 0.0
+      },
+      "signing_latency_ms": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "n": 0,
+        "p95": 0.0,
+        "stdev": 0.0
+      },
+      "successes": 0,
+      "user_interaction_cost": "Medium-High: physical touch/PIN or secure-display confirmation may be required.",
+      "verification_latency_ms": {
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "n": 0,
+        "p95": 0.0,
+        "stdev": 0.0
+      }
+    }
+  ],
+  "trials_per_backend": 100
+}

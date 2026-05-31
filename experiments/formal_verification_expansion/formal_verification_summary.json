@@ -1,0 +1,55 @@
+{
+  "experiment": "formal_verification_expansion",
+  "lemmas": [
+    {
+      "lemma": "no_execution_without_matching_intent",
+      "property": "No execution without matching intent",
+      "threat_mapping": "Session misuse, missing proof"
+    },
+    {
+      "lemma": "nonce_freshness",
+      "property": "Nonce freshness / issued intent existence",
+      "threat_mapping": "Injected or unissued intent"
+    },
+    {
+      "lemma": "replay_resistance",
+      "property": "Replay resistance",
+      "threat_mapping": "Proof replay"
+    },
+    {
+      "lemma": "intent_non_transferability",
+      "property": "Intent non-transferability",
+      "threat_mapping": "Intent/scope substitution"
+    },
+    {
+      "lemma": "context_confinement",
+      "property": "Context confinement",
+      "threat_mapping": "Wrong RP/session/tenant context"
+    },
+    {
+      "lemma": "session_compromise_does_not_imply_execution",
+      "property": "Session compromise does not imply execution",
+      "threat_mapping": "Stolen session"
+    },
+    {
+      "lemma": "action_substitution_impossibility",
+      "property": "Action substitution impossibility",
+      "threat_mapping": "Cross-action reuse"
+    }
+  ],
+  "tamarin_status": {
+    "available": true,
+    "lemma_results": {
+      "action_substitution_impossibility": "verified (5 steps)",
+      "context_confinement": "verified (5 steps)",
+      "intent_non_transferability": "verified (14 steps)",
+      "no_execution_without_matching_intent": "verified (7 steps)",
+      "nonce_freshness": "verified (3 steps)",
+      "replay_resistance": "verified (10 steps)",
+      "session_compromise_does_not_imply_execution": "verified (7 steps)"
+    },
+    "note": "proof output written to experiments/formal_verification_expansion/tamarin_output.txt",
+    "returncode": 0,
+    "wellformedness": "successful"
+  }
+}

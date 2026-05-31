@@ -1,0 +1,590 @@
+[
+  {
+    "name": "exact_match",
+    "category": "correct_acceptance",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": true,
+    "expected_reason": "approved",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "canonicalization_order_equivalent",
+    "category": "canonicalization_order",
+    "requested_intent": {
+      "constraints": {
+        "expires_in_seconds": 60
+      },
+      "context": {
+        "tenant": "retail",
+        "session_id": "session-alpha",
+        "user_id": 1,
+        "rp_id": "poia-demo-bank"
+      },
+      "scope": {
+        "transfer_type": "external",
+        "beneficiary_id": 7,
+        "currency": "USD",
+        "amount": 100.0,
+        "from_account": 1
+      },
+      "action": "transfer"
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": true,
+    "expected_reason": "approved",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "encoding_variation_equivalent",
+    "category": "encoding_variations",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": "1",
+        "amount": "100.00",
+        "currency": "USD",
+        "beneficiary_id": "7",
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": "1",
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": "60"
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": true,
+    "expected_reason": "approved",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "action_mismatch",
+    "category": "action",
+    "requested_intent": {
+      "action": "withdrawal",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "semantic_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "amount_mismatch",
+    "category": "amount_value",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.01,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "semantic_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "target_object_mismatch",
+    "category": "target_object",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 8,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "semantic_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "user_identity_mismatch",
+    "category": "user_identity",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 2,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "semantic_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "rp_context_mismatch",
+    "category": "rp_context",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "evil.example",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "semantic_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "nonce_mismatch",
+    "category": "nonce",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-attacker-reuse",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "nonce_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "nonce_reuse",
+    "category": "nonce_reuse",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 60,
+    "expect_accept": false,
+    "expected_reason": "nonce_reuse",
+    "preconsume_nonce": true
+  },
+  {
+    "name": "proof_timestamp_mismatch",
+    "category": "timestamp",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": 60,
+    "proof_expires_delta_s": 120,
+    "expect_accept": false,
+    "expected_reason": "proof_mismatch",
+    "preconsume_nonce": false
+  },
+  {
+    "name": "expired_validity_window",
+    "category": "validity_window",
+    "requested_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "proof_intent": {
+      "action": "transfer",
+      "scope": {
+        "from_account": 1,
+        "amount": 100.0,
+        "currency": "USD",
+        "beneficiary_id": 7,
+        "transfer_type": "external"
+      },
+      "context": {
+        "rp_id": "poia-demo-bank",
+        "user_id": 1,
+        "session_id": "session-alpha",
+        "tenant": "retail"
+      },
+      "constraints": {
+        "expires_in_seconds": 60
+      }
+    },
+    "nonce": "nonce-functional-001",
+    "proof_nonce": "nonce-functional-001",
+    "expires_delta_s": -1,
+    "proof_expires_delta_s": -1,
+    "expect_accept": false,
+    "expected_reason": "expired",
+    "preconsume_nonce": false
+  }
+]

@@ -1,0 +1,73 @@
+{
+  "banking_transfer": {
+    "action": "transfer",
+    "constraints": {
+      "expires_in_seconds": 60,
+      "nonce": "n-bank"
+    },
+    "context": {
+      "jurisdiction": "JP",
+      "rp_id": "poia-bank",
+      "user_id": "customer-1"
+    },
+    "scope": {
+      "amount": 250.0,
+      "currency": "USD",
+      "from_account": "CHK-1001",
+      "to_account": "EXT-9007"
+    }
+  },
+  "cloud_api": {
+    "action": "rotate_key",
+    "constraints": {
+      "expires_in_seconds": 60,
+      "nonce": "n-cloud"
+    },
+    "context": {
+      "change_request": "CR-9001",
+      "operator_id": "ops-3",
+      "rp_id": "poia-cloud"
+    },
+    "scope": {
+      "key_id": "kms-key-77",
+      "project": "prod-payments",
+      "region": "ap-northeast-1"
+    }
+  },
+  "enterprise_admin": {
+    "action": "grant_role",
+    "constraints": {
+      "expires_in_seconds": 60,
+      "nonce": "n-iam"
+    },
+    "context": {
+      "admin_id": "admin-1",
+      "rp_id": "poia-iam",
+      "ticket": "CHG-2042"
+    },
+    "scope": {
+      "duration_hours": 4,
+      "role": "reader",
+      "target_user": "analyst@example.com",
+      "tenant": "retail"
+    }
+  },
+  "healthcare_export": {
+    "action": "export_record",
+    "constraints": {
+      "expires_in_seconds": 60,
+      "nonce": "n-health"
+    },
+    "context": {
+      "clinician_id": "doctor-7",
+      "consent_ref": "CONS-88",
+      "rp_id": "poia-health"
+    },
+    "scope": {
+      "patient_id": "P-1024",
+      "purpose": "referral",
+      "recipient": "clinic-b",
+      "record_type": "lab_results"
+    }
+  }
+}

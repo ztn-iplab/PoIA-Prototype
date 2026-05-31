@@ -1,0 +1,401 @@
+backend,configuration,trial,available,success,failure_reason,signing_latency_ms,verification_latency_ms,server_side_latency_ms,end_to_end_latency_ms
+webauthn_platform,WebAuthn platform authenticator,1,True,True,,0.008833,0.011334,0.056667,5500.056667
+webauthn_platform,WebAuthn platform authenticator,2,True,True,,0.004167,0.008583,0.028958,5500.028958
+webauthn_platform,WebAuthn platform authenticator,3,True,True,,0.002458,0.008083,0.0255,5500.0255
+webauthn_platform,WebAuthn platform authenticator,4,True,True,,0.002333,0.008083,0.025333,5500.025333
+webauthn_platform,WebAuthn platform authenticator,5,True,True,,0.002292,0.007792,0.02475,5500.02475
+webauthn_platform,WebAuthn platform authenticator,6,True,True,,0.002292,0.007667,0.024542,5500.024542
+webauthn_platform,WebAuthn platform authenticator,7,True,True,,0.00225,0.007625,0.02475,5500.02475
+webauthn_platform,WebAuthn platform authenticator,8,True,True,,0.00225,0.007541,0.02375,5500.02375
+webauthn_platform,WebAuthn platform authenticator,9,True,True,,0.002333,0.007791,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,10,True,True,,0.002333,0.007792,0.024958,5500.024958
+webauthn_platform,WebAuthn platform authenticator,11,True,True,,0.002291,0.007708,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,12,True,True,,0.002291,0.007709,0.0245,5500.0245
+webauthn_platform,WebAuthn platform authenticator,13,True,True,,0.002375,0.007625,0.024375,5500.024375
+webauthn_platform,WebAuthn platform authenticator,14,True,True,,0.002334,0.007666,0.024208,5500.024208
+webauthn_platform,WebAuthn platform authenticator,15,True,True,,0.002375,0.007708,0.024208,5500.024208
+webauthn_platform,WebAuthn platform authenticator,16,True,True,,0.002334,0.007666,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,17,True,True,,0.002333,0.007667,0.024166,5500.024166
+webauthn_platform,WebAuthn platform authenticator,18,True,True,,0.00225,0.007541,0.023958,5500.023958
+webauthn_platform,WebAuthn platform authenticator,19,True,True,,0.002292,0.007708,0.024167,5500.024167
+webauthn_platform,WebAuthn platform authenticator,20,True,True,,0.002333,0.007542,0.024084,5500.024084
+webauthn_platform,WebAuthn platform authenticator,21,True,True,,0.002333,0.007666,0.024125,5500.024125
+webauthn_platform,WebAuthn platform authenticator,22,True,True,,0.002333,0.007625,0.024208,5500.024208
+webauthn_platform,WebAuthn platform authenticator,23,True,True,,0.002334,0.0075,0.023875,5500.023875
+webauthn_platform,WebAuthn platform authenticator,24,True,True,,0.002375,0.007625,0.024,5500.024
+webauthn_platform,WebAuthn platform authenticator,25,True,True,,0.002416,0.00775,0.024167,5500.024167
+webauthn_platform,WebAuthn platform authenticator,26,True,True,,0.002375,0.00775,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,27,True,True,,0.002375,0.007416,0.023792,5500.023792
+webauthn_platform,WebAuthn platform authenticator,28,True,True,,0.002333,0.007667,0.024084,5500.024084
+webauthn_platform,WebAuthn platform authenticator,29,True,True,,0.002334,0.00775,0.024125,5500.024125
+webauthn_platform,WebAuthn platform authenticator,30,True,True,,0.002291,0.007625,0.023875,5500.023875
+webauthn_platform,WebAuthn platform authenticator,31,True,True,,0.002333,0.007416,0.023792,5500.023792
+webauthn_platform,WebAuthn platform authenticator,32,True,True,,0.005542,0.012458,0.0565,5500.0565
+webauthn_platform,WebAuthn platform authenticator,33,True,True,,0.002708,0.008625,0.029792,5500.029792
+webauthn_platform,WebAuthn platform authenticator,34,True,True,,0.002459,0.008209,0.025958,5500.025958
+webauthn_platform,WebAuthn platform authenticator,35,True,True,,0.002375,0.007917,0.024958,5500.024958
+webauthn_platform,WebAuthn platform authenticator,36,True,True,,0.002375,0.007916,0.024792,5500.024792
+webauthn_platform,WebAuthn platform authenticator,37,True,True,,0.002333,0.007792,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,38,True,True,,0.002375,0.007791,0.024708,5500.024708
+webauthn_platform,WebAuthn platform authenticator,39,True,True,,0.002333,0.007625,0.024209,5500.024209
+webauthn_platform,WebAuthn platform authenticator,40,True,True,,0.002333,0.007667,0.024167,5500.024167
+webauthn_platform,WebAuthn platform authenticator,41,True,True,,0.002334,0.007542,0.024209,5500.024209
+webauthn_platform,WebAuthn platform authenticator,42,True,True,,0.002334,0.007583,0.02425,5500.02425
+webauthn_platform,WebAuthn platform authenticator,43,True,True,,0.002416,0.00775,0.024625,5500.024625
+webauthn_platform,WebAuthn platform authenticator,44,True,True,,0.002333,0.007791,0.024625,5500.024625
+webauthn_platform,WebAuthn platform authenticator,45,True,True,,0.002291,0.007667,0.0245,5500.0245
+webauthn_platform,WebAuthn platform authenticator,46,True,True,,0.017875,0.030791,0.208417,5500.208417
+webauthn_platform,WebAuthn platform authenticator,47,True,True,,0.007917,0.033667,0.088709,5500.088709
+webauthn_platform,WebAuthn platform authenticator,48,True,True,,0.005333,0.076417,0.276625,5500.276625
+webauthn_platform,WebAuthn platform authenticator,49,True,True,,0.074792,0.010708,0.103792,5500.103792
+webauthn_platform,WebAuthn platform authenticator,50,True,True,,0.0025,0.007833,0.025292,5500.025292
+webauthn_platform,WebAuthn platform authenticator,51,True,True,,0.002417,0.007666,0.0245,5500.0245
+webauthn_platform,WebAuthn platform authenticator,52,True,True,,0.002333,0.143458,0.1605,5500.1605
+webauthn_platform,WebAuthn platform authenticator,53,True,True,,0.005208,0.126542,0.178167,5500.178167
+webauthn_platform,WebAuthn platform authenticator,54,True,True,,0.003083,0.046083,0.132583,5500.132583
+webauthn_platform,WebAuthn platform authenticator,55,True,True,,0.038792,0.014042,0.070416,5500.070416
+webauthn_platform,WebAuthn platform authenticator,56,True,True,,0.002792,0.008125,0.027959,5500.027959
+webauthn_platform,WebAuthn platform authenticator,57,True,True,,0.0025,0.02525,0.042917,5500.042917
+webauthn_platform,WebAuthn platform authenticator,58,True,True,,0.002459,0.007834,0.025625,5500.025625
+webauthn_platform,WebAuthn platform authenticator,59,True,True,,0.002417,0.00775,0.024625,5500.024625
+webauthn_platform,WebAuthn platform authenticator,60,True,True,,0.002333,0.007708,0.024417,5500.024417
+webauthn_platform,WebAuthn platform authenticator,61,True,True,,0.015833,0.052667,0.254167,5500.254167
+webauthn_platform,WebAuthn platform authenticator,62,True,True,,0.006667,0.011666,0.092792,5500.092792
+webauthn_platform,WebAuthn platform authenticator,63,True,True,,0.002958,0.008583,0.029875,5500.029875
+webauthn_platform,WebAuthn platform authenticator,64,True,True,,0.003792,0.009958,0.08575,5500.08575
+webauthn_platform,WebAuthn platform authenticator,65,True,True,,0.002417,0.007958,0.026042,5500.026042
+webauthn_platform,WebAuthn platform authenticator,66,True,True,,0.0025,0.007792,0.025,5500.025
+webauthn_platform,WebAuthn platform authenticator,67,True,True,,0.002375,0.007792,0.024833,5500.024833
+webauthn_platform,WebAuthn platform authenticator,68,True,True,,0.002416,0.00775,0.024542,5500.024542
+webauthn_platform,WebAuthn platform authenticator,69,True,True,,0.002375,0.007791,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,70,True,True,,0.016625,0.012125,0.043209,5500.043209
+webauthn_platform,WebAuthn platform authenticator,71,True,True,,0.0435,0.013583,0.437458,5500.437458
+webauthn_platform,WebAuthn platform authenticator,72,True,True,,0.002542,0.007917,0.028,5500.028
+webauthn_platform,WebAuthn platform authenticator,73,True,True,,0.002375,0.007833,0.025209,5500.025209
+webauthn_platform,WebAuthn platform authenticator,74,True,True,,0.002417,0.007666,0.024833,5500.024833
+webauthn_platform,WebAuthn platform authenticator,75,True,True,,0.002375,0.007667,0.024541,5500.024541
+webauthn_platform,WebAuthn platform authenticator,76,True,True,,0.002375,0.007667,0.024792,5500.024792
+webauthn_platform,WebAuthn platform authenticator,77,True,True,,0.002292,0.0075,0.024292,5500.024292
+webauthn_platform,WebAuthn platform authenticator,78,True,True,,0.002291,0.007542,0.024209,5500.024209
+webauthn_platform,WebAuthn platform authenticator,79,True,True,,0.002292,0.0075,0.024083,5500.024083
+webauthn_platform,WebAuthn platform authenticator,80,True,True,,0.002292,0.007625,0.024167,5500.024167
+webauthn_platform,WebAuthn platform authenticator,81,True,True,,0.002375,0.0075,0.024167,5500.024167
+webauthn_platform,WebAuthn platform authenticator,82,True,True,,0.002333,0.007541,0.024,5500.024
+webauthn_platform,WebAuthn platform authenticator,83,True,True,,0.00225,0.007708,0.024083,5500.024083
+webauthn_platform,WebAuthn platform authenticator,84,True,True,,0.002333,0.007542,0.024041,5500.024041
+webauthn_platform,WebAuthn platform authenticator,85,True,True,,0.002416,0.007875,0.025,5500.025
+webauthn_platform,WebAuthn platform authenticator,86,True,True,,0.002334,0.007417,0.024125,5500.024125
+webauthn_platform,WebAuthn platform authenticator,87,True,True,,0.002292,0.007583,0.023792,5500.023792
+webauthn_platform,WebAuthn platform authenticator,88,True,True,,0.002334,0.0075,0.024083,5500.024083
+webauthn_platform,WebAuthn platform authenticator,89,True,True,,0.002292,0.007416,0.02375,5500.02375
+webauthn_platform,WebAuthn platform authenticator,90,True,True,,0.259084,0.016334,0.558125,5500.558125
+webauthn_platform,WebAuthn platform authenticator,91,True,True,,0.005792,0.014417,0.147542,5500.147542
+webauthn_platform,WebAuthn platform authenticator,92,True,True,,0.002708,0.028,0.050125,5500.050125
+webauthn_platform,WebAuthn platform authenticator,93,True,True,,0.003166,0.008792,0.2655,5500.2655
+webauthn_platform,WebAuthn platform authenticator,94,True,True,,0.002459,0.008083,0.026542,5500.026542
+webauthn_platform,WebAuthn platform authenticator,95,True,True,,0.002334,0.007916,0.025042,5500.025042
+webauthn_platform,WebAuthn platform authenticator,96,True,True,,0.002459,0.007666,0.024834,5500.024834
+webauthn_platform,WebAuthn platform authenticator,97,True,True,,0.002375,0.007667,0.024458,5500.024458
+webauthn_platform,WebAuthn platform authenticator,98,True,True,,0.002334,0.007583,0.024459,5500.024459
+webauthn_platform,WebAuthn platform authenticator,99,True,True,,0.002333,0.007625,0.024291,5500.024291
+webauthn_platform,WebAuthn platform authenticator,100,True,True,,0.002375,0.007667,0.024541,5500.024541
+zt_authenticator,ZT-Authenticator,1,True,True,,0.0055,0.008875,0.034625,3400.034625
+zt_authenticator,ZT-Authenticator,2,True,True,,0.002583,0.007916,0.021833,3400.021833
+zt_authenticator,ZT-Authenticator,3,True,True,,0.002417,0.007708,0.020667,3400.020667
+zt_authenticator,ZT-Authenticator,4,True,True,,0.002583,0.007666,0.020875,3400.020875
+zt_authenticator,ZT-Authenticator,5,True,True,,0.002417,0.007375,0.020167,3400.020167
+zt_authenticator,ZT-Authenticator,6,True,True,,0.002417,0.056667,0.070834,3400.070834
+zt_authenticator,ZT-Authenticator,7,True,True,,0.018459,0.069542,0.239583,3400.239583
+zt_authenticator,ZT-Authenticator,8,True,True,,0.006334,0.009125,0.035167,3400.035167
+zt_authenticator,ZT-Authenticator,9,True,True,,0.002583,0.008,0.021917,3400.021917
+zt_authenticator,ZT-Authenticator,10,True,True,,0.002542,0.007875,0.0215,3400.0215
+zt_authenticator,ZT-Authenticator,11,True,True,,0.002458,0.007917,0.021083,3400.021083
+zt_authenticator,ZT-Authenticator,12,True,True,,0.002583,0.008041,0.021666,3400.021666
+zt_authenticator,ZT-Authenticator,13,True,True,,0.0025,0.00775,0.021042,3400.021042
+zt_authenticator,ZT-Authenticator,14,True,True,,0.002417,0.007833,0.020875,3400.020875
+zt_authenticator,ZT-Authenticator,15,True,True,,0.002416,0.007708,0.020667,3400.020667
+zt_authenticator,ZT-Authenticator,16,True,True,,0.002375,0.00775,0.02075,3400.02075
+zt_authenticator,ZT-Authenticator,17,True,True,,0.002458,0.007833,0.020667,3400.020667
+zt_authenticator,ZT-Authenticator,18,True,True,,0.002375,0.007667,0.020583,3400.020583
+zt_authenticator,ZT-Authenticator,19,True,True,,0.002416,0.007667,0.020417,3400.020417
+zt_authenticator,ZT-Authenticator,20,True,True,,0.002417,0.00775,0.020834,3400.020834
+zt_authenticator,ZT-Authenticator,21,True,True,,0.002375,0.007583,0.020459,3400.020459
+zt_authenticator,ZT-Authenticator,22,True,True,,0.0025,0.007666,0.020542,3400.020542
+zt_authenticator,ZT-Authenticator,23,True,True,,0.002417,0.007583,0.02025,3400.02025
+zt_authenticator,ZT-Authenticator,24,True,True,,0.002416,0.007583,0.020292,3400.020292
+zt_authenticator,ZT-Authenticator,25,True,True,,0.002375,0.007625,0.020417,3400.020417
+zt_authenticator,ZT-Authenticator,26,True,True,,0.002416,0.00775,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,27,True,True,,0.002375,0.007583,0.0205,3400.0205
+zt_authenticator,ZT-Authenticator,28,True,True,,0.002375,0.007584,0.020167,3400.020167
+zt_authenticator,ZT-Authenticator,29,True,True,,0.002375,0.007708,0.020542,3400.020542
+zt_authenticator,ZT-Authenticator,30,True,True,,0.002416,0.007667,0.020583,3400.020583
+zt_authenticator,ZT-Authenticator,31,True,True,,0.002417,0.007541,0.020333,3400.020333
+zt_authenticator,ZT-Authenticator,32,True,True,,0.002333,0.007708,0.020458,3400.020458
+zt_authenticator,ZT-Authenticator,33,True,True,,0.002375,0.016583,0.03025,3400.03025
+zt_authenticator,ZT-Authenticator,34,True,True,,0.002584,0.007666,0.022,3400.022
+zt_authenticator,ZT-Authenticator,35,True,True,,0.0025,0.007459,0.02025,3400.02025
+zt_authenticator,ZT-Authenticator,36,True,True,,0.002375,0.0075,0.020125,3400.020125
+zt_authenticator,ZT-Authenticator,37,True,True,,0.002417,0.007458,0.020083,3400.020083
+zt_authenticator,ZT-Authenticator,38,True,True,,0.002375,0.0075,0.020125,3400.020125
+zt_authenticator,ZT-Authenticator,39,True,True,,0.002334,0.007459,0.02,3400.02
+zt_authenticator,ZT-Authenticator,40,True,True,,0.002417,0.007541,0.020125,3400.020125
+zt_authenticator,ZT-Authenticator,41,True,True,,0.002458,0.007583,0.020208,3400.020208
+zt_authenticator,ZT-Authenticator,42,True,True,,0.002375,0.007583,0.020042,3400.020042
+zt_authenticator,ZT-Authenticator,43,True,True,,0.002375,0.007625,0.0205,3400.0205
+zt_authenticator,ZT-Authenticator,44,True,True,,0.0025,0.0075,0.020542,3400.020542
+zt_authenticator,ZT-Authenticator,45,True,True,,0.002375,0.007542,0.020209,3400.020209
+zt_authenticator,ZT-Authenticator,46,True,True,,0.002375,0.007542,0.020459,3400.020459
+zt_authenticator,ZT-Authenticator,47,True,True,,0.002417,0.007583,0.020125,3400.020125
+zt_authenticator,ZT-Authenticator,48,True,True,,0.002459,0.007458,0.020084,3400.020084
+zt_authenticator,ZT-Authenticator,49,True,True,,0.002416,0.007584,0.020083,3400.020083
+zt_authenticator,ZT-Authenticator,50,True,True,,0.002417,0.007417,0.020042,3400.020042
+zt_authenticator,ZT-Authenticator,51,True,True,,0.002375,0.007417,0.019958,3400.019958
+zt_authenticator,ZT-Authenticator,52,True,True,,0.002375,0.00775,0.020209,3400.020209
+zt_authenticator,ZT-Authenticator,53,True,True,,0.002375,0.007584,0.020125,3400.020125
+zt_authenticator,ZT-Authenticator,54,True,True,,0.002375,0.007667,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,55,True,True,,0.002417,0.007625,0.020125,3400.020125
+zt_authenticator,ZT-Authenticator,56,True,True,,0.002417,0.007459,0.020083,3400.020083
+zt_authenticator,ZT-Authenticator,57,True,True,,0.002417,0.007625,0.020292,3400.020292
+zt_authenticator,ZT-Authenticator,58,True,True,,0.002417,0.007625,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,59,True,True,,0.002458,0.007542,0.020333,3400.020333
+zt_authenticator,ZT-Authenticator,60,True,True,,0.002375,0.007416,0.02025,3400.02025
+zt_authenticator,ZT-Authenticator,61,True,True,,0.002375,0.007542,0.020291,3400.020291
+zt_authenticator,ZT-Authenticator,62,True,True,,0.002375,0.0075,0.02,3400.02
+zt_authenticator,ZT-Authenticator,63,True,True,,0.002416,0.0075,0.020083,3400.020083
+zt_authenticator,ZT-Authenticator,64,True,True,,0.002416,0.0075,0.020083,3400.020083
+zt_authenticator,ZT-Authenticator,65,True,True,,0.002417,0.007417,0.02025,3400.02025
+zt_authenticator,ZT-Authenticator,66,True,True,,0.002334,0.007625,0.020208,3400.020208
+zt_authenticator,ZT-Authenticator,67,True,True,,0.002416,0.007584,0.020208,3400.020208
+zt_authenticator,ZT-Authenticator,68,True,True,,0.019666,0.087208,0.2975,3400.2975
+zt_authenticator,ZT-Authenticator,69,True,True,,0.011958,0.029125,0.145875,3400.145875
+zt_authenticator,ZT-Authenticator,70,True,True,,0.007917,0.023083,0.064541,3400.064541
+zt_authenticator,ZT-Authenticator,71,True,True,,0.018833,0.014459,0.063459,3400.063459
+zt_authenticator,ZT-Authenticator,72,True,True,,0.002625,0.007666,0.022,3400.022
+zt_authenticator,ZT-Authenticator,73,True,True,,0.002459,0.0075,0.0205,3400.0205
+zt_authenticator,ZT-Authenticator,74,True,True,,0.0025,0.00775,0.020709,3400.020709
+zt_authenticator,ZT-Authenticator,75,True,True,,0.002583,0.007917,0.02125,3400.02125
+zt_authenticator,ZT-Authenticator,76,True,True,,0.002459,0.007792,0.020875,3400.020875
+zt_authenticator,ZT-Authenticator,77,True,True,,0.002458,0.007875,0.020875,3400.020875
+zt_authenticator,ZT-Authenticator,78,True,True,,0.0025,0.007584,0.020584,3400.020584
+zt_authenticator,ZT-Authenticator,79,True,True,,0.002375,0.007583,0.020209,3400.020209
+zt_authenticator,ZT-Authenticator,80,True,True,,0.002333,0.007625,0.020459,3400.020459
+zt_authenticator,ZT-Authenticator,81,True,True,,0.002416,0.007584,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,82,True,True,,0.0025,0.007541,0.020333,3400.020333
+zt_authenticator,ZT-Authenticator,83,True,True,,0.002375,0.007667,0.020292,3400.020292
+zt_authenticator,ZT-Authenticator,84,True,True,,0.002333,0.007542,0.020208,3400.020208
+zt_authenticator,ZT-Authenticator,85,True,True,,0.002416,0.007875,0.02075,3400.02075
+zt_authenticator,ZT-Authenticator,86,True,True,,0.002416,0.007709,0.020625,3400.020625
+zt_authenticator,ZT-Authenticator,87,True,True,,0.002375,0.007667,0.020417,3400.020417
+zt_authenticator,ZT-Authenticator,88,True,True,,0.002334,0.007625,0.02025,3400.02025
+zt_authenticator,ZT-Authenticator,89,True,True,,0.002375,0.007708,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,90,True,True,,0.002416,0.007584,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,91,True,True,,0.002375,0.007625,0.020416,3400.020416
+zt_authenticator,ZT-Authenticator,92,True,True,,0.002458,0.0075,0.020333,3400.020333
+zt_authenticator,ZT-Authenticator,93,True,True,,0.002375,0.007666,0.020417,3400.020417
+zt_authenticator,ZT-Authenticator,94,True,True,,0.002375,0.007583,0.020334,3400.020334
+zt_authenticator,ZT-Authenticator,95,True,True,,0.002459,0.007583,0.020334,3400.020334
+zt_authenticator,ZT-Authenticator,96,True,True,,0.002416,0.0075,0.02025,3400.02025
+zt_authenticator,ZT-Authenticator,97,True,True,,0.002375,0.007667,0.020334,3400.020334
+zt_authenticator,ZT-Authenticator,98,True,True,,0.002375,0.007542,0.020417,3400.020417
+zt_authenticator,ZT-Authenticator,99,True,True,,0.002458,0.007709,0.020375,3400.020375
+zt_authenticator,ZT-Authenticator,100,True,True,,0.002458,0.007625,0.020542,3400.020542
+software_signing,Software signing baseline,1,True,True,,0.021875,0.011292,0.062333,150.062333
+software_signing,Software signing baseline,2,True,True,,0.002792,0.008208,0.018208,150.018208
+software_signing,Software signing baseline,3,True,True,,0.002542,0.007875,0.016833,150.016833
+software_signing,Software signing baseline,4,True,True,,0.0025,0.00775,0.016292,150.016292
+software_signing,Software signing baseline,5,True,True,,0.002416,0.007459,0.015916,150.015916
+software_signing,Software signing baseline,6,True,True,,0.003625,0.007708,0.017375,150.017375
+software_signing,Software signing baseline,7,True,True,,0.0025,0.007583,0.016292,150.016292
+software_signing,Software signing baseline,8,True,True,,0.002375,0.0075,0.015959,150.015959
+software_signing,Software signing baseline,9,True,True,,0.002459,0.007666,0.016292,150.016292
+software_signing,Software signing baseline,10,True,True,,0.002458,0.007625,0.016333,150.016333
+software_signing,Software signing baseline,11,True,True,,0.002333,0.0075,0.015875,150.015875
+software_signing,Software signing baseline,12,True,True,,0.002417,0.007541,0.015792,150.015792
+software_signing,Software signing baseline,13,True,True,,0.002375,0.007458,0.015708,150.015708
+software_signing,Software signing baseline,14,True,True,,0.002375,0.0075,0.015792,150.015792
+software_signing,Software signing baseline,15,True,True,,0.002375,0.007708,0.016042,150.016042
+software_signing,Software signing baseline,16,True,True,,0.02675,0.043917,0.104208,150.104208
+software_signing,Software signing baseline,17,True,True,,0.008709,0.023916,0.055083,150.055083
+software_signing,Software signing baseline,18,True,True,,0.007958,0.023083,0.049667,150.049667
+software_signing,Software signing baseline,19,True,True,,0.007875,0.022375,0.048666,150.048666
+software_signing,Software signing baseline,20,True,True,,0.00775,0.022583,0.048666,150.048666
+software_signing,Software signing baseline,21,True,True,,0.014083,0.030333,0.230833,150.230833
+software_signing,Software signing baseline,22,True,True,,0.008625,0.179167,0.209084,150.209084
+software_signing,Software signing baseline,23,True,True,,0.00975,0.023542,0.053625,150.053625
+software_signing,Software signing baseline,24,True,True,,0.007875,0.02475,0.050166,150.050166
+software_signing,Software signing baseline,25,True,True,,0.013,0.027667,0.124667,150.124667
+software_signing,Software signing baseline,26,True,True,,0.008125,0.025167,0.053375,150.053375
+software_signing,Software signing baseline,27,True,True,,0.008041,0.107875,0.134333,150.134333
+software_signing,Software signing baseline,28,True,True,,0.009792,0.02275,0.052959,150.052959
+software_signing,Software signing baseline,29,True,True,,0.00775,0.082709,0.107834,150.107834
+software_signing,Software signing baseline,30,True,True,,0.010542,0.132625,0.163917,150.163917
+software_signing,Software signing baseline,31,True,True,,0.009041,0.023042,0.052625,150.052625
+software_signing,Software signing baseline,32,True,True,,0.007708,0.022583,0.047709,150.047709
+software_signing,Software signing baseline,33,True,True,,0.00775,0.022417,0.048,150.048
+software_signing,Software signing baseline,34,True,True,,0.007708,0.022334,0.048333,150.048333
+software_signing,Software signing baseline,35,True,True,,0.007375,0.021917,0.046666,150.046666
+software_signing,Software signing baseline,36,True,True,,0.007625,0.022166,0.047041,150.047041
+software_signing,Software signing baseline,37,True,True,,0.010458,0.011166,0.10275,150.10275
+software_signing,Software signing baseline,38,True,True,,0.021292,0.053333,0.083084,150.083084
+software_signing,Software signing baseline,39,True,True,,0.00475,0.009333,0.023833,150.023833
+software_signing,Software signing baseline,40,True,True,,0.002708,0.008084,0.0175,150.0175
+software_signing,Software signing baseline,41,True,True,,0.0025,0.00775,0.016458,150.016458
+software_signing,Software signing baseline,42,True,True,,0.0025,0.00775,0.016541,150.016541
+software_signing,Software signing baseline,43,True,True,,0.0025,0.007833,0.016583,150.016583
+software_signing,Software signing baseline,44,True,True,,0.002375,0.007708,0.016208,150.016208
+software_signing,Software signing baseline,45,True,True,,0.002458,0.007791,0.016458,150.016458
+software_signing,Software signing baseline,46,True,True,,0.002459,0.008,0.017,150.017
+software_signing,Software signing baseline,47,True,True,,0.002458,0.007833,0.016542,150.016542
+software_signing,Software signing baseline,48,True,True,,0.002459,0.007667,0.016334,150.016334
+software_signing,Software signing baseline,49,True,True,,0.0025,0.007667,0.016083,150.016083
+software_signing,Software signing baseline,50,True,True,,0.0025,0.007708,0.016167,150.016167
+software_signing,Software signing baseline,51,True,True,,0.002416,0.007625,0.016125,150.016125
+software_signing,Software signing baseline,52,True,True,,0.0025,0.007583,0.016,150.016
+software_signing,Software signing baseline,53,True,True,,0.002459,0.007625,0.016042,150.016042
+software_signing,Software signing baseline,54,True,True,,0.0025,0.007625,0.01625,150.01625
+software_signing,Software signing baseline,55,True,True,,0.002458,0.007625,0.016125,150.016125
+software_signing,Software signing baseline,56,True,True,,0.002458,0.0075,0.016208,150.016208
+software_signing,Software signing baseline,57,True,True,,0.0025,0.007583,0.015917,150.015917
+software_signing,Software signing baseline,58,True,True,,0.002458,0.007542,0.015875,150.015875
+software_signing,Software signing baseline,59,True,True,,0.002416,0.007417,0.015833,150.015833
+software_signing,Software signing baseline,60,True,True,,0.002417,0.007459,0.015708,150.015708
+software_signing,Software signing baseline,61,True,True,,0.002417,0.007416,0.015625,150.015625
+software_signing,Software signing baseline,62,True,True,,0.002417,0.007375,0.015666,150.015666
+software_signing,Software signing baseline,63,True,True,,0.002416,0.007417,0.015667,150.015667
+software_signing,Software signing baseline,64,True,True,,0.0025,0.0075,0.015875,150.015875
+software_signing,Software signing baseline,65,True,True,,0.0025,0.007708,0.016666,150.016666
+software_signing,Software signing baseline,66,True,True,,0.002458,0.007625,0.01625,150.01625
+software_signing,Software signing baseline,67,True,True,,0.002417,0.007541,0.015708,150.015708
+software_signing,Software signing baseline,68,True,True,,0.0025,0.007458,0.015875,150.015875
+software_signing,Software signing baseline,69,True,True,,0.002458,0.007667,0.015875,150.015875
+software_signing,Software signing baseline,70,True,True,,0.002458,0.0075,0.015833,150.015833
+software_signing,Software signing baseline,71,True,True,,0.0025,0.0075,0.015875,150.015875
+software_signing,Software signing baseline,72,True,True,,0.002417,0.007667,0.016084,150.016084
+software_signing,Software signing baseline,73,True,True,,0.002417,0.007542,0.015916,150.015916
+software_signing,Software signing baseline,74,True,True,,0.002416,0.007458,0.01575,150.01575
+software_signing,Software signing baseline,75,True,True,,0.002375,0.007542,0.015708,150.015708
+software_signing,Software signing baseline,76,True,True,,0.002417,0.007458,0.015875,150.015875
+software_signing,Software signing baseline,77,True,True,,0.002417,0.007583,0.015875,150.015875
+software_signing,Software signing baseline,78,True,True,,0.002417,0.007583,0.015875,150.015875
+software_signing,Software signing baseline,79,True,True,,0.002375,0.0075,0.015792,150.015792
+software_signing,Software signing baseline,80,True,True,,0.002417,0.007459,0.01575,150.01575
+software_signing,Software signing baseline,81,True,True,,0.002417,0.007542,0.015917,150.015917
+software_signing,Software signing baseline,82,True,True,,0.002541,0.007459,0.015834,150.015834
+software_signing,Software signing baseline,83,True,True,,0.002416,0.007459,0.015708,150.015708
+software_signing,Software signing baseline,84,True,True,,0.002417,0.007417,0.015708,150.015708
+software_signing,Software signing baseline,85,True,True,,0.002417,0.007458,0.015792,150.015792
+software_signing,Software signing baseline,86,True,True,,0.002833,0.007833,0.110833,150.110833
+software_signing,Software signing baseline,87,True,True,,0.0025,0.007583,0.016042,150.016042
+software_signing,Software signing baseline,88,True,True,,0.002458,0.007625,0.015959,150.015959
+software_signing,Software signing baseline,89,True,True,,0.002417,0.007541,0.015708,150.015708
+software_signing,Software signing baseline,90,True,True,,0.002417,0.007458,0.015792,150.015792
+software_signing,Software signing baseline,91,True,True,,0.0025,0.007375,0.015625,150.015625
+software_signing,Software signing baseline,92,True,True,,0.0025,0.007541,0.015958,150.015958
+software_signing,Software signing baseline,93,True,True,,0.002416,0.007584,0.015958,150.015958
+software_signing,Software signing baseline,94,True,True,,0.0025,0.007542,0.015916,150.015916
+software_signing,Software signing baseline,95,True,True,,0.002458,0.0075,0.01575,150.01575
+software_signing,Software signing baseline,96,True,True,,0.002417,0.00775,0.016042,150.016042
+software_signing,Software signing baseline,97,True,True,,0.002583,0.00775,0.01625,150.01625
+software_signing,Software signing baseline,98,True,True,,0.002625,0.007584,0.016208,150.016208
+software_signing,Software signing baseline,99,True,True,,0.002459,0.0075,0.015917,150.015917
+software_signing,Software signing baseline,100,True,True,,0.002542,0.00775,0.016375,150.016375
+hardware_backed_key,Hardware-backed key,1,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,2,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,3,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,4,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,5,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,6,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,7,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,8,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,9,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,10,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,11,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,12,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,13,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,14,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,15,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,16,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,17,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,18,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,19,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,20,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,21,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,22,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,23,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,24,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,25,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,26,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,27,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,28,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,29,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,30,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,31,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,32,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,33,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,34,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,35,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,36,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,37,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,38,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,39,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,40,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,41,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,42,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,43,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,44,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,45,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,46,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,47,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,48,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,49,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,50,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,51,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,52,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,53,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,54,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,55,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,56,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,57,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,58,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,59,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,60,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,61,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,62,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,63,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,64,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,65,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,66,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,67,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,68,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,69,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,70,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,71,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,72,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,73,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,74,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,75,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,76,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,77,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,78,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,79,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,80,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,81,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,82,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,83,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,84,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,85,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,86,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,87,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,88,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,89,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,90,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,91,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,92,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,93,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,94,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,95,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,96,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,97,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,98,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,99,False,False,backend_unavailable,0.0,0.0,0.0,0.0
+hardware_backed_key,Hardware-backed key,100,False,False,backend_unavailable,0.0,0.0,0.0,0.0

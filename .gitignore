@@ -1,9 +1,17 @@
 .venv/
 __pycache__/
 *.pyc
+.DS_Store
 app/data/
 *.db
 .env
+.poia_experiments.csv
+PoIA_Extended/
+experiments/.DS_Store
+experiments/poia_run_fresh_*/
+migration_backup/
 tamarin/results/
 certs/*.pem
 certs/*.key
+private/*.pem
+private/*.key

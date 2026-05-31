@@ -1,13 +1,17 @@
 /**
- * PoIA protocol model
- * - Intent issuance binds (uid, action, scope, nonce)
+ * PoIA protocol model (abstracted)
+ * - Intent issuance binds (uid, action, scope, context, nonce)
  * - User approves by signing intent tuple with device key
  * - Server accepts only with matching intent and valid signature
+ * - Session compromise is modeled separately from signing-key compromise
  */
 
 theory PoIA_Protocol begin
 
 builtins: signing
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ #i ==> x = y"
 
 rule Init_User:
   [ Fr(uid), Fr(sk) ]
@@ -15,57 +19,84 @@ rule Init_User:
   [ !UserKey(uid, sk), !UserPub(uid, pk(sk)) ]
 
 rule Issue_Intent:
-  [ Fr(action), Fr(scope), Fr(nonce), !UserPub(uid, pk) ]
-  --[ IssueIntent(uid, action, scope, nonce) ]->
-  [ Intent(uid, action, scope, nonce), !IntentIssued(uid, action, scope, nonce),
-    Out(<uid, action, scope, nonce>) ]
+  [ Fr(action), Fr(scope), Fr(ctx), Fr(nonce), !UserPub(uid, pk) ]
+  --[ IssueIntent(uid, action, scope, ctx, nonce) ]->
+  [ Intent(uid, action, scope, ctx, nonce), !IntentIssued(uid, action, scope, ctx, nonce),
+    Out(<uid, action, scope, ctx, nonce>) ]
 
 rule User_Approve:
-  [ !UserKey(uid, sk), !IntentIssued(uid, action, scope, nonce),
-    In(<uid, action, scope, nonce>) ]
-  --[ ApproveIntent(uid, action, scope, nonce) ]->
-  [ Out(<uid, action, scope, nonce, sign(<uid, action, scope, nonce>, sk)>),
-    Approval(uid, action, scope, nonce)
+  [ !UserKey(uid, sk), !IntentIssued(uid, action, scope, ctx, nonce),
+    In(<uid, action, scope, ctx, nonce>) ]
+  --[ ApproveIntent(uid, action, scope, ctx, nonce) ]->
+  [ Out(<uid, action, scope, ctx, nonce, sign(<uid, action, scope, ctx, nonce>, sk)>),
+    Approval(uid, action, scope, ctx, nonce)
   ]
 
 rule Server_Accept:
-  [ Intent(uid, action, scope, nonce),
-    In(<uid, action, scope, nonce, sig>),
-    !UserPub(uid, pk),
-    Eq(verify(sig, <uid, action, scope, nonce>, pk), true)
+  [ Intent(uid, action, scope, ctx, nonce),
+    In(<uid, action, scope, ctx, nonce, sig>),
+    !UserPub(uid, pk)
   ]
-  --[ ServerAccept(uid, action, scope, nonce) ]->
+  --[ Eq(verify(sig, <uid, action, scope, ctx, nonce>, pk), true),
+      ServerAccept(uid, action, scope, ctx, nonce) ]->
   [ ]
+
+rule Compromise_Session:
+  [ !UserPub(uid, pk) ]
+  --[ CompromiseSession(uid) ]->
+  [ Out(<uid, 'session-token'>) ]
 
 rule Reveal_Key:
   [ !UserKey(uid, sk) ] --[ KeyReveal(uid) ]-> [ Out(sk) ]
 
 // Security lemmas
 
-lemma intent_non_transferability:
+lemma no_execution_without_matching_intent:
   all-traces
-  "All uid action scope nonce #i.
-     (ServerAccept(uid, action, scope, nonce) @ #i)
-     ==> ( (Ex #j. ApproveIntent(uid, action, scope, nonce) @ #j)
+  "All uid action scope ctx nonce #i.
+     (ServerAccept(uid, action, scope, ctx, nonce) @ #i)
+     ==> ( (Ex #j. ApproveIntent(uid, action, scope, ctx, nonce) @ #j)
            | (Ex #k. KeyReveal(uid) @ #k) )"
 
-lemma intent_integrity:
+lemma nonce_freshness:
   all-traces
-  "All uid action scope nonce #i.
-     (ServerAccept(uid, action, scope, nonce) @ #i)
-     ==> (Ex #j. IssueIntent(uid, action, scope, nonce) @ #j)"
+  "All uid action scope ctx nonce #i.
+     (ServerAccept(uid, action, scope, ctx, nonce) @ #i)
+     ==> (Ex #j. IssueIntent(uid, action, scope, ctx, nonce) @ #j)"
 
-lemma freshness:
+lemma replay_resistance:
   all-traces
-  "All uid action scope nonce #i #j.
-     (ServerAccept(uid, action, scope, nonce) @ #i)
-     & (ServerAccept(uid, action, scope, nonce) @ #j)
+  "All uid action scope ctx nonce #i #j.
+     (ServerAccept(uid, action, scope, ctx, nonce) @ #i)
+     & (ServerAccept(uid, action, scope, ctx, nonce) @ #j)
      ==> (#i = #j)"
+
+lemma intent_non_transferability:
+  all-traces
+  "All uid action scope ctx nonce action2 scope2 ctx2 #i #j.
+     (ApproveIntent(uid, action, scope, ctx, nonce) @ #i)
+     & (ServerAccept(uid, action2, scope2, ctx2, nonce) @ #j)
+     ==> (action = action2 & scope = scope2 & ctx = ctx2)"
 
 lemma context_confinement:
   all-traces
-  "All uid action scope nonce #i.
-     (ApproveIntent(uid, action, scope, nonce) @ #i)
-     ==> (Ex #j. IssueIntent(uid, action, scope, nonce) @ #j)"
+  "All uid action scope ctx nonce ctx2 #i #j.
+     (ApproveIntent(uid, action, scope, ctx, nonce) @ #i)
+     & (ServerAccept(uid, action, scope, ctx2, nonce) @ #j)
+     ==> (ctx = ctx2)"
+
+lemma session_compromise_does_not_imply_execution:
+  all-traces
+  "All uid action scope ctx nonce #i.
+     (ServerAccept(uid, action, scope, ctx, nonce) @ #i)
+     ==> ( (Ex #j. ApproveIntent(uid, action, scope, ctx, nonce) @ #j)
+           | (Ex #k. KeyReveal(uid) @ #k) )"
+
+lemma action_substitution_impossibility:
+  all-traces
+  "All uid action scope ctx nonce action2 #i #j.
+     (ApproveIntent(uid, action, scope, ctx, nonce) @ #i)
+     & (ServerAccept(uid, action2, scope, ctx, nonce) @ #j)
+     ==> (action = action2)"
 
 end

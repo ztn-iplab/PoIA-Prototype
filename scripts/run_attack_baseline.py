@@ -1,79 +1,49 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import time
-from urllib.parse import urljoin
 
-import requests
-import urllib3
-
-
-SCENARIOS = [
-    "replay",
-    "relay_phishing",
-    "session_misuse",
-    "intent_substitution",
-]
-
-
-def create_intent(session, base_url, action, user_id, rp_id, verify):
-    payload = {
-        "action": action,
-        "scope": {"amount": 100.0, "currency": "USD", "account_id": 1},
-        "context": {"rp_id": rp_id, "user_id": user_id},
-    }
-    res = session.post(
-        urljoin(base_url, "/api/poia/test/intent"),
-        json=payload,
-        timeout=10,
-        verify=verify,
-    )
-    res.raise_for_status()
-    return res.json()
-
-
-def approve_intent(session, base_url, intent_id, scenario, verify):
-    payload = {
-        "intent_id": intent_id,
-        "scenario": f"baseline_{scenario}",
-        "force_status": "approved",
-        "reason": "baseline_no_intent_binding",
-    }
-    res = session.post(
-        urljoin(base_url, "/api/poia/test/approve"),
-        json=payload,
-        timeout=10,
-        verify=verify,
-    )
-    res.raise_for_status()
-    return res.json()
+from _experiment_common import DEFAULT_SCENARIOS, build_session, run_attack_trials
 
 
 def main():
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     parser = argparse.ArgumentParser(description="Run baseline attack simulation in PoIA test mode.")
     parser.add_argument("--base-url", default="https://poia.local", help="PoIA base URL")
     parser.add_argument("--user-id", type=int, default=1, help="User ID for synthetic intent")
     parser.add_argument("--rp-id", default="poia-demo-bank", help="RP ID")
     parser.add_argument("--trials", type=int, default=30, help="Trials per scenario")
     parser.add_argument("--sleep", type=float, default=0.1, help="Sleep between trials")
+    parser.add_argument("--timeout", type=float, default=12.0, help="Request timeout in seconds")
+    parser.add_argument("--retries", type=int, default=2, help="HTTP retries for transient failures")
+    parser.add_argument(
+        "--scenario-prefix",
+        default="",
+        help="Optional scenario tag prefix. Keep empty for analyzer compatibility.",
+    )
+    parser.add_argument("--continue-on-error", action="store_true", help="Continue even if a trial fails")
+    parser.add_argument("--output", help="Optional path to write JSON summary")
     parser.add_argument("--insecure", action="store_true", help="Disable TLS verification")
     args = parser.parse_args()
 
-    session = requests.Session()
-    summary = {}
-    verify_tls = not args.insecure
-    for scenario in SCENARIOS:
-        approved = 0
-        for _ in range(args.trials):
-            intent = create_intent(session, args.base_url, "transfer", args.user_id, args.rp_id, verify_tls)
-            intent_id = intent["intent_id"]
-            result = approve_intent(session, args.base_url, intent_id, scenario, verify_tls)
-            if result.get("status") == "approved":
-                approved += 1
-            time.sleep(args.sleep)
-        summary[scenario] = {"approved": approved, "trials": args.trials}
-    print(json.dumps(summary, indent=2))
+    session = build_session(insecure=args.insecure, retries=args.retries)
+    summary = run_attack_trials(
+        session=session,
+        base_url=args.base_url,
+        user_id=args.user_id,
+        rp_id=args.rp_id,
+        trials=args.trials,
+        sleep_s=args.sleep,
+        timeout_s=args.timeout,
+        scenarios=DEFAULT_SCENARIOS,
+        approve=True,
+        reason="baseline_no_intent_binding",
+        continue_on_error=args.continue_on_error,
+        scenario_prefix=args.scenario_prefix,
+    )
+    rendered = json.dumps(summary, indent=2)
+    print(rendered)
+    if args.output:
+        with open(args.output, "w", encoding="utf-8") as handle:
+            handle.write(rendered + "\n")
 
 
 if __name__ == "__main__":

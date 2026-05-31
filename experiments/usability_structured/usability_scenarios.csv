@@ -1,0 +1,5 @@
+scenario,intent_statement,changed_field,word_count,required_terms_present,required_terms_total,understandable_score,changed_field_detectable,estimated_approval_time_s,confusion_rate,habituation_risk
+bank_transfer,Transfer 250 USD from CHK-1001 to beneficiary EXT-9007,amount,8,5,5,100,True,2.64,0.0,low
+enterprise_role,Grant reader role to analyst@example.com in tenant retail for 4 hours,role,11,5,5,100,True,3.18,0.0,low
+healthcare_export,Export lab_results for patient P-1024 to clinic-b for referral,patient,9,5,5,100,True,2.82,0.0,low
+cloud_key_rotation,Rotate key kms-key-77 in project prod-payments region ap-northeast-1,object,8,4,4,100,True,2.64,0.0,low

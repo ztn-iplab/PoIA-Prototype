@@ -1,0 +1,1201 @@
+trial,mode,scenario,display_name,expected_poia_denial_reason,accepted,attack_success,correct_rejection,incorrect_acceptance,reason
+1,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+1,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+2,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+2,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+3,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+3,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+4,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+4,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+5,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+5,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+6,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+6,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+7,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+7,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+8,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+8,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+9,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+9,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+10,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+10,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+11,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+11,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+12,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+12,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+13,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+13,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+14,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+14,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+15,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+15,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+16,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+16,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+17,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+17,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+18,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+18,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+19,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+19,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+20,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+20,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+21,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+21,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+22,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+22,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+23,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+23,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+24,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+24,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+25,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+25,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+26,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+26,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+27,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+27,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+28,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+28,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+29,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+29,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+30,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+30,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+31,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+31,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+32,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+32,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+33,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+33,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+34,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+34,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+35,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+35,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+36,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+36,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+37,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+37,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+38,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+38,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+39,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+39,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+40,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+40,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+41,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+41,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+42,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+42,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+43,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+43,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+44,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+44,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+45,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+45,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+46,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+46,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+47,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+47,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+48,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+48,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+49,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+49,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+50,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+50,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+51,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+51,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+52,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+52,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+53,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+53,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+54,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+54,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+55,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+55,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+56,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+56,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+57,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+57,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+58,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+58,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+59,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+59,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+60,baseline,replay_attack,Replay attack,nonce_reuse,True,True,False,True,session_only_authorized
+60,poia,replay_attack,Replay attack,nonce_reuse,False,False,True,False,nonce_reuse
+1,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+1,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+2,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+2,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+3,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+3,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+4,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+4,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+5,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+5,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+6,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+6,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+7,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+7,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+8,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+8,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+9,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+9,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+10,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+10,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+11,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+11,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+12,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+12,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+13,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+13,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+14,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+14,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+15,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+15,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+16,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+16,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+17,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+17,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+18,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+18,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+19,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+19,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+20,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+20,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+21,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+21,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+22,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+22,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+23,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+23,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+24,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+24,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+25,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+25,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+26,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+26,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+27,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+27,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+28,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+28,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+29,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+29,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+30,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+30,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+31,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+31,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+32,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+32,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+33,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+33,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+34,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+34,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+35,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+35,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+36,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+36,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+37,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+37,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+38,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+38,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+39,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+39,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+40,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+40,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+41,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+41,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+42,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+42,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+43,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+43,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+44,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+44,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+45,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+45,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+46,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+46,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+47,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+47,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+48,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+48,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+49,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+49,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+50,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+50,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+51,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+51,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+52,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+52,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+53,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+53,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+54,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+54,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+55,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+55,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+56,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+56,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+57,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+57,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+58,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+58,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+59,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+59,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+60,baseline,relay_phishing,Relay phishing,semantic_mismatch,True,True,False,True,session_only_authorized
+60,poia,relay_phishing,Relay phishing,semantic_mismatch,False,False,True,False,semantic_mismatch
+1,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+1,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+2,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+2,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+3,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+3,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+4,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+4,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+5,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+5,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+6,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+6,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+7,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+7,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+8,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+8,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+9,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+9,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+10,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+10,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+11,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+11,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+12,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+12,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+13,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+13,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+14,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+14,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+15,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+15,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+16,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+16,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+17,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+17,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+18,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+18,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+19,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+19,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+20,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+20,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+21,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+21,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+22,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+22,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+23,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+23,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+24,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+24,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+25,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+25,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+26,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+26,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+27,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+27,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+28,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+28,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+29,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+29,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+30,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+30,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+31,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+31,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+32,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+32,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+33,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+33,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+34,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+34,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+35,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+35,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+36,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+36,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+37,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+37,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+38,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+38,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+39,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+39,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+40,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+40,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+41,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+41,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+42,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+42,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+43,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+43,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+44,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+44,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+45,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+45,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+46,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+46,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+47,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+47,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+48,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+48,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+49,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+49,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+50,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+50,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+51,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+51,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+52,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+52,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+53,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+53,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+54,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+54,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+55,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+55,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+56,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+56,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+57,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+57,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+58,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+58,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+59,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+59,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+60,baseline,session_misuse,Session misuse,missing_proof,True,True,False,True,session_only_authorized
+60,poia,session_misuse,Session misuse,missing_proof,False,False,True,False,missing_proof
+1,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+1,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+2,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+2,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+3,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+3,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+4,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+4,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+5,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+5,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+6,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+6,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+7,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+7,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+8,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+8,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+9,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+9,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+10,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+10,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+11,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+11,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+12,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+12,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+13,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+13,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+14,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+14,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+15,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+15,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+16,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+16,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+17,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+17,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+18,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+18,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+19,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+19,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+20,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+20,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+21,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+21,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+22,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+22,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+23,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+23,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+24,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+24,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+25,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+25,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+26,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+26,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+27,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+27,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+28,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+28,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+29,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+29,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+30,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+30,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+31,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+31,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+32,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+32,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+33,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+33,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+34,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+34,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+35,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+35,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+36,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+36,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+37,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+37,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+38,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+38,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+39,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+39,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+40,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+40,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+41,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+41,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+42,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+42,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+43,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+43,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+44,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+44,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+45,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+45,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+46,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+46,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+47,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+47,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+48,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+48,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+49,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+49,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+50,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+50,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+51,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+51,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+52,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+52,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+53,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+53,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+54,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+54,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+55,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+55,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+56,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+56,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+57,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+57,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+58,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+58,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+59,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+59,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+60,baseline,intent_substitution,Intent substitution,semantic_mismatch,True,True,False,True,session_only_authorized
+60,poia,intent_substitution,Intent substitution,semantic_mismatch,False,False,True,False,semantic_mismatch
+1,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+1,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+2,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+2,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+3,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+3,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+4,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+4,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+5,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+5,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+6,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+6,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+7,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+7,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+8,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+8,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+9,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+9,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+10,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+10,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+11,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+11,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+12,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+12,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+13,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+13,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+14,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+14,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+15,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+15,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+16,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+16,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+17,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+17,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+18,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+18,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+19,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+19,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+20,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+20,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+21,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+21,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+22,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+22,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+23,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+23,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+24,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+24,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+25,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+25,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+26,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+26,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+27,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+27,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+28,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+28,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+29,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+29,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+30,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+30,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+31,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+31,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+32,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+32,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+33,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+33,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+34,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+34,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+35,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+35,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+36,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+36,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+37,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+37,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+38,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+38,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+39,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+39,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+40,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+40,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+41,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+41,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+42,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+42,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+43,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+43,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+44,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+44,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+45,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+45,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+46,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+46,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+47,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+47,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+48,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+48,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+49,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+49,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+50,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+50,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+51,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+51,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+52,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+52,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+53,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+53,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+54,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+54,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+55,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+55,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+56,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+56,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+57,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+57,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+58,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+58,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+59,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+59,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+60,baseline,scope_tampering,Scope tampering,semantic_mismatch,True,True,False,True,session_only_authorized
+60,poia,scope_tampering,Scope tampering,semantic_mismatch,False,False,True,False,semantic_mismatch
+1,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+1,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+2,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+2,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+3,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+3,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+4,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+4,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+5,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+5,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+6,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+6,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+7,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+7,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+8,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+8,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+9,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+9,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+10,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+10,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+11,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+11,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+12,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+12,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+13,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+13,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+14,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+14,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+15,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+15,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+16,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+16,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+17,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+17,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+18,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+18,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+19,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+19,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+20,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+20,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+21,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+21,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+22,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+22,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+23,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+23,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+24,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+24,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+25,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+25,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+26,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+26,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+27,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+27,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+28,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+28,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+29,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+29,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+30,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+30,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+31,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+31,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+32,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+32,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+33,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+33,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+34,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+34,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+35,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+35,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+36,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+36,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+37,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+37,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+38,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+38,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+39,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+39,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+40,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+40,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+41,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+41,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+42,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+42,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+43,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+43,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+44,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+44,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+45,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+45,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+46,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+46,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+47,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+47,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+48,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+48,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+49,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+49,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+50,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+50,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+51,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+51,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+52,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+52,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+53,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+53,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+54,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+54,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+55,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+55,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+56,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+56,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+57,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+57,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+58,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+58,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+59,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+59,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+60,baseline,context_substitution,Context substitution,context_mismatch,True,True,False,True,session_only_authorized
+60,poia,context_substitution,Context substitution,context_mismatch,False,False,True,False,context_mismatch
+1,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+1,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+2,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+2,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+3,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+3,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+4,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+4,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+5,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+5,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+6,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+6,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+7,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+7,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+8,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+8,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+9,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+9,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+10,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+10,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+11,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+11,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+12,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+12,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+13,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+13,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+14,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+14,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+15,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+15,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+16,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+16,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+17,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+17,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+18,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+18,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+19,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+19,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+20,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+20,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+21,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+21,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+22,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+22,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+23,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+23,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+24,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+24,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+25,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+25,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+26,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+26,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+27,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+27,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+28,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+28,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+29,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+29,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+30,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+30,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+31,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+31,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+32,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+32,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+33,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+33,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+34,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+34,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+35,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+35,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+36,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+36,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+37,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+37,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+38,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+38,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+39,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+39,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+40,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+40,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+41,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+41,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+42,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+42,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+43,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+43,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+44,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+44,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+45,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+45,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+46,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+46,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+47,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+47,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+48,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+48,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+49,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+49,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+50,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+50,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+51,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+51,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+52,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+52,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+53,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+53,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+54,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+54,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+55,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+55,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+56,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+56,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+57,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+57,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+58,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+58,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+59,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+59,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+60,baseline,expired_proof_reuse,Expired proof reuse,expired,True,True,False,True,session_only_authorized
+60,poia,expired_proof_reuse,Expired proof reuse,expired,False,False,True,False,expired
+1,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+1,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+2,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+2,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+3,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+3,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+4,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+4,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+5,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+5,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+6,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+6,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+7,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+7,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+8,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+8,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+9,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+9,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+10,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+10,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+11,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+11,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+12,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+12,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+13,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+13,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+14,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+14,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+15,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+15,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+16,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+16,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+17,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+17,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+18,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+18,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+19,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+19,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+20,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+20,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+21,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+21,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+22,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+22,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+23,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+23,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+24,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+24,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+25,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+25,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+26,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+26,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+27,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+27,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+28,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+28,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+29,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+29,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+30,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+30,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+31,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+31,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+32,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+32,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+33,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+33,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+34,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+34,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+35,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+35,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+36,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+36,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+37,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+37,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+38,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+38,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+39,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+39,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+40,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+40,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+41,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+41,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+42,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+42,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+43,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+43,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+44,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+44,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+45,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+45,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+46,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+46,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+47,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+47,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+48,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+48,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+49,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+49,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+50,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+50,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+51,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+51,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+52,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+52,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+53,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+53,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+54,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+54,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+55,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+55,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+56,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+56,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+57,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+57,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+58,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+58,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+59,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+59,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+60,baseline,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,True,True,False,True,session_only_authorized
+60,poia,concurrent_session_misuse,Concurrent-session misuse,context_mismatch,False,False,True,False,context_mismatch
+1,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+1,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+2,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+2,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+3,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+3,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+4,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+4,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+5,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+5,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+6,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+6,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+7,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+7,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+8,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+8,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+9,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+9,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+10,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+10,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+11,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+11,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+12,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+12,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+13,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+13,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+14,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+14,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+15,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+15,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+16,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+16,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+17,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+17,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+18,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+18,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+19,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+19,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+20,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+20,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+21,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+21,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+22,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+22,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+23,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+23,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+24,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+24,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+25,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+25,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+26,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+26,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+27,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+27,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+28,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+28,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+29,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+29,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+30,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+30,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+31,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+31,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+32,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+32,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+33,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+33,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+34,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+34,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+35,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+35,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+36,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+36,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+37,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+37,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+38,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+38,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+39,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+39,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+40,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+40,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+41,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+41,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+42,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+42,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+43,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+43,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+44,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+44,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+45,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+45,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+46,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+46,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+47,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+47,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+48,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+48,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+49,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+49,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+50,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+50,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+51,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+51,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+52,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+52,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+53,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+53,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+54,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+54,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+55,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+55,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+56,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+56,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+57,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+57,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+58,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+58,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+59,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+59,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+60,baseline,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,True,True,False,True,session_only_authorized
+60,poia,multi_step_workflow_abuse,Multi-step workflow abuse,semantic_mismatch,False,False,True,False,semantic_mismatch
+1,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+1,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+2,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+2,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+3,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+3,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+4,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+4,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+5,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+5,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+6,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+6,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+7,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+7,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+8,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+8,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+9,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+9,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+10,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+10,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+11,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+11,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+12,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+12,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+13,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+13,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+14,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+14,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+15,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+15,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+16,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+16,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+17,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+17,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+18,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+18,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+19,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+19,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+20,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+20,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+21,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+21,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+22,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+22,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+23,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+23,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+24,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+24,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+25,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+25,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+26,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+26,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+27,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+27,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+28,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+28,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+29,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+29,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+30,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+30,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+31,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+31,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+32,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+32,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+33,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+33,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+34,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+34,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+35,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+35,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+36,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+36,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+37,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+37,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+38,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+38,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+39,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+39,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+40,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+40,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+41,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+41,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+42,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+42,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+43,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+43,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+44,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+44,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+45,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+45,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+46,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+46,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+47,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+47,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+48,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+48,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+49,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+49,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+50,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+50,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+51,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+51,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+52,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+52,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+53,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+53,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+54,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+54,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+55,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+55,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+56,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+56,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+57,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+57,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+58,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+58,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+59,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+59,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch
+60,baseline,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,True,True,False,True,session_only_authorized
+60,poia,confused_deputy_api_call,Confused-deputy API call,semantic_mismatch,False,False,True,False,semantic_mismatch

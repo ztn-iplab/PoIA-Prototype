@@ -1,0 +1,105 @@
+{
+  "experiment": "cross_domain_generality",
+  "summary": [
+    {
+      "cases": [
+        "amount_tamper",
+        "exact_match",
+        "recipient_tamper"
+      ],
+      "correct_acceptances": 60,
+      "correct_rejections": 120,
+      "domain": "banking_transfer",
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "schema_fields": [
+        "amount",
+        "currency",
+        "from_account",
+        "to_account"
+      ],
+      "total_cases": 180,
+      "verification_ms": {
+        "max": 0.07812499999999833,
+        "mean": 0.018957855555555722,
+        "median": 0.016541999999994395,
+        "n": 180
+      }
+    },
+    {
+      "cases": [
+        "exact_match",
+        "role_escalation",
+        "tenant_tamper"
+      ],
+      "correct_acceptances": 60,
+      "correct_rejections": 120,
+      "domain": "enterprise_admin",
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "schema_fields": [
+        "duration_hours",
+        "role",
+        "target_user",
+        "tenant"
+      ],
+      "total_cases": 180,
+      "verification_ms": {
+        "max": 0.09779199999999932,
+        "mean": 0.017365505555554567,
+        "median": 0.01612499999999184,
+        "n": 180
+      }
+    },
+    {
+      "cases": [
+        "exact_match",
+        "patient_tamper",
+        "purpose_tamper"
+      ],
+      "correct_acceptances": 60,
+      "correct_rejections": 120,
+      "domain": "healthcare_export",
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "schema_fields": [
+        "patient_id",
+        "purpose",
+        "recipient",
+        "record_type"
+      ],
+      "total_cases": 180,
+      "verification_ms": {
+        "max": 0.07000000000000062,
+        "mean": 0.017506438888887966,
+        "median": 0.01610449999999569,
+        "n": 180
+      }
+    },
+    {
+      "cases": [
+        "exact_match",
+        "key_tamper",
+        "project_tamper"
+      ],
+      "correct_acceptances": 60,
+      "correct_rejections": 120,
+      "domain": "cloud_api",
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "schema_fields": [
+        "key_id",
+        "project",
+        "region"
+      ],
+      "total_cases": 180,
+      "verification_ms": {
+        "max": 0.08720800000000528,
+        "mean": 0.022687727777777257,
+        "median": 0.015458000000002914,
+        "n": 180
+      }
+    }
+  ],
+  "trials": 60
+}
