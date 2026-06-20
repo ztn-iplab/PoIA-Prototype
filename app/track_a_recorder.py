@@ -30,7 +30,7 @@ def _opaque(label: str, value: Any) -> str:
 
 def _safe_scope(scope: Mapping[str, Any]) -> Dict[str, Any]:
     safe: Dict[str, Any] = {}
-    sensitive = {"account_number", "external_account", "name", "reference"}
+    sensitive = {"account_number", "external_account", "name", "object_id", "reference"}
     for key, value in scope.items():
         if key in sensitive and value not in (None, ""):
             safe[key] = _opaque(key, value)
@@ -48,7 +48,11 @@ def _safe_intent(intent: Mapping[str, Any]) -> Dict[str, Any]:
             "user_id": _opaque("principal", context.get("user_id", "unknown")),
             "rp_id": context.get("rp_id"),
             "workflow_id": context.get("workflow_id"),
-            "on_behalf_of": context.get("on_behalf_of"),
+            "on_behalf_of": (
+                _opaque("delegated_principal", context.get("on_behalf_of"))
+                if context.get("on_behalf_of")
+                else None
+            ),
         },
         "constraints": intent.get("constraints", {}),
     }
@@ -164,6 +168,14 @@ class TrackARecorder:
         snapshot["digest"] = _digest(snapshot)
         return snapshot
 
+    def attach_external_state(
+        self, snapshot: Mapping[str, Any], label: str, state: Mapping[str, Any]
+    ) -> Dict[str, Any]:
+        combined = {key: value for key, value in snapshot.items() if key != "digest"}
+        combined[label] = dict(state)
+        combined["digest"] = _digest(combined)
+        return combined
+
     def record(
         self,
         *,
@@ -209,7 +221,11 @@ class TrackARecorder:
             "scope": _safe_scope(intent_body.get("scope", {})),
             "context": {
                 "rp_id": context.get("rp_id"),
-                "on_behalf_of": context.get("on_behalf_of"),
+                "on_behalf_of": (
+                    _opaque("delegated_principal", context.get("on_behalf_of"))
+                    if context.get("on_behalf_of")
+                    else None
+                ),
             },
             "workflow_id": workflow_id,
             "nonce": _opaque("nonce", nonce) if nonce else None,

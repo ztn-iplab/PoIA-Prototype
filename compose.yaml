@@ -11,6 +11,9 @@ services:
       POIA_ENABLED: "true"
       POIA_TEST_MODE: "${POIA_TEST_MODE:-false}"
       POIA_EXPERIMENT_MODE: "${POIA_EXPERIMENT_MODE:-false}"
+      POIA_DOWNSTREAM_URL: "http://poia-ledger:8010"
+      POIA_DOWNSTREAM_SERVICE_ID: "poia-bank"
+      POIA_DOWNSTREAM_SECRET: "${POIA_DOWNSTREAM_SECRET:-}"
       POIA_TRACK_A_MANIFEST: "${POIA_TRACK_A_MANIFEST:-}"
       POIA_TRACK_A_SCENARIO_ID: "${POIA_TRACK_A_SCENARIO_ID:-}"
       POIA_TRACK_A_EXPECTED_DECISION: "${POIA_TRACK_A_EXPECTED_DECISION:-}"
@@ -26,6 +29,20 @@ services:
       - ./experiments/track_a:/experiments/track_a
     depends_on:
       - mailpit
+      - poia-ledger
+
+  poia-ledger:
+    build:
+      context: .
+      dockerfile: Containerfile
+    command: ["uvicorn", "downstream.main:app", "--host", "0.0.0.0", "--port", "8010"]
+    environment:
+      POIA_DOWNSTREAM_DATA_DIR: /ledger-data
+      POIA_DOWNSTREAM_SERVICE_ID: "poia-bank"
+      POIA_DOWNSTREAM_SECRET: "${POIA_DOWNSTREAM_SECRET:-}"
+      POIA_DOWNSTREAM_REQUIRE_POIA: "${POIA_DOWNSTREAM_REQUIRE_POIA:-true}"
+    volumes:
+      - poia_ledger_data:/ledger-data
 
   mailpit:
     image: docker.io/axllent/mailpit:latest
@@ -47,3 +64,4 @@ services:
 
 volumes:
   poia_data:
+  poia_ledger_data:

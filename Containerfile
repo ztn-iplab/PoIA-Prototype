@@ -6,6 +6,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
+COPY downstream ./downstream
 
 ENV POIA_DATA_DIR=/data
 ENV POIA_SESSION_SECRET=change-me

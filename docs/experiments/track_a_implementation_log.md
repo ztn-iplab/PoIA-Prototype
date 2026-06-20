@@ -148,3 +148,32 @@ workflow consumption, transfer, or balance change. The exact approved request
 then executed one transfer and changed the workflow to `consumed`. This is the
 executable basis for the `multi_step_abuse` cell; it is not yet an `n=200`
 confirmatory result.
+
+## Independent downstream and confused-deputy path
+
+Date: 2026-06-20
+
+Track A now includes an independently deployed FastAPI ledger service with its
+own SQLite state. Bank-to-ledger requests use a timestamped HMAC service
+credential. PoIA mode additionally requires an RP-issued attestation that binds
+the downstream request identifier, action, scope, delegated principal,
+relying-party context, intent hash, and proof identifier.
+
+The ledger independently verifies the service signature, clock window, PoIA
+attestation, semantic equality, delegated principal, and unique downstream
+request identifier before inserting an entry. The shared secret is supplied by
+environment variable and is neither committed nor written to evidence.
+
+The bank records downstream pre/post state digests alongside its local state.
+The dependency-backed tests verified:
+
+- one exact delegated operation creates one downstream entry;
+- substituting `on_behalf_of` is rejected as `delegation_mismatch` before the
+  downstream call and leaves state unchanged;
+- a valid service credential cannot carry an attestation for a different
+  action;
+- a missing PoIA attestation is rejected when PoIA is required;
+- replaying the same downstream request identifier creates no second entry.
+
+The full dependency-backed suite passed 22 tests. These are implementation
+regressions, not the preregistered `n=200` observations.

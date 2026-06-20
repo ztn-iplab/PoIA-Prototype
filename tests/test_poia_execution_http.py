@@ -60,6 +60,25 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
             )
             poia_routes.POIA_EXPERIMENT_MODE = True
 
+            class FakeDownstream:
+                def __init__(self):
+                    self.entries = 0
+
+                def state(self, principal):
+                    return {
+                        "available": True,
+                        "principal": principal,
+                        "entry_count": self.entries,
+                        "digest": f"entries-{self.entries}",
+                    }
+
+                def post_ledger_entry(self, intent_body, proof_id):
+                    self.entries += 1
+                    return 201, {"status": "accepted", "proof_id": proof_id}
+
+            fake_downstream = FakeDownstream()
+            poia_routes.downstream_client = fake_downstream
+
             poia_store.intents.clear()
             poia_store.challenges.clear()
             poia_store.proofs.clear()
@@ -162,6 +181,41 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
                         "X-PoIA-Scenario-Id": "multi_step_legitimate_control",
                     },
                 )
+                delegation_start = client.post(
+                    "/api/poia/experiment/delegation/start",
+                    json={"scope": {"object_id": "ledger-object-1", "amount": 25.0}},
+                )
+                delegation_intent_id = delegation_start.json()["intent_id"]
+                poia_store.approve_proof(
+                    ProofRecord(delegation_intent_id, "opaque", "approved", "Approved", 1),
+                    time.time(),
+                )
+                confused_request = json.loads(
+                    json.dumps(poia_store.intents[delegation_intent_id].intent_body)
+                )
+                confused_request["context"]["on_behalf_of"] = "different-principal"
+                confused = client.post(
+                    "/api/poia/experiment/execute",
+                    json={
+                        "intent_id": delegation_intent_id,
+                        "requested_intent": confused_request,
+                    },
+                    headers={
+                        "X-PoIA-Expected-Decision": "reject",
+                        "X-PoIA-Scenario-Id": "confused_deputy",
+                    },
+                )
+                delegated = client.post(
+                    "/api/poia/experiment/execute",
+                    json={
+                        "intent_id": delegation_intent_id,
+                        "requested_intent": poia_store.intents[delegation_intent_id].intent_body,
+                    },
+                    headers={
+                        "X-PoIA-Expected-Decision": "accept",
+                        "X-PoIA-Scenario-Id": "confused_deputy_legitimate_control",
+                    },
+                )
 
             self.assertEqual(first.status_code, 200)
             self.assertIn("Transfer completed", first.text)
@@ -173,6 +227,11 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
             self.assertEqual(workflow_abuse.status_code, 400)
             self.assertEqual(workflow_abuse.json()["reason"], "workflow_mismatch")
             self.assertEqual(workflow_execute.status_code, 200)
+            self.assertEqual(delegation_start.status_code, 201)
+            self.assertEqual(confused.status_code, 400)
+            self.assertEqual(confused.json()["reason"], "delegation_mismatch")
+            self.assertEqual(delegated.status_code, 201)
+            self.assertEqual(fake_downstream.entries, 1)
             with db.db_connect() as conn:
                 balance = conn.execute(
                     "SELECT balance FROM accounts WHERE id = ?", (account_id,)
@@ -193,15 +252,18 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
             ]
             self.assertEqual(
                 [row["decision"] for row in rows],
-                ["accept", "reject", "reject", "reject", "accept"],
+                ["accept", "reject", "reject", "reject", "accept", "reject", "accept"],
             )
             self.assertEqual(rows[1]["rejection_reason"], "proof_consumed")
             self.assertEqual(rows[2]["rejection_reason"], "scope_mismatch")
             self.assertEqual(rows[3]["rejection_reason"], "workflow_mismatch")
+            self.assertEqual(rows[5]["rejection_reason"], "delegation_mismatch")
             self.assertTrue(rows[0]["state_changed"])
             self.assertFalse(rows[1]["state_changed"])
             self.assertFalse(rows[2]["state_changed"])
             self.assertFalse(rows[3]["state_changed"])
+            self.assertFalse(rows[5]["state_changed"])
+            self.assertTrue(rows[6]["state_changed"])
             self.assertEqual(poia_store.proofs[tamper_id].status, "approved")
             request_artifacts = sorted((run_dir / "requests").glob("*.json"))
             artifacts = [json.loads(path.read_text()) for path in request_artifacts]

@@ -24,6 +24,7 @@ from ..track_a_recorder import track_a_recorder
 from ..model import ProofRecord
 from ..model import intent_mismatch_reason
 from ..db import db_connect
+from ..downstream_client import downstream_client
 from ..routes.banking import (
     execute_beneficiary_add,
     execute_cash,
@@ -478,6 +479,11 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
         if track_a_recorder.enabled
         else {"digest": "unavailable"}
     )
+    delegated_principal = requested_context.get("on_behalf_of")
+    if track_a_recorder.enabled and action == "ledger_post" and delegated_principal:
+        before = track_a_recorder.attach_external_state(
+            before, "downstream_ledger", downstream_client.state(str(delegated_principal))
+        )
     workflow_reason = None
     semantic_reason = intent_mismatch_reason(intent_record.intent_body, requested)
     if semantic_reason:
@@ -497,7 +503,7 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
             workflow_reason = "workflow_consumed"
         elif workflow["action"] != action or workflow["scope_hash"] != scope_hash:
             workflow_reason = "workflow_scope_mismatch"
-    if action != "transfer":
+    if action not in {"transfer", "ledger_post"}:
         reserved, reason = False, "unsupported_action"
     elif workflow_reason:
         reserved, reason = False, workflow_reason
@@ -517,9 +523,23 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
                 reserved = False
                 reason = "workflow_consumed"
     if reserved:
-        response = execute_transfer(request, user, requested)
-        decision = "accept"
-        rejection_reason = None
+        if action == "transfer":
+            response = execute_transfer(request, user, requested)
+            decision = "accept"
+            rejection_reason = None
+        else:
+            downstream_status, downstream_body = downstream_client.post_ledger_entry(
+                requested, intent_id
+            )
+            response = Response(
+                content=json.dumps(downstream_body),
+                media_type="application/json",
+                status_code=downstream_status,
+            )
+            decision = "accept" if downstream_status == 201 else "reject"
+            rejection_reason = (
+                None if decision == "accept" else downstream_body.get("reason", "downstream_denied")
+            )
     else:
         response = Response(
             content=json.dumps({"status": "denied", "reason": reason}),
@@ -530,6 +550,10 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
         rejection_reason = reason
     if track_a_recorder.enabled:
         after = track_a_recorder.capture_state(user["id"], action, scope)
+        if action == "ledger_post" and delegated_principal:
+            after = track_a_recorder.attach_external_state(
+                after, "downstream_ledger", downstream_client.state(str(delegated_principal))
+            )
         track_a_recorder.record(
             request=request,
             intent_id=intent_id,
@@ -546,6 +570,50 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
             requested_intent_body=requested,
         )
     return response
+
+
+@router.post("/api/poia/experiment/delegation/start")
+def api_poia_experiment_delegation_start(payload: dict, request: Request) -> Response:
+    if not POIA_EXPERIMENT_MODE:
+        return Response(
+            content=json.dumps({"status": "disabled"}),
+            media_type="application/json",
+            status_code=403,
+        )
+    user = get_current_user(request)
+    if not require_login(user):
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "unauthorized"}),
+            media_type="application/json",
+            status_code=401,
+        )
+    scope = payload.get("scope")
+    if not isinstance(scope, dict) or not scope.get("object_id"):
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "invalid_delegation"}),
+            media_type="application/json",
+            status_code=400,
+        )
+    intent_id = create_poia_intent(
+        action="ledger_post",
+        scope=scope,
+        context={
+            "rp_id": "poia-ledger",
+            "user_id": user["id"],
+            "on_behalf_of": f"experiment-principal-{user['id']}",
+        },
+    )
+    return Response(
+        content=json.dumps(
+            {
+                "status": "pending",
+                "intent_id": intent_id,
+                "approval_url": f"/poia/approve/{intent_id}",
+            }
+        ),
+        media_type="application/json",
+        status_code=201,
+    )
 
 
 @router.post("/api/poia/experiment/workflow/start")
