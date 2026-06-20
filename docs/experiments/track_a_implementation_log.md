@@ -222,3 +222,22 @@ context, workflow, and constraint changes remain mismatches. Hashing and the
 execution decision can no longer disagree because one used canonical bytes and
 the other used Python dictionary equality. The full dependency-backed suite
 passed 29 tests after this change.
+
+## Functional correctness verifier-only run
+
+Date: 2026-06-20
+
+Run `functional-verifier-df29fc2-n200` executed 16 declarative cases with 200
+fresh trials each at clean commit `df29fc23efd26ef617167b40c6d70de9740891cd`
+and seed `20260620`. The 3,200-row raw dataset remains local under
+`experiments/track_a/raw/`; its reviewed manifest, summary, table, and SHA-256
+checksums are versioned.
+
+All 3,200 decisions matched their references. The run observed 0 false
+acceptances among 2,400 expected rejections (Wilson 95% CI 0-0.16%) and 0 false
+rejections among 800 expected acceptances (Wilson 95% CI 0-0.48%). Overall
+correctness was 3,200/3,200 (Wilson 95% CI 99.88-100%). The paper labels these
+results verifier-only; real WebAuthn and ZT-Authenticator cells remain pending.
+The local `PoIA_Extended/Main.tex` was updated with these measured denominators
+and interpretation limits. PDF compilation remains pending because no LaTeX
+engine is installed on this host.
