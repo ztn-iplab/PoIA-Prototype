@@ -3,6 +3,13 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+if [[ -f "${ROOT_DIR}/.env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "${ROOT_DIR}/.env"
+  set +a
+fi
+
 usage() {
   echo "Usage: ./run.sh [--build]"
   echo "  --build   rebuild images before starting"
@@ -168,14 +175,18 @@ if [[ "${engine_bin}" == "podman" ]]; then
 fi
 
 host_ip=$(detect_host_ip || true)
-update_dns_mapping "${host_ip}"
-update_hosts_mapping "${host_ip}"
+if [[ "${POIA_SKIP_HOST_SETUP:-false}" == "true" ]]; then
+  echo "Skipping privileged DNS and hosts-file setup."
+else
+  update_dns_mapping "${host_ip}"
+  update_hosts_mapping "${host_ip}"
+fi
 ensure_cert
 cleanup_ports
 
-export PUBLIC_BASE_URL="https://poia.local"
-export WEB_RP_ID="poia.local"
-export WEB_ORIGIN="https://poia.local"
+export PUBLIC_BASE_URL="${PUBLIC_BASE_URL:-https://poia.local}"
+export WEB_RP_ID="${WEB_RP_ID:-poia.local}"
+export WEB_ORIGIN="${WEB_ORIGIN:-https://poia.local}"
 
 echo "Using PUBLIC_BASE_URL=${PUBLIC_BASE_URL}"
 if [[ -n "${host_ip}" ]]; then

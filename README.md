@@ -47,6 +47,14 @@ ZT-Authenticator mobile app (or any standard TOTP app) to enroll.
 
 - The HTTPS entrypoint is via nginx and `https://poia.local`
 - Mailpit is exposed at `http://127.0.0.1:8027` (web UI)
+- Rootless runtimes that cannot bind ports below 1024 can set
+  `POIA_HTTPS_PORT=8443`, `POIA_HTTP_PORT=8080`, and use
+  `https://poia.local:8443` as `PUBLIC_BASE_URL` and `WEB_ORIGIN`.
+  Put these values in the ignored `.env` file. Set
+  `POIA_SKIP_HOST_SETUP=true` when hostname resolution is supplied by a browser
+  resolver rule or external DNS. For a phone on the same LAN,
+  `PUBLIC_BASE_URL` may use the certificate's LAN IP while `WEB_ORIGIN` and
+  `WEB_RP_ID` remain bound to `poia.local`.
 
 ## Demo flow
 
@@ -158,4 +166,3 @@ python3 scripts/run_experiment_suite.py \
 5) **Auditability**
    - Verify each executed action has intent linkage (intent_id, rp_id, device_id).
    - Compare with baseline session-only logging.
-

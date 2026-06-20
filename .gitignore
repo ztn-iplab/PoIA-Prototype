@@ -16,5 +16,7 @@ migration_backup/
 tamarin/results/
 certs/*.pem
 certs/*.key
+certs/*.crt
+certs/*.srl
 private/*.pem
 private/*.key

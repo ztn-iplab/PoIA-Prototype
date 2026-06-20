@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     environment:
       POIA_DATA_DIR: /data
-      POIA_SESSION_SECRET: "change-me-in-prod"
+      POIA_SESSION_SECRET: "${POIA_SESSION_SECRET:-change-me-in-local-demo}"
       POIA_ENABLED: "true"
       POIA_TEST_MODE: "${POIA_TEST_MODE:-false}"
       POIA_EXPERIMENT_MODE: "${POIA_EXPERIMENT_MODE:-false}"
@@ -53,8 +53,8 @@ services:
   nginx:
     image: docker.io/library/nginx:alpine
     ports:
-      - "443:443"
-      - "80:80"
+      - "${POIA_HTTPS_PORT:-443}:443"
+      - "${POIA_HTTP_PORT:-80}:80"
     volumes:
       - ./nginx/sites-enabled:/etc/nginx/conf.d:ro
       - ./certs:/etc/ssl/certs:ro
