@@ -144,6 +144,17 @@ def init_db() -> None:
                 created_at INTEGER NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES users(id)
             );
+
+            CREATE TABLE IF NOT EXISTS poia_workflows (
+                workflow_id TEXT PRIMARY KEY,
+                user_id INTEGER NOT NULL,
+                action TEXT NOT NULL,
+                scope_hash TEXT NOT NULL,
+                status TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
+                consumed_at INTEGER,
+                FOREIGN KEY(user_id) REFERENCES users(id)
+            );
             """
         )
         try:

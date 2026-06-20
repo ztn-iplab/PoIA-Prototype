@@ -10,6 +10,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse, Response
 
 from ..core import (
     build_proof_payload,
+    canonical_json,
     create_poia_intent,
     get_current_user,
     intent_hash,
@@ -21,6 +22,7 @@ from ..core import (
 from ..poia_metrics import log_poia_event
 from ..track_a_recorder import track_a_recorder
 from ..model import ProofRecord
+from ..model import intent_mismatch_reason
 from ..db import db_connect
 from ..routes.banking import (
     execute_beneficiary_add,
@@ -469,17 +471,51 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
         )
     action = requested.get("action", "unknown")
     scope = requested.get("scope", {})
+    requested_context = requested.get("context", {})
+    workflow_id = requested_context.get("workflow_id")
     before = (
         track_a_recorder.capture_state(user["id"], action, scope)
         if track_a_recorder.enabled
         else {"digest": "unavailable"}
     )
+    workflow_reason = None
+    semantic_reason = intent_mismatch_reason(intent_record.intent_body, requested)
+    if semantic_reason:
+        workflow_reason = semantic_reason
+    elif workflow_id:
+        scope_hash = hashlib.sha256(canonical_json(scope)).hexdigest()
+        with db_connect() as conn:
+            workflow = conn.execute(
+                "SELECT * FROM poia_workflows WHERE workflow_id = ?",
+                (workflow_id,),
+            ).fetchone()
+        if workflow is None:
+            workflow_reason = "workflow_invalid"
+        elif workflow["user_id"] != user["id"]:
+            workflow_reason = "workflow_principal_mismatch"
+        elif workflow["status"] != "pending":
+            workflow_reason = "workflow_consumed"
+        elif workflow["action"] != action or workflow["scope_hash"] != scope_hash:
+            workflow_reason = "workflow_scope_mismatch"
     if action != "transfer":
         reserved, reason = False, "unsupported_action"
+    elif workflow_reason:
+        reserved, reason = False, workflow_reason
     else:
         reserved, reason, _, _ = poia_store.reserve_execution(
             intent_id, user["id"], time.time(), requested
         )
+    if reserved:
+        if workflow_id:
+            with db_connect() as conn:
+                updated = conn.execute(
+                    "UPDATE poia_workflows SET status = 'consumed', consumed_at = ? "
+                    "WHERE workflow_id = ? AND status = 'pending'",
+                    (int(time.time()), workflow_id),
+                ).rowcount
+            if updated != 1:
+                reserved = False
+                reason = "workflow_consumed"
     if reserved:
         response = execute_transfer(request, user, requested)
         decision = "accept"
@@ -510,6 +546,61 @@ def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
             requested_intent_body=requested,
         )
     return response
+
+
+@router.post("/api/poia/experiment/workflow/start")
+def api_poia_experiment_workflow_start(payload: dict, request: Request) -> Response:
+    if not POIA_EXPERIMENT_MODE:
+        return Response(
+            content=json.dumps({"status": "disabled"}),
+            media_type="application/json",
+            status_code=403,
+        )
+    user = get_current_user(request)
+    if not require_login(user):
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "unauthorized"}),
+            media_type="application/json",
+            status_code=401,
+        )
+    action = payload.get("action")
+    scope = payload.get("scope")
+    if action != "transfer" or not isinstance(scope, dict):
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "invalid_workflow"}),
+            media_type="application/json",
+            status_code=400,
+        )
+    workflow_id = secrets.token_urlsafe(12)
+    scope_hash = hashlib.sha256(canonical_json(scope)).hexdigest()
+    with db_connect() as conn:
+        conn.execute(
+            "INSERT INTO poia_workflows "
+            "(workflow_id, user_id, action, scope_hash, status, created_at) "
+            "VALUES (?, ?, ?, ?, 'pending', ?)",
+            (workflow_id, user["id"], action, scope_hash, int(time.time())),
+        )
+    intent_id = create_poia_intent(
+        action=action,
+        scope=scope,
+        context={
+            "rp_id": "poia-demo-bank",
+            "user_id": user["id"],
+            "workflow_id": workflow_id,
+        },
+    )
+    return Response(
+        content=json.dumps(
+            {
+                "status": "pending",
+                "workflow_id": workflow_id,
+                "intent_id": intent_id,
+                "approval_url": f"/poia/approve/{intent_id}",
+            }
+        ),
+        media_type="application/json",
+        status_code=201,
+    )
 
 
 @router.get("/api/poia/pending")

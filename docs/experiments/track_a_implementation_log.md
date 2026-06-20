@@ -131,3 +131,20 @@ The HTTP regression was expanded to submit an approved amount of 100 and a
 requested amount of 700. The endpoint returned `scope_mismatch`, inserted no
 transaction, changed no balance, retained the proof in approved state, and
 wrote the paired request artifact. Both test modes passed 21 tests.
+
+## Multi-step workflow binding
+
+Date: 2026-06-20
+
+The lab workflow-start endpoint creates a database-backed pending workflow that
+binds a synthetic principal, action, and canonical scope digest. The generated
+PoIA intent carries the same `workflow_id`. Execution requires the semantic
+intent match and a pending workflow with the matching principal, action, and
+scope; successful reservation consumes the workflow once before dispatch.
+
+The HTTP regression first substituted a different workflow identifier. The
+request was rejected as `workflow_mismatch`, with no proof consumption,
+workflow consumption, transfer, or balance change. The exact approved request
+then executed one transfer and changed the workflow to `consumed`. This is the
+executable basis for the `multi_step_abuse` cell; it is not yet an `n=200`
+confirmatory result.

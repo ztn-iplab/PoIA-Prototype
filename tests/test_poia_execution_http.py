@@ -118,6 +118,50 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
                         "X-PoIA-Scenario-Id": "request_tampering",
                     },
                 )
+                workflow_start = client.post(
+                    "/api/poia/experiment/workflow/start",
+                    json={
+                        "action": "transfer",
+                        "scope": {
+                            "from_account": account_id,
+                            "amount": 50.0,
+                            "currency": "USD",
+                            "external_account": "workflow-target",
+                        },
+                    },
+                )
+                workflow_body = workflow_start.json()
+                workflow_intent_id = workflow_body["intent_id"]
+                poia_store.approve_proof(
+                    ProofRecord(workflow_intent_id, "opaque", "approved", "Approved", 1),
+                    time.time(),
+                )
+                wrong_workflow = json.loads(
+                    json.dumps(poia_store.intents[workflow_intent_id].intent_body)
+                )
+                wrong_workflow["context"]["workflow_id"] = "different-workflow"
+                workflow_abuse = client.post(
+                    "/api/poia/experiment/execute",
+                    json={
+                        "intent_id": workflow_intent_id,
+                        "requested_intent": wrong_workflow,
+                    },
+                    headers={
+                        "X-PoIA-Expected-Decision": "reject",
+                        "X-PoIA-Scenario-Id": "multi_step_abuse",
+                    },
+                )
+                workflow_execute = client.post(
+                    "/api/poia/experiment/execute",
+                    json={
+                        "intent_id": workflow_intent_id,
+                        "requested_intent": poia_store.intents[workflow_intent_id].intent_body,
+                    },
+                    headers={
+                        "X-PoIA-Expected-Decision": "accept",
+                        "X-PoIA-Scenario-Id": "multi_step_legitimate_control",
+                    },
+                )
 
             self.assertEqual(first.status_code, 200)
             self.assertIn("Transfer completed", first.text)
@@ -125,6 +169,10 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
             self.assertIn("already been used", second.text)
             self.assertEqual(tampered.status_code, 400)
             self.assertEqual(tampered.json()["reason"], "scope_mismatch")
+            self.assertEqual(workflow_start.status_code, 201)
+            self.assertEqual(workflow_abuse.status_code, 400)
+            self.assertEqual(workflow_abuse.json()["reason"], "workflow_mismatch")
+            self.assertEqual(workflow_execute.status_code, 200)
             with db.db_connect() as conn:
                 balance = conn.execute(
                     "SELECT balance FROM accounts WHERE id = ?", (account_id,)
@@ -132,23 +180,36 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
                 transactions = conn.execute(
                     "SELECT COUNT(*) FROM transactions WHERE account_id = ?", (account_id,)
                 ).fetchone()[0]
-            self.assertEqual(balance, 900.0)
-            self.assertEqual(transactions, 1)
+                workflow_status = conn.execute(
+                    "SELECT status FROM poia_workflows WHERE workflow_id = ?",
+                    (workflow_body["workflow_id"],),
+                ).fetchone()[0]
+            self.assertEqual(balance, 850.0)
+            self.assertEqual(transactions, 2)
+            self.assertEqual(workflow_status, "consumed")
             rows = [
                 json.loads(line)
                 for line in (run_dir / "decisions" / "decisions.jsonl").read_text().splitlines()
             ]
             self.assertEqual(
-                [row["decision"] for row in rows], ["accept", "reject", "reject"]
+                [row["decision"] for row in rows],
+                ["accept", "reject", "reject", "reject", "accept"],
             )
             self.assertEqual(rows[1]["rejection_reason"], "proof_consumed")
             self.assertEqual(rows[2]["rejection_reason"], "scope_mismatch")
+            self.assertEqual(rows[3]["rejection_reason"], "workflow_mismatch")
             self.assertTrue(rows[0]["state_changed"])
             self.assertFalse(rows[1]["state_changed"])
             self.assertFalse(rows[2]["state_changed"])
+            self.assertFalse(rows[3]["state_changed"])
             self.assertEqual(poia_store.proofs[tamper_id].status, "approved")
             request_artifacts = sorted((run_dir / "requests").glob("*.json"))
-            tamper_artifact = json.loads(request_artifacts[-1].read_text())
+            artifacts = [json.loads(path.read_text()) for path in request_artifacts]
+            tamper_artifact = next(
+                artifact
+                for artifact in artifacts
+                if artifact["requested_intent"]["scope"].get("amount") == 700.0
+            )
             self.assertEqual(tamper_artifact["approved_intent"]["scope"]["amount"], 100.0)
             self.assertEqual(tamper_artifact["requested_intent"]["scope"]["amount"], 700.0)
 
