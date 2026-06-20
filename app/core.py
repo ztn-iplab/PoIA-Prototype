@@ -1,6 +1,5 @@
 import base64
 import hashlib
-import json
 import secrets
 import time
 from typing import Any, Dict, Optional
@@ -14,6 +13,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from .db import db_connect
+from .intent_codec import canonical_json
 from .model import ChallengeRecord, InMemoryPoIA, IntentRecord, ProofRecord
 from .poia_metrics import log_poia_event
 from .settings import (
@@ -66,10 +66,6 @@ def get_current_user(request: Request) -> Optional[Any]:
 
 def require_login(user: Optional[Any]) -> bool:
     return user is not None
-
-
-def canonical_json(data: Dict[str, Any]) -> bytes:
-    return json.dumps(data, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
 
 
 def build_intent(action: str, scope: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:

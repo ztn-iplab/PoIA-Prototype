@@ -201,3 +201,24 @@ protected API-operation record. PoIA rejected the identical substitution as
 `action_mismatch` with no state change, retained the proof, and then accepted
 the exact `deploy_config` request. Baseline and PoIA observations were written
 under separate manifests. The full dependency-backed suite passed 23 tests.
+
+## Canonical intent contract
+
+Date: 2026-06-20
+
+Intent hashing and semantic matching now use one normalization and canonical
+JSON implementation. It defines:
+
+- lexicographic object-key ordering and whitespace-free JSON;
+- NFC normalization for every string value and object key;
+- rejection of keys that collide after Unicode normalization;
+- one representation for integer-equivalent floats and signed zero;
+- rejection of NaN and positive or negative infinity;
+- preservation of array order and exact non-integral numeric values.
+
+Consequently, harmless field-order, JSON-escape, NFC/NFD, and `100`/`100.0`
+variations compare equal, while semantic action, scope, target, principal,
+context, workflow, and constraint changes remain mismatches. Hashing and the
+execution decision can no longer disagree because one used canonical bytes and
+the other used Python dictionary equality. The full dependency-backed suite
+passed 29 tests after this change.

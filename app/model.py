@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from threading import RLock
 from typing import Any, Dict, Optional, Tuple
 
+from .intent_codec import canonical_json
+
 
 @dataclass
 class IntentRecord:
@@ -91,24 +93,36 @@ def intent_mismatch_reason(
     approved: Dict[str, Any], requested: Dict[str, Any]
 ) -> Optional[str]:
     """Return the most specific semantic mismatch without normalizing values."""
-    if approved.get("action") != requested.get("action"):
+    if canonical_json({"value": approved.get("action")}) != canonical_json(
+        {"value": requested.get("action")}
+    ):
         return "action_mismatch"
     approved_context = approved.get("context", {})
     requested_context = requested.get("context", {})
-    if approved_context.get("workflow_id") != requested_context.get("workflow_id"):
+    if canonical_json({"value": approved_context.get("workflow_id")}) != canonical_json(
+        {"value": requested_context.get("workflow_id")}
+    ):
         return "workflow_mismatch"
-    if approved_context.get("on_behalf_of") != requested_context.get("on_behalf_of"):
+    if canonical_json({"value": approved_context.get("on_behalf_of")}) != canonical_json(
+        {"value": requested_context.get("on_behalf_of")}
+    ):
         return "delegation_mismatch"
-    if approved_context.get("user_id") != requested_context.get("user_id"):
+    if canonical_json({"value": approved_context.get("user_id")}) != canonical_json(
+        {"value": requested_context.get("user_id")}
+    ):
         return "principal_mismatch"
-    if approved_context.get("rp_id") != requested_context.get("rp_id"):
+    if canonical_json({"value": approved_context.get("rp_id")}) != canonical_json(
+        {"value": requested_context.get("rp_id")}
+    ):
         return "rp_mismatch"
-    if approved_context != requested_context:
+    if canonical_json(approved_context) != canonical_json(requested_context):
         return "context_mismatch"
-    if approved.get("scope") != requested.get("scope"):
+    if canonical_json(approved.get("scope", {})) != canonical_json(requested.get("scope", {})):
         return "scope_mismatch"
-    if approved.get("constraints") != requested.get("constraints"):
+    if canonical_json(approved.get("constraints", {})) != canonical_json(
+        requested.get("constraints", {})
+    ):
         return "constraints_mismatch"
-    if approved != requested:
+    if canonical_json(approved) != canonical_json(requested):
         return "intent_mismatch"
     return None
