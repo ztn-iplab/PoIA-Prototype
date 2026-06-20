@@ -1,7 +1,13 @@
 import unittest
 from concurrent.futures import ThreadPoolExecutor
 
-from app.model import ChallengeRecord, InMemoryPoIA, IntentRecord, ProofRecord
+from app.model import (
+    ChallengeRecord,
+    InMemoryPoIA,
+    IntentRecord,
+    ProofRecord,
+    intent_mismatch_reason,
+)
 
 
 def populated_store(expires_at: float = 2_000_000_000.0) -> InMemoryPoIA:
@@ -81,6 +87,55 @@ class PoIAStateMachineTests(unittest.TestCase):
         second = store.reserve_execution("intent-1", 7, 1_900_000_003.0)
         self.assertTrue(first[0])
         self.assertEqual(second[:2], (False, "proof_consumed"))
+
+    def test_semantic_mismatch_does_not_consume_proof(self) -> None:
+        store = populated_store()
+        store.approve_proof(
+            ProofRecord("intent-1", "opaque", "approved", "Approved", 1),
+            1_900_000_001.0,
+        )
+        requested = {
+            **store.intents["intent-1"].intent_body,
+            "scope": {"amount": 1000},
+        }
+        accepted, reason, _, _ = store.reserve_execution(
+            "intent-1", 7, 1_900_000_002.0, requested
+        )
+        self.assertFalse(accepted)
+        self.assertEqual(reason, "scope_mismatch")
+        self.assertEqual(store.proofs["intent-1"].status, "approved")
+
+    def test_mismatch_taxonomy_covers_protocol_bindings(self) -> None:
+        approved = {
+            "action": "ledger_post",
+            "scope": {"amount": 100},
+            "context": {
+                "user_id": 7,
+                "rp_id": "ledger.local",
+                "workflow_id": "workflow-1",
+                "on_behalf_of": "principal-7",
+            },
+            "constraints": {"expires_in_seconds": 60},
+        }
+        cases = (
+            ({**approved, "action": "api_key_rotate"}, "action_mismatch"),
+            (
+                {**approved, "context": {**approved["context"], "workflow_id": "workflow-2"}},
+                "workflow_mismatch",
+            ),
+            (
+                {**approved, "context": {**approved["context"], "on_behalf_of": "principal-8"}},
+                "delegation_mismatch",
+            ),
+            (
+                {**approved, "context": {**approved["context"], "rp_id": "attacker.local"}},
+                "rp_mismatch",
+            ),
+            ({**approved, "scope": {"amount": 101}}, "scope_mismatch"),
+        )
+        for requested, expected in cases:
+            with self.subTest(expected=expected):
+                self.assertEqual(intent_mismatch_reason(approved, requested), expected)
 
 
 if __name__ == "__main__":

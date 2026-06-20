@@ -13,6 +13,7 @@ POIA_WITHDRAW_THRESHOLD = 500.0
 SESSION_SECRET = os.getenv("POIA_SESSION_SECRET", "dev-only-secret")
 POIA_ENABLED = os.getenv("POIA_ENABLED", "true").lower() == "true"
 POIA_TEST_MODE = os.getenv("POIA_TEST_MODE", "false").lower() == "true"
+POIA_EXPERIMENT_MODE = os.getenv("POIA_EXPERIMENT_MODE", "false").lower() == "true"
 MFA_ENROLL_SECRET = os.getenv("MFA_ENROLL_SECRET", SESSION_SECRET)
 MFA_ENROLL_TTL_MINUTES = 10
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "https://poia.local")

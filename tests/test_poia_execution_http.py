@@ -58,6 +58,7 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
             poia_routes.track_a_recorder = TrackARecorder(
                 manifest_path, scenario_id="exact_legitimate_match"
             )
+            poia_routes.POIA_EXPERIMENT_MODE = True
 
             poia_store.intents.clear()
             poia_store.challenges.clear()
@@ -93,11 +94,37 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
                         "X-PoIA-Scenario-Id": "replay",
                     },
                 )
+                tamper_id = create_poia_intent(
+                    action="transfer",
+                    scope={
+                        "from_account": account_id,
+                        "amount": 100.0,
+                        "currency": "USD",
+                        "external_account": "synthetic-target",
+                    },
+                    context={"rp_id": "poia-demo-bank", "user_id": user_id},
+                )
+                poia_store.approve_proof(
+                    ProofRecord(tamper_id, "opaque", "approved", "Approved", 1),
+                    time.time(),
+                )
+                requested = json.loads(json.dumps(poia_store.intents[tamper_id].intent_body))
+                requested["scope"]["amount"] = 700.0
+                tampered = client.post(
+                    "/api/poia/experiment/execute",
+                    json={"intent_id": tamper_id, "requested_intent": requested},
+                    headers={
+                        "X-PoIA-Expected-Decision": "reject",
+                        "X-PoIA-Scenario-Id": "request_tampering",
+                    },
+                )
 
             self.assertEqual(first.status_code, 200)
             self.assertIn("Transfer completed", first.text)
             self.assertEqual(second.status_code, 200)
             self.assertIn("already been used", second.text)
+            self.assertEqual(tampered.status_code, 400)
+            self.assertEqual(tampered.json()["reason"], "scope_mismatch")
             with db.db_connect() as conn:
                 balance = conn.execute(
                     "SELECT balance FROM accounts WHERE id = ?", (account_id,)
@@ -111,10 +138,19 @@ class PoIAExecutionHTTPTests(unittest.TestCase):
                 json.loads(line)
                 for line in (run_dir / "decisions" / "decisions.jsonl").read_text().splitlines()
             ]
-            self.assertEqual([row["decision"] for row in rows], ["accept", "reject"])
+            self.assertEqual(
+                [row["decision"] for row in rows], ["accept", "reject", "reject"]
+            )
             self.assertEqual(rows[1]["rejection_reason"], "proof_consumed")
+            self.assertEqual(rows[2]["rejection_reason"], "scope_mismatch")
             self.assertTrue(rows[0]["state_changed"])
             self.assertFalse(rows[1]["state_changed"])
+            self.assertFalse(rows[2]["state_changed"])
+            self.assertEqual(poia_store.proofs[tamper_id].status, "approved")
+            request_artifacts = sorted((run_dir / "requests").glob("*.json"))
+            tamper_artifact = json.loads(request_artifacts[-1].read_text())
+            self.assertEqual(tamper_artifact["approved_intent"]["scope"]["amount"], 100.0)
+            self.assertEqual(tamper_artifact["requested_intent"]["scope"]["amount"], 700.0)
 
 
 if __name__ == "__main__":

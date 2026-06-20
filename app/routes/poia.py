@@ -29,7 +29,7 @@ from ..routes.banking import (
     execute_transfer,
 )
 from ..webauthn_utils import get_webauthn_server, load_credentials, webauthn_state_store
-from ..settings import POIA_TEST_MODE, INTENT_TTL_SECONDS
+from ..settings import POIA_EXPERIMENT_MODE, POIA_TEST_MODE, INTENT_TTL_SECONDS
 from fido2.utils import websafe_decode, websafe_encode
 
 router = APIRouter()
@@ -430,6 +430,84 @@ def poia_execute(intent_id: str, request: Request) -> Response:
             started_ns=started_ns,
             before=before,
             after=after,
+        )
+    return response
+
+
+@router.post("/api/poia/experiment/execute")
+def api_poia_experiment_execute(payload: dict, request: Request) -> Response:
+    """Execute an explicitly supplied intent through the production semantic gate."""
+    if not POIA_EXPERIMENT_MODE:
+        return Response(
+            content=json.dumps({"status": "disabled"}),
+            media_type="application/json",
+            status_code=403,
+        )
+    started_ns = time.perf_counter_ns()
+    user = get_current_user(request)
+    if not require_login(user):
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "unauthorized"}),
+            media_type="application/json",
+            status_code=401,
+        )
+    intent_id = str(payload.get("intent_id") or "")
+    requested = payload.get("requested_intent")
+    if not intent_id or not isinstance(requested, dict):
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "missing_fields"}),
+            media_type="application/json",
+            status_code=400,
+        )
+    intent_record = poia_store.intents.get(intent_id)
+    challenge = poia_store.challenges.get(intent_id)
+    if intent_record is None or challenge is None:
+        return Response(
+            content=json.dumps({"status": "denied", "reason": "intent_invalid"}),
+            media_type="application/json",
+            status_code=404,
+        )
+    action = requested.get("action", "unknown")
+    scope = requested.get("scope", {})
+    before = (
+        track_a_recorder.capture_state(user["id"], action, scope)
+        if track_a_recorder.enabled
+        else {"digest": "unavailable"}
+    )
+    if action != "transfer":
+        reserved, reason = False, "unsupported_action"
+    else:
+        reserved, reason, _, _ = poia_store.reserve_execution(
+            intent_id, user["id"], time.time(), requested
+        )
+    if reserved:
+        response = execute_transfer(request, user, requested)
+        decision = "accept"
+        rejection_reason = None
+    else:
+        response = Response(
+            content=json.dumps({"status": "denied", "reason": reason}),
+            media_type="application/json",
+            status_code=409 if reason == "proof_consumed" else 400,
+        )
+        decision = "reject"
+        rejection_reason = reason
+    if track_a_recorder.enabled:
+        after = track_a_recorder.capture_state(user["id"], action, scope)
+        track_a_recorder.record(
+            request=request,
+            intent_id=intent_id,
+            intent_body=requested,
+            nonce=challenge.nonce,
+            expected_decision=track_a_recorder.expected_decision_for(request),
+            decision=decision,
+            rejection_reason=rejection_reason,
+            http_status=response.status_code,
+            started_ns=started_ns,
+            before=before,
+            after=after,
+            approved_intent_body=intent_record.intent_body,
+            requested_intent_body=requested,
         )
     return response
 

@@ -66,6 +66,9 @@ class TrackARecorderTests(unittest.TestCase):
             snapshots = list((run_dir / "state_snapshots").glob("*.json"))
             self.assertEqual(len(snapshots), 1)
             self.assertEqual(json.loads(snapshots[0].read_text())["request_id"], "request-1")
+            requests = list((run_dir / "requests").glob("*.json"))
+            self.assertEqual(len(requests), 1)
+            self.assertNotIn("secret-value", requests[0].read_text())
 
     def test_manifest_directory_must_match_run_id(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -52,7 +52,11 @@ class InMemoryPoIA:
             return True, "approved"
 
     def reserve_execution(
-        self, intent_id: str, principal_id: int, now: float
+        self,
+        intent_id: str,
+        principal_id: int,
+        now: float,
+        requested_intent_body: Optional[Dict[str, Any]] = None,
     ) -> Tuple[bool, str, Optional[IntentRecord], Optional[ChallengeRecord]]:
         """Atomically consume one approved proof before protected execution."""
         with self._lock:
@@ -63,6 +67,12 @@ class InMemoryPoIA:
                 return False, "intent_invalid", intent, challenge
             if intent.intent_body.get("context", {}).get("user_id") != principal_id:
                 return False, "principal_mismatch", intent, challenge
+            if requested_intent_body is not None:
+                mismatch = intent_mismatch_reason(
+                    intent.intent_body, requested_intent_body
+                )
+                if mismatch is not None:
+                    return False, mismatch, intent, challenge
             if proof is None:
                 return False, "proof_missing", intent, challenge
             if proof.status == "consumed":
@@ -75,3 +85,30 @@ class InMemoryPoIA:
             proof.message = "Consumed"
             proof.consumed_at = now
             return True, "approved", intent, challenge
+
+
+def intent_mismatch_reason(
+    approved: Dict[str, Any], requested: Dict[str, Any]
+) -> Optional[str]:
+    """Return the most specific semantic mismatch without normalizing values."""
+    if approved.get("action") != requested.get("action"):
+        return "action_mismatch"
+    approved_context = approved.get("context", {})
+    requested_context = requested.get("context", {})
+    if approved_context.get("workflow_id") != requested_context.get("workflow_id"):
+        return "workflow_mismatch"
+    if approved_context.get("on_behalf_of") != requested_context.get("on_behalf_of"):
+        return "delegation_mismatch"
+    if approved_context.get("user_id") != requested_context.get("user_id"):
+        return "principal_mismatch"
+    if approved_context.get("rp_id") != requested_context.get("rp_id"):
+        return "rp_mismatch"
+    if approved_context != requested_context:
+        return "context_mismatch"
+    if approved.get("scope") != requested.get("scope"):
+        return "scope_mismatch"
+    if approved.get("constraints") != requested.get("constraints"):
+        return "constraints_mismatch"
+    if approved != requested:
+        return "intent_mismatch"
+    return None

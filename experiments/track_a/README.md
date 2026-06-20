@@ -26,6 +26,7 @@ export POIA_TRACK_A_MANIFEST=/experiments/track_a/raw/<run_id>/manifest.json
 export POIA_TRACK_A_SCENARIO_ID=exact_legitimate_match
 export POIA_TRACK_A_EXPECTED_DECISION=accept
 export POIA_TEST_MODE=false
+export POIA_EXPERIMENT_MODE=true
 ./run.sh --build
 ```
 
@@ -34,6 +35,12 @@ state snapshot per completed operation. Browser-driven attempts receive
 monotonic attempt numbers. Automated harnesses may provide
 `X-PoIA-Request-Id`, `X-PoIA-Attempt`, `X-PoIA-Scenario-Id`,
 `X-PoIA-Scenario-Category`, and `X-PoIA-Expected-Decision` headers.
+
+`POIA_EXPERIMENT_MODE` exposes authenticated lab endpoints used for explicit
+approved-versus-requested intent comparisons. Keep it `false` outside an
+isolated experiment run. `POIA_TEST_MODE` remains `false` for every reportable
+WebAuthn and ZT-Authenticator run; the synthetic approval endpoints are not
+confirmatory evidence.
 
 Generate an honest progress table at any point:
 

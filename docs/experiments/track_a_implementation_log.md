@@ -104,3 +104,30 @@ test then executed an approved transfer twice through the real execution route:
 The dependency-backed suite passed 19 tests. The standard-library suite also
 passed, with the HTTP test explicitly skipped when optional application test
 dependencies are unavailable.
+
+## Explicit semantic comparison path
+
+Date: 2026-06-20
+
+The atomic execution gate accepts an optional requested intent and compares it
+to the approved intent before consuming the proof. The rejection taxonomy now
+distinguishes action, scope, principal, relying-party, workflow, delegation,
+context, and constraint mismatches. A mismatch leaves the proof approved, so a
+subsequent exact request can still be tested without conflating tampering with
+proof consumption.
+
+An authenticated endpoint at `/api/poia/experiment/execute` exposes this exact
+production state transition only when `POIA_EXPERIMENT_MODE=true`. It currently
+dispatches real transfer execution after a successful match. Reportable runs
+must keep `POIA_TEST_MODE=false`; experiment mode does not bypass proof
+verification or approval.
+
+Every recorded attempt now includes a separate redacted request artifact with
+the approved and requested intents. This supplies the preregistered original-
+versus-mutated evidence without storing direct account numbers, external
+targets, user identifiers, nonces, proofs, or signatures.
+
+The HTTP regression was expanded to submit an approved amount of 100 and a
+requested amount of 700. The endpoint returned `scope_mismatch`, inserted no
+transaction, changed no balance, retained the proof in approved state, and
+wrote the paired request artifact. Both test modes passed 21 tests.

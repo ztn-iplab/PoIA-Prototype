@@ -39,6 +39,21 @@ def _safe_scope(scope: Mapping[str, Any]) -> Dict[str, Any]:
     return safe
 
 
+def _safe_intent(intent: Mapping[str, Any]) -> Dict[str, Any]:
+    context = intent.get("context", {})
+    return {
+        "action": intent.get("action"),
+        "scope": _safe_scope(intent.get("scope", {})),
+        "context": {
+            "user_id": _opaque("principal", context.get("user_id", "unknown")),
+            "rp_id": context.get("rp_id"),
+            "workflow_id": context.get("workflow_id"),
+            "on_behalf_of": context.get("on_behalf_of"),
+        },
+        "constraints": intent.get("constraints", {}),
+    }
+
+
 class TrackARecorder:
     def __init__(
         self,
@@ -159,6 +174,8 @@ class TrackARecorder:
         started_ns: int,
         before: Mapping[str, Any],
         after: Mapping[str, Any],
+        approved_intent_body: Optional[Mapping[str, Any]] = None,
+        requested_intent_body: Optional[Mapping[str, Any]] = None,
     ) -> None:
         if not self.enabled or self.run_dir is None:
             return
@@ -216,6 +233,15 @@ class TrackARecorder:
         }
         decision_path = self.run_dir / "decisions" / "decisions.jsonl"
         snapshot_path = self.run_dir / "state_snapshots" / f"{attempt_n:04d}-{request_id}.json"
+        request_path = self.run_dir / "requests" / f"{attempt_n:04d}-{request_id}.json"
+        request_evidence = {
+            "schema_version": "1.0.0",
+            "run_id": self.manifest["run_id"],
+            "request_id": request_id,
+            "attempt_n": attempt_n,
+            "approved_intent": _safe_intent(approved_intent_body or intent_body),
+            "requested_intent": _safe_intent(requested_intent_body or intent_body),
+        }
         line = json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
         with self._lock:
             with decision_path.open("a", encoding="utf-8") as handle:
@@ -225,6 +251,11 @@ class TrackARecorder:
                 json.dump(evidence, handle, indent=2, sort_keys=True, ensure_ascii=True)
                 handle.write("\n")
             temporary.replace(snapshot_path)
+            request_temporary = request_path.with_suffix(".json.tmp")
+            with request_temporary.open("w", encoding="utf-8") as handle:
+                json.dump(request_evidence, handle, indent=2, sort_keys=True, ensure_ascii=True)
+                handle.write("\n")
+            request_temporary.replace(request_path)
 
 
 track_a_recorder = TrackARecorder.from_environment()
