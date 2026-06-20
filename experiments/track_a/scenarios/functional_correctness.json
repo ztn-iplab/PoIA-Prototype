@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "scenario_set": "track_a_functional_correctness_verifier_only",
+  "scenarios": [
+    {"id": "exact_legitimate_match", "category": "exact_match", "mutation": "none", "expected_decision": "accept"},
+    {"id": "action_mismatch", "category": "action", "mutation": "replace_action", "expected_decision": "reject"},
+    {"id": "amount_mismatch", "category": "scope", "mutation": "replace_amount", "expected_decision": "reject"},
+    {"id": "currency_partial_field_mismatch", "category": "scope", "mutation": "replace_currency_only", "expected_decision": "reject"},
+    {"id": "target_object_mismatch", "category": "target_object", "mutation": "replace_target", "expected_decision": "reject"},
+    {"id": "principal_mismatch", "category": "user_identity", "mutation": "replace_session_principal", "expected_decision": "reject"},
+    {"id": "rp_context_mismatch", "category": "rp_context", "mutation": "replace_rp", "expected_decision": "reject"},
+    {"id": "nonce_mismatch", "category": "nonce", "mutation": "replace_nonce", "expected_decision": "reject"},
+    {"id": "nonce_reuse", "category": "nonce", "mutation": "reuse_consumed_proof", "expected_decision": "reject"},
+    {"id": "expired_intent", "category": "timestamp", "mutation": "submit_after_expiry", "expected_decision": "reject"},
+    {"id": "validity_boundary_59_9", "category": "validity_window", "mutation": "submit_at_59_9_seconds", "expected_decision": "accept"},
+    {"id": "validity_boundary_60_1", "category": "validity_window", "mutation": "submit_at_60_1_seconds", "expected_decision": "reject"},
+    {"id": "validity_constraint_mismatch", "category": "validity_window", "mutation": "replace_validity_constraint", "expected_decision": "reject"},
+    {"id": "canonical_field_order", "category": "canonicalization_order", "mutation": "reverse_object_order", "expected_decision": "accept"},
+    {"id": "unicode_and_numeric_encoding", "category": "encoding_variations", "mutation": "nfd_and_integer_float", "expected_decision": "accept"},
+    {"id": "workflow_identifier_mismatch", "category": "workflow_identifier", "mutation": "replace_workflow_id", "expected_decision": "reject"}
+  ]
+}

@@ -22,7 +22,7 @@ from ..core import (
 from ..poia_metrics import log_poia_event
 from ..track_a_recorder import track_a_recorder
 from ..model import ProofRecord
-from ..model import intent_mismatch_reason
+from ..model import intent_mismatch_reason, nonce_mismatch_reason
 from ..db import db_connect
 from ..downstream_client import downstream_client
 from ..routes.banking import (
@@ -912,7 +912,7 @@ def api_poia_approve(payload: dict) -> Response:
             method="zt_authenticator",
         )
         return Response(content=json.dumps({"status": "denied", "reason": "rp_mismatch"}), media_type="application/json", status_code=400)
-    if challenge.nonce != nonce:
+    if nonce_mismatch_reason(challenge, nonce):
         log_poia_event(
             event="intent_approve",
             intent_id=intent_id,

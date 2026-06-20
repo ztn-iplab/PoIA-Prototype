@@ -13,7 +13,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from .db import db_connect
-from .intent_codec import canonical_json
+from .intent_codec import build_intent, canonical_json
 from .model import ChallengeRecord, InMemoryPoIA, IntentRecord, ProofRecord
 from .poia_metrics import log_poia_event
 from .settings import (
@@ -66,15 +66,6 @@ def get_current_user(request: Request) -> Optional[Any]:
 
 def require_login(user: Optional[Any]) -> bool:
     return user is not None
-
-
-def build_intent(action: str, scope: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
-    return {
-        "action": action,
-        "scope": scope,
-        "context": context,
-        "constraints": {"expires_in_seconds": INTENT_TTL_SECONDS},
-    }
 
 
 def intent_hash(intent_body: Dict[str, Any]) -> str:
@@ -134,7 +125,12 @@ def create_poia_intent(
     context: Dict[str, Any],
 ) -> str:
     intent_id = secrets.token_urlsafe(12)
-    intent_body = build_intent(action=action, scope=scope, context=context)
+    intent_body = build_intent(
+        action=action,
+        scope=scope,
+        context=context,
+        ttl_seconds=INTENT_TTL_SECONDS,
+    )
     poia_store.intents[intent_id] = IntentRecord(
         intent_id=intent_id,
         intent_body=intent_body,

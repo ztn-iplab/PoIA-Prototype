@@ -47,3 +47,17 @@ def canonical_json(data: Mapping[str, Any]) -> bytes:
         ensure_ascii=True,
         allow_nan=False,
     ).encode("utf-8")
+
+
+def build_intent(
+    action: str,
+    scope: Dict[str, Any],
+    context: Dict[str, Any],
+    ttl_seconds: int = 60,
+) -> Dict[str, Any]:
+    return {
+        "action": action,
+        "scope": scope,
+        "context": context,
+        "constraints": {"expires_in_seconds": ttl_seconds},
+    }

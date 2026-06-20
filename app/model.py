@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from threading import RLock
+import secrets
 from typing import Any, Dict, Optional, Tuple
 
 from .intent_codec import canonical_json
@@ -125,4 +126,10 @@ def intent_mismatch_reason(
         return "constraints_mismatch"
     if canonical_json(approved) != canonical_json(requested):
         return "intent_mismatch"
+    return None
+
+
+def nonce_mismatch_reason(challenge: ChallengeRecord, submitted_nonce: str) -> Optional[str]:
+    if not submitted_nonce or not secrets.compare_digest(challenge.nonce, submitted_nonce):
+        return "nonce_mismatch"
     return None

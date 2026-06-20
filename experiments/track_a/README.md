@@ -54,6 +54,20 @@ unless there are exactly 200 uniquely numbered decisions. A measured zero is
 reported with its Wilson 95% confidence interval, never as an unsupported bare
 `0%`.
 
+Run the backend-independent functional matrix only from a clean commit:
+
+```bash
+python3 scripts/run_track_a_functional_verifier.py \
+  --trials 200 \
+  --seed 20260620
+```
+
+This produces 3,200 local raw observations across 16 declarative cases. Its
+manifest and tables label the evidence `verifier_only`; they must not be
+described as WebAuthn or ZT-Authenticator measurements. The real-backend
+acceptance and rejection cells are recorded separately during the manual
+200-operation runs.
+
 Generated run data is intentionally excluded from Git until it has been
 reviewed for secrets and assigned an artifact checksum. Scenario definitions,
 schemas, analysis code, and empty directory placeholders remain versioned.
