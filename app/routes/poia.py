@@ -235,7 +235,8 @@ def poia_assertion_complete(payload: dict, request: Request) -> Response:
             status_code=400,
         )
 
-    latency_ms = int((time.time() - intent_record.created_at) * 1000)
+    now = time.time()
+    latency_ms = int((now - intent_record.created_at) * 1000)
     proof = ProofRecord(
         intent_id=intent_id,
         signature_b64=payload["signature"],
@@ -243,7 +244,26 @@ def poia_assertion_complete(payload: dict, request: Request) -> Response:
         message="Approved",
         latency_ms=latency_ms,
     )
-    poia_store.proofs[intent_id] = proof
+    approved, approval_reason = poia_store.approve_proof(proof, now)
+    if not approved:
+        log_poia_event(
+            event="passkey_complete",
+            intent_id=intent_id,
+            user_id=user["id"],
+            rp_id=intent_record.intent_body.get("context", {}).get("rp_id"),
+            action=intent_record.intent_body.get("action"),
+            status="denied",
+            reason=approval_reason,
+            created_at=intent_record.created_at,
+            expires_at=challenge_record.expires_at,
+            method="webauthn",
+            latency_ms=latency_ms,
+        )
+        return Response(
+            content=json.dumps({"error": "poia_approval_denied", "reason": approval_reason}),
+            media_type="application/json",
+            status_code=409 if approval_reason == "replay" else 400,
+        )
     log_poia_event(
         event="passkey_complete",
         intent_id=intent_id,
@@ -285,13 +305,31 @@ def poia_execute(intent_id: str, request: Request) -> Response:
     user = get_current_user(request)
     if not require_login(user):
         return RedirectResponse(url="/login", status_code=302)
-    intent_record = poia_store.intents.get(intent_id)
-    challenge_record = poia_store.challenges.get(intent_id)
-    proof = poia_store.proofs.get(intent_id)
-    if not intent_record or not challenge_record or not proof or proof.status != "approved":
-        return render(request, "result.html", {"status": "Rejected", "message": "Intent not approved."})
-    if int(time.time()) > int(challenge_record.expires_at):
-        return render(request, "result.html", {"status": "Rejected", "message": "Intent expired."})
+    reserved, reason, intent_record, challenge_record = poia_store.reserve_execution(
+        intent_id, user["id"], time.time()
+    )
+    if not reserved or intent_record is None or challenge_record is None:
+        log_poia_event(
+            event="intent_execute",
+            intent_id=intent_id,
+            user_id=user["id"],
+            rp_id=(intent_record.intent_body.get("context", {}).get("rp_id") if intent_record else None),
+            action=(intent_record.intent_body.get("action") if intent_record else None),
+            status="denied",
+            reason=reason,
+            created_at=(intent_record.created_at if intent_record else None),
+            expires_at=(challenge_record.expires_at if challenge_record else None),
+        )
+        messages = {
+            "expired": "Intent expired.",
+            "proof_consumed": "Intent proof has already been used.",
+            "principal_mismatch": "Intent belongs to another user.",
+        }
+        return render(
+            request,
+            "result.html",
+            {"status": "Rejected", "message": messages.get(reason, "Intent not approved.")},
+        )
 
     action = intent_record.intent_body["action"]
     log_poia_event(
@@ -515,14 +553,21 @@ def api_poia_approve(payload: dict) -> Response:
                 )
                 return Response(content=json.dumps({"status": "denied", "reason": "invalid_signature"}), media_type="application/json", status_code=400)
 
-    latency_ms = int((time.time() - intent_record.created_at) * 1000)
-    poia_store.proofs[intent_id] = ProofRecord(
+    now = time.time()
+    latency_ms = int((now - intent_record.created_at) * 1000)
+    approved, approval_reason = poia_store.approve_proof(ProofRecord(
         intent_id=intent_id,
         signature_b64=signature,
         status="approved",
         message="Approved",
         latency_ms=latency_ms,
-    )
+    ), now)
+    if not approved:
+        return Response(
+            content=json.dumps({"status": "denied", "reason": approval_reason}),
+            media_type="application/json",
+            status_code=409 if approval_reason == "replay" else 400,
+        )
     log_poia_event(
         event="intent_approve",
         intent_id=intent_id,
@@ -616,13 +661,20 @@ def api_poia_test_approve(payload: dict) -> Response:
         reason = reason or "expired"
     latency_ms = int((time.time() - intent_record.created_at) * 1000)
     status = "approved" if force_status == "approved" else "denied"
-    poia_store.proofs[intent_id] = ProofRecord(
+    proof_record = ProofRecord(
         intent_id=intent_id,
         signature_b64="test-mode",
         status=status,
         message="Approved" if status == "approved" else "Denied",
         latency_ms=latency_ms,
     )
+    if status == "approved":
+        approved, approval_reason = poia_store.approve_proof(proof_record, time.time())
+        if not approved:
+            status = "denied"
+            reason = approval_reason
+    else:
+        poia_store.proofs[intent_id] = proof_record
     log_poia_event(
         event="intent_approve",
         intent_id=intent_id,
