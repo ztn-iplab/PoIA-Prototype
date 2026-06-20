@@ -241,3 +241,28 @@ results verifier-only; real WebAuthn and ZT-Authenticator cells remain pending.
 The local `PoIA_Extended/Main.tex` was updated with these measured denominators
 and interpretation limits. PDF compilation remains pending because no LaTeX
 engine is installed on this host.
+
+## Real-backend validation gate
+
+Date: 2026-06-20
+
+The production WebAuthn and ZT-Authenticator paths now record reportable
+rejections as well as successful protected operations. Expiry, missing
+credentials, WebAuthn verification failure, replay, RP/nonce/hash mismatch,
+unenrolled devices, invalid P-256 signatures, proof-state rejection, and an
+explicit user denial produce a linked decision, redacted request comparison,
+pre/post state snapshot, and raw timing artifact.
+
+Challenge-to-decision timing is measured from intent creation for real PoIA
+operations, with both the wall-clock boundary and endpoint monotonic counters
+retained in the timing artifact. The progress validator joins evidence by
+attempt and request identifier, detects duplicates, reports exact remaining
+observations, and refuses incomplete evidence bundles.
+
+Run preparation now refuses dirty RP or authenticator repositories and requires
+the operator to freeze browser/client runtime, authenticator platform,
+container runtime, measured RTT, and database version. The real-backend
+operator protocol documents denominator rules, the separate 200-action runs,
+sensitive-data boundaries, progress checks, freezing, and final analysis. The
+dependency-backed suite passed 32 tests. No real WebAuthn or ZT observation was
+created during this implementation step.

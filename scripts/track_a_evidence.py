@@ -108,6 +108,7 @@ def git_state(repo: Path) -> Dict[str, Any]:
 def create_manifest(
     *, run_id: str, batch_id: str, configuration: str, random_seed: int,
     authenticator_repo: Path | None = None,
+    experimental_environment: Mapping[str, Any] | None = None,
 ) -> Dict[str, Any]:
     validate_safe_id("run_id", run_id)
     validate_safe_id("batch_id", batch_id)
@@ -141,6 +142,14 @@ def create_manifest(
             "machine": platform.machine(),
             "processor_count": os.cpu_count(),
         },
+        "experimental_environment": dict(experimental_environment or {
+            "browser_or_client_runtime": "not_recorded",
+            "authenticator_platform": "not_recorded",
+            "container_runtime": "not_recorded",
+            "network_rtt_ms": None,
+            "database_backend": "not_recorded",
+            "clock_source": "time.time and time.perf_counter_ns",
+        }),
         "sensitive_data_policy": "No credentials, tokens, raw signatures, secrets, or direct personal identifiers.",
     }
 

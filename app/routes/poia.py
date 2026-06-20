@@ -101,6 +101,7 @@ def poia_intent(intent_id: str, request: Request) -> Response:
 
 @router.post("/poia/assertion-begin")
 def poia_assertion_begin(payload: dict, request: Request) -> Response:
+    started_ns = time.perf_counter_ns()
     user = get_current_user(request)
     if not require_login(user):
         return Response(content=json.dumps({"error": "unauthorized"}), media_type="application/json", status_code=401)
@@ -130,11 +131,33 @@ def poia_assertion_begin(payload: dict, request: Request) -> Response:
             expires_at=challenge_record.expires_at,
             method="webauthn",
         )
-        return Response(content=json.dumps({"error": "poia_expired"}), media_type="application/json", status_code=400)
+        response = Response(content=json.dumps({"error": "poia_expired"}), media_type="application/json", status_code=400)
+        track_a_recorder.record_rejection(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge_record.nonce,
+            rejection_reason="expired",
+            http_status=response.status_code,
+            started_ns=started_ns,
+            created_at=intent_record.created_at,
+        )
+        return response
 
     credentials, _descriptors = load_credentials(user["id"])
     if not credentials:
-        return Response(content=json.dumps({"error": "no_passkey"}), media_type="application/json", status_code=404)
+        response = Response(content=json.dumps({"error": "no_passkey"}), media_type="application/json", status_code=404)
+        track_a_recorder.record_rejection(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge_record.nonce,
+            rejection_reason="no_passkey",
+            http_status=response.status_code,
+            started_ns=started_ns,
+            created_at=intent_record.created_at,
+        )
+        return response
 
     proof_payload = build_proof_payload(intent_record.intent_body, challenge_record.nonce, challenge_record.expires_at)
     challenge = hashlib.sha256(proof_payload).digest()
@@ -186,6 +209,7 @@ def poia_assertion_begin(payload: dict, request: Request) -> Response:
 
 @router.post("/poia/assertion-complete")
 def poia_assertion_complete(payload: dict, request: Request) -> Response:
+    started_ns = time.perf_counter_ns()
     user = get_current_user(request)
     if not require_login(user):
         return Response(content=json.dumps({"error": "unauthorized"}), media_type="application/json", status_code=401)
@@ -233,11 +257,22 @@ def poia_assertion_complete(payload: dict, request: Request) -> Response:
             method="webauthn",
             payload={"detail": str(exc)},
         )
-        return Response(
+        response = Response(
             content=json.dumps({"error": "poia_verify_failed", "detail": str(exc)}),
             media_type="application/json",
             status_code=400,
         )
+        track_a_recorder.record_rejection(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge_record.nonce,
+            rejection_reason="verify_failed",
+            http_status=response.status_code,
+            started_ns=started_ns,
+            created_at=intent_record.created_at,
+        )
+        return response
 
     now = time.time()
     latency_ms = int((now - intent_record.created_at) * 1000)
@@ -263,11 +298,22 @@ def poia_assertion_complete(payload: dict, request: Request) -> Response:
             method="webauthn",
             latency_ms=latency_ms,
         )
-        return Response(
+        response = Response(
             content=json.dumps({"error": "poia_approval_denied", "reason": approval_reason}),
             media_type="application/json",
             status_code=409 if approval_reason == "replay" else 400,
         )
+        track_a_recorder.record_rejection(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge_record.nonce,
+            rejection_reason=approval_reason,
+            http_status=response.status_code,
+            started_ns=started_ns,
+            created_at=intent_record.created_at,
+        )
+        return response
     log_poia_event(
         event="passkey_complete",
         intent_id=intent_id,
@@ -374,6 +420,14 @@ def poia_execute(intent_id: str, request: Request) -> Response:
                 started_ns=started_ns,
                 before=before,
                 after=after,
+                latency_ms=(
+                    max(0.0, (time.time() - intent_record.created_at) * 1000.0)
+                    if intent_record is not None
+                    else None
+                ),
+                latency_started_at_utc=(
+                    intent_record.created_at if intent_record is not None else None
+                ),
             )
         return response
 
@@ -433,6 +487,8 @@ def poia_execute(intent_id: str, request: Request) -> Response:
             started_ns=started_ns,
             before=before,
             after=after,
+            latency_ms=max(0.0, (time.time() - intent_record.created_at) * 1000.0),
+            latency_started_at_utc=intent_record.created_at,
         )
     return response
 
@@ -877,27 +933,49 @@ def api_poia_pending(user_id: int, force: int = 0) -> Response:
 
 
 @router.post("/api/poia/approve")
-def api_poia_approve(payload: dict) -> Response:
+def api_poia_approve(payload: dict, request: Request) -> Response:
+    started_ns = time.perf_counter_ns()
     intent_id = payload.get("intent_id")
     device_id_raw = payload.get("device_id")
     rp_id = (payload.get("rp_id") or "").strip()
     nonce = (payload.get("nonce") or "").strip()
     signature = (payload.get("signature") or "").strip()
     intent_hash_override = (payload.get("intent_hash") or "").strip()
-    if not intent_id or not device_id_raw or not rp_id or not nonce or not signature:
+    if not intent_id:
         return Response(content=json.dumps({"status": "denied", "reason": "missing_fields"}), media_type="application/json", status_code=400)
-    try:
-        device_id = int(device_id_raw)
-    except (TypeError, ValueError):
-        return Response(content=json.dumps({"status": "denied", "reason": "invalid_device"}), media_type="application/json", status_code=400)
 
     intent_record = poia_store.intents.get(intent_id)
     challenge = poia_store.challenges.get(intent_id)
     if not intent_record or not challenge:
         return Response(content=json.dumps({"status": "denied", "reason": "intent_invalid"}), media_type="application/json", status_code=404)
+
+    def deny(reason: str, status_code: int = 400) -> Response:
+        response = Response(
+            content=json.dumps({"status": "denied", "reason": reason}),
+            media_type="application/json",
+            status_code=status_code,
+        )
+        track_a_recorder.record_rejection(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge.nonce,
+            rejection_reason=reason,
+            http_status=status_code,
+            started_ns=started_ns,
+            created_at=intent_record.created_at,
+        )
+        return response
+
+    if not device_id_raw or not rp_id or not nonce or not signature:
+        return deny("missing_fields")
+    try:
+        device_id = int(device_id_raw)
+    except (TypeError, ValueError):
+        return deny("invalid_device")
     proof = poia_store.proofs.get(intent_id)
     if proof and proof.status != "pending":
-        return Response(content=json.dumps({"status": "denied", "reason": "replay"}), media_type="application/json", status_code=409)
+        return deny("replay", 409)
     if intent_record.intent_body.get("context", {}).get("rp_id") != rp_id:
         log_poia_event(
             event="intent_approve",
@@ -911,7 +989,7 @@ def api_poia_approve(payload: dict) -> Response:
             expires_at=challenge.expires_at,
             method="zt_authenticator",
         )
-        return Response(content=json.dumps({"status": "denied", "reason": "rp_mismatch"}), media_type="application/json", status_code=400)
+        return deny("rp_mismatch")
     if nonce_mismatch_reason(challenge, nonce):
         log_poia_event(
             event="intent_approve",
@@ -925,7 +1003,7 @@ def api_poia_approve(payload: dict) -> Response:
             expires_at=challenge.expires_at,
             method="zt_authenticator",
         )
-        return Response(content=json.dumps({"status": "denied", "reason": "nonce_mismatch"}), media_type="application/json", status_code=400)
+        return deny("nonce_mismatch")
     if int(time.time()) > int(challenge.expires_at):
         log_poia_event(
             event="intent_approve",
@@ -939,7 +1017,7 @@ def api_poia_approve(payload: dict) -> Response:
             expires_at=challenge.expires_at,
             method="zt_authenticator",
         )
-        return Response(content=json.dumps({"status": "denied", "reason": "expired"}), media_type="application/json", status_code=400)
+        return deny("expired")
 
     from ..security import verify_p256_signature
     proof_payload = build_proof_payload(intent_record.intent_body, challenge.nonce, challenge.expires_at)
@@ -958,7 +1036,7 @@ def api_poia_approve(payload: dict) -> Response:
             expires_at=challenge.expires_at,
             method="zt_authenticator",
         )
-        return Response(content=json.dumps({"status": "denied", "reason": "hash_mismatch"}), media_type="application/json", status_code=400)
+        return deny("hash_mismatch")
     primary_message = f"{proof_hash}|{device_id}|{rp_id}|{nonce}".encode("utf-8")
     fallback_message = f"{nonce}|{device_id}|{rp_id}|{proof_hash}".encode("utf-8")
     alt_primary_message = f"{body_hash}|{device_id}|{rp_id}|{nonce}".encode("utf-8")
@@ -984,7 +1062,7 @@ def api_poia_approve(payload: dict) -> Response:
             expires_at=challenge.expires_at,
             method="zt_authenticator",
         )
-        return Response(content=json.dumps({"status": "denied", "reason": "device_not_enrolled"}), media_type="application/json", status_code=400)
+        return deny("device_not_enrolled")
     if not verify_p256_signature(device_key["public_key"], primary_message, signature):
         if not verify_p256_signature(device_key["public_key"], fallback_message, signature):
             if verify_p256_signature(device_key["public_key"], alt_primary_message, signature) or verify_p256_signature(
@@ -1004,7 +1082,7 @@ def api_poia_approve(payload: dict) -> Response:
                     expires_at=challenge.expires_at,
                     method="zt_authenticator",
                 )
-                return Response(content=json.dumps({"status": "denied", "reason": "invalid_signature"}), media_type="application/json", status_code=400)
+                return deny("invalid_signature")
 
     now = time.time()
     latency_ms = int((now - intent_record.created_at) * 1000)
@@ -1016,11 +1094,7 @@ def api_poia_approve(payload: dict) -> Response:
         latency_ms=latency_ms,
     ), now)
     if not approved:
-        return Response(
-            content=json.dumps({"status": "denied", "reason": approval_reason}),
-            media_type="application/json",
-            status_code=409 if approval_reason == "replay" else 400,
-        )
+        return deny(approval_reason, 409 if approval_reason == "replay" else 400)
     log_poia_event(
         event="intent_approve",
         intent_id=intent_id,
@@ -1038,7 +1112,8 @@ def api_poia_approve(payload: dict) -> Response:
 
 
 @router.post("/api/poia/deny")
-def api_poia_deny(payload: dict) -> Response:
+def api_poia_deny(payload: dict, request: Request) -> Response:
+    started_ns = time.perf_counter_ns()
     intent_id = payload.get("intent_id") or payload.get("intentId") or payload.get("id")
     if not intent_id:
         return Response(content=json.dumps({"status": "denied", "reason": "missing_intent"}), media_type="application/json", status_code=400)
@@ -1069,7 +1144,21 @@ def api_poia_deny(payload: dict) -> Response:
         "poia_deny",
         f"Intent {intent_id} denied",
     )
-    return Response(content=json.dumps({"status": "denied"}), media_type="application/json")
+    response = Response(content=json.dumps({"status": "denied"}), media_type="application/json")
+    intent_record = poia_store.intents.get(intent_id)
+    challenge = poia_store.challenges.get(intent_id)
+    if intent_record is not None:
+        track_a_recorder.record_rejection(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge.nonce if challenge else None,
+            rejection_reason=payload.get("reason") or "user_denied",
+            http_status=response.status_code,
+            started_ns=started_ns,
+            created_at=intent_record.created_at,
+        )
+    return response
 
 
 @router.post("/api/poia/test/intent")

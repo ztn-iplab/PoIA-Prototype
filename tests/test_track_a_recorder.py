@@ -69,6 +69,9 @@ class TrackARecorderTests(unittest.TestCase):
             requests = list((run_dir / "requests").glob("*.json"))
             self.assertEqual(len(requests), 1)
             self.assertNotIn("secret-value", requests[0].read_text())
+            timings = list((run_dir / "timings").glob("*.json"))
+            self.assertEqual(len(timings), 1)
+            self.assertEqual(json.loads(timings[0].read_text())["request_id"], "request-1")
 
     def test_manifest_directory_must_match_run_id(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -78,6 +81,39 @@ class TrackARecorderTests(unittest.TestCase):
             path.write_text(json.dumps(manifest))
             with self.assertRaises(RuntimeError):
                 TrackARecorder(path, "replay")
+
+    def test_rejection_writes_complete_evidence_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            recorder = TrackARecorder(
+                write_manifest(Path(directory)),
+                "nonce_mismatch",
+                "reject",
+            )
+            recorder.capture_state = lambda *_args: {"digest": "unchanged"}
+            request = SimpleNamespace(headers=Headers({"x-poia-request-id": "rejected-1"}))
+            recorder.record_rejection(
+                request=request,
+                intent_id="intent-rejected",
+                intent_body={
+                    "action": "transfer",
+                    "scope": {"amount": 50},
+                    "context": {"user_id": 9, "rp_id": "poia.local"},
+                },
+                nonce="nonce-rejected",
+                rejection_reason="nonce_mismatch",
+                http_status=400,
+                started_ns=0,
+                created_at=None,
+            )
+            run_dir = Path(directory) / "run-1"
+            row = json.loads((run_dir / "decisions" / "decisions.jsonl").read_text())
+            self.assertEqual(row["decision"], "reject")
+            self.assertEqual(row["expected_decision"], "reject")
+            self.assertEqual(row["rejection_reason"], "nonce_mismatch")
+            self.assertFalse(row["state_changed"])
+            self.assertEqual(len(list((run_dir / "state_snapshots").glob("*.json"))), 1)
+            self.assertEqual(len(list((run_dir / "requests").glob("*.json"))), 1)
+            self.assertEqual(len(list((run_dir / "timings").glob("*.json"))), 1)
 
     def test_expected_decision_must_be_explicit(self) -> None:
         recorder = TrackARecorder(None)

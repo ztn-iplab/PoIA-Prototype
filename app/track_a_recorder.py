@@ -196,6 +196,8 @@ class TrackARecorder:
         after: Mapping[str, Any],
         approved_intent_body: Optional[Mapping[str, Any]] = None,
         requested_intent_body: Optional[Mapping[str, Any]] = None,
+        latency_ms: Optional[float] = None,
+        latency_started_at_utc: Optional[float] = None,
     ) -> None:
         if not self.enabled or self.run_dir is None:
             return
@@ -210,8 +212,15 @@ class TrackARecorder:
         workflow_id = context.get("workflow_id") or intent_body.get("workflow_id")
         rp_commit = self.manifest["rp_repository"]["commit"]
         authenticator = self.manifest.get("authenticator_repository")
+        finished_ns = time.perf_counter_ns()
+        finished_at_utc = time.time()
+        measured_latency_ms = (
+            latency_ms
+            if latency_ms is not None
+            else (finished_ns - started_ns) / 1_000_000
+        )
         record = {
-            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "timestamp_utc": datetime.fromtimestamp(finished_at_utc, timezone.utc).isoformat(),
             "run_id": self.manifest["run_id"],
             "batch_id": self.manifest["batch_id"],
             "attempt_n": attempt_n,
@@ -240,7 +249,7 @@ class TrackARecorder:
             "rejection_reason": rejection_reason,
             "http_status": http_status,
             "state_changed": before.get("digest") != after.get("digest"),
-            "latency_ms": (time.perf_counter_ns() - started_ns) / 1_000_000,
+            "latency_ms": measured_latency_ms,
             "rp_commit": rp_commit,
             "authenticator_commit": authenticator["commit"] if authenticator else None,
             "scenario_commit": rp_commit,
@@ -258,6 +267,7 @@ class TrackARecorder:
         decision_path = self.run_dir / "decisions" / "decisions.jsonl"
         snapshot_path = self.run_dir / "state_snapshots" / f"{attempt_n:04d}-{request_id}.json"
         request_path = self.run_dir / "requests" / f"{attempt_n:04d}-{request_id}.json"
+        timing_path = self.run_dir / "timings" / f"{attempt_n:04d}-{request_id}.json"
         request_evidence = {
             "schema_version": "1.0.0",
             "run_id": self.manifest["run_id"],
@@ -265,6 +275,26 @@ class TrackARecorder:
             "attempt_n": attempt_n,
             "approved_intent": _safe_intent(approved_intent_body or intent_body),
             "requested_intent": _safe_intent(requested_intent_body or intent_body),
+        }
+        timing_evidence = {
+            "schema_version": "1.0.0",
+            "run_id": self.manifest["run_id"],
+            "request_id": request_id,
+            "attempt_n": attempt_n,
+            "clock_source": (
+                "time.time"
+                if latency_started_at_utc is not None
+                else "time.perf_counter_ns"
+            ),
+            "latency_started_at_utc": (
+                datetime.fromtimestamp(latency_started_at_utc, timezone.utc).isoformat()
+                if latency_started_at_utc is not None
+                else None
+            ),
+            "finished_at_utc": datetime.fromtimestamp(finished_at_utc, timezone.utc).isoformat(),
+            "endpoint_started_perf_counter_ns": started_ns,
+            "endpoint_finished_perf_counter_ns": finished_ns,
+            "latency_ms": measured_latency_ms,
         }
         line = json.dumps(record, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
         with self._lock:
@@ -280,6 +310,54 @@ class TrackARecorder:
                 json.dump(request_evidence, handle, indent=2, sort_keys=True, ensure_ascii=True)
                 handle.write("\n")
             request_temporary.replace(request_path)
+            timing_temporary = timing_path.with_suffix(".json.tmp")
+            with timing_temporary.open("w", encoding="utf-8") as handle:
+                json.dump(timing_evidence, handle, indent=2, sort_keys=True, ensure_ascii=True)
+                handle.write("\n")
+            timing_temporary.replace(timing_path)
+
+    def record_rejection(
+        self,
+        *,
+        request: Any,
+        intent_id: str,
+        intent_body: Mapping[str, Any],
+        nonce: Optional[str],
+        rejection_reason: str,
+        http_status: int,
+        started_ns: int,
+        created_at: Optional[float] = None,
+    ) -> None:
+        if not self.enabled:
+            return
+        context = intent_body.get("context", {})
+        principal_id = context.get("user_id")
+        if not isinstance(principal_id, int):
+            raise RuntimeError("Track A rejection recording requires an integer experiment principal")
+        before = self.capture_state(
+            principal_id,
+            str(intent_body.get("action") or "unknown"),
+            intent_body.get("scope", {}),
+        )
+        self.record(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_body,
+            nonce=nonce,
+            expected_decision=self.expected_decision_for(request),
+            decision="reject",
+            rejection_reason=rejection_reason,
+            http_status=http_status,
+            started_ns=started_ns,
+            before=before,
+            after=before,
+            latency_ms=(
+                max(0.0, (time.time() - created_at) * 1000.0)
+                if created_at is not None
+                else None
+            ),
+            latency_started_at_utc=created_at,
+        )
 
 
 track_a_recorder = TrackARecorder.from_environment()

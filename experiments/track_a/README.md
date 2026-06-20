@@ -10,7 +10,12 @@ Prepare a run before starting the relying party or issuing any trial:
 python3 scripts/prepare_track_a_run.py \
   --configuration session_only \
   --batch-id session-only-01 \
-  --seed 20260620
+  --seed 20260620 \
+  --browser-or-client-runtime "Chrome <version>" \
+  --authenticator-platform none \
+  --container-runtime "Docker Desktop <version>" \
+  --network-rtt-ms <measured-rtt> \
+  --database-backend "SQLite <version>"
 ```
 
 The command validates every scenario, creates a run directory under `raw/`,
@@ -45,6 +50,8 @@ confirmatory evidence.
 Generate an honest progress table at any point:
 
 ```bash
+python3 scripts/track_a_run_status.py experiments/track_a/raw/<run_id>
+
 python3 scripts/analyze_track_a.py \
   experiments/track_a/raw/<run_id> --allow-incomplete
 ```

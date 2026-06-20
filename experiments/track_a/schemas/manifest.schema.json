@@ -7,7 +7,7 @@
     "schema_version", "experiment", "run_id", "batch_id", "configuration",
     "random_seed", "created_at_utc", "sample_size_per_scenario",
     "scenario_file", "scenario_schema_version", "scenario_file_sha256",
-    "rp_repository", "authenticator_repository", "runtime",
+    "rp_repository", "authenticator_repository", "runtime", "experimental_environment",
     "sensitive_data_policy"
   ],
   "properties": {
@@ -34,6 +34,22 @@
         "platform": {"type": "string"},
         "machine": {"type": "string"},
         "processor_count": {"type": ["integer", "null"]}
+      }
+    },
+    "experimental_environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "browser_or_client_runtime", "authenticator_platform", "container_runtime",
+        "network_rtt_ms", "database_backend", "clock_source"
+      ],
+      "properties": {
+        "browser_or_client_runtime": {"type": "string", "minLength": 1},
+        "authenticator_platform": {"type": "string", "minLength": 1},
+        "container_runtime": {"type": "string", "minLength": 1},
+        "network_rtt_ms": {"type": ["number", "null"], "minimum": 0},
+        "database_backend": {"type": "string", "minLength": 1},
+        "clock_source": {"type": "string", "minLength": 1}
       }
     },
     "sensitive_data_policy": {"type": "string"}
