@@ -12,6 +12,7 @@ import platform
 import random
 import statistics
 import subprocess
+import sys
 import time
 import unicodedata
 from datetime import datetime, timezone
@@ -25,6 +26,8 @@ except ModuleNotFoundError:
 
 ROOT = Path(__file__).resolve().parents[1]
 SCENARIOS_PATH = ROOT / "experiments" / "track_a" / "scenarios" / "functional_correctness.json"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from app.intent_codec import build_intent, canonical_json
 from app.model import (
