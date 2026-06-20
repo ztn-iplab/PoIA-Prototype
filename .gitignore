@@ -7,6 +7,9 @@ app/data/
 .env
 .poia_experiments.csv
 PoIA_Extended/
+
+# Unreviewed Track A run evidence may contain environment-specific metadata.
+experiments/track_a/raw/*/
 experiments/.DS_Store
 experiments/poia_run_fresh_*/
 migration_backup/

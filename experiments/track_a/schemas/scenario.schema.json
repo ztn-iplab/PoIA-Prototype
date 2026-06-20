@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poia.local/schemas/track-a-scenario-set.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scenario_set", "scenarios"],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "scenario_set": {"const": "track_a_security_effectiveness"},
+    "scenarios": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "description", "protected_action", "attack_mutation", "expected_decision", "expected_rejection_reasons", "prohibited_state_change"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "category": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "description": {"type": "string", "minLength": 20},
+          "protected_action": {"type": "string", "minLength": 1},
+          "attack_mutation": {"type": "string", "minLength": 1},
+          "expected_decision": {"const": "reject"},
+          "expected_rejection_reasons": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "prohibited_state_change": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

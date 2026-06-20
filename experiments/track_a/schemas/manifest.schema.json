@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poia.local/schemas/track-a-manifest.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "experiment", "run_id", "batch_id", "configuration",
+    "random_seed", "created_at_utc", "sample_size_per_scenario",
+    "scenario_file", "scenario_schema_version", "scenario_file_sha256",
+    "rp_repository", "authenticator_repository", "runtime",
+    "sensitive_data_policy"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "experiment": {"const": "track_a"},
+    "run_id": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$"},
+    "batch_id": {"type": "string", "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{0,79}$"},
+    "configuration": {"enum": ["session_only", "poia_webauthn", "poia_zt_authenticator"]},
+    "random_seed": {"type": "integer"},
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "sample_size_per_scenario": {"const": 200},
+    "scenario_file": {"type": "string"},
+    "scenario_schema_version": {"type": "string"},
+    "scenario_file_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "rp_repository": {"$ref": "#/$defs/repository"},
+    "authenticator_repository": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/repository"}]},
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python", "implementation", "platform", "machine", "processor_count"],
+      "properties": {
+        "python": {"type": "string"},
+        "implementation": {"type": "string"},
+        "platform": {"type": "string"},
+        "machine": {"type": "string"},
+        "processor_count": {"type": ["integer", "null"]}
+      }
+    },
+    "sensitive_data_policy": {"type": "string"}
+  },
+  "$defs": {
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "tree", "dirty"],
+      "properties": {
+        "commit": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "tree": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+        "dirty": {"type": "boolean"}
+      }
+    }
+  }
+}

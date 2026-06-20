@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poia.local/schemas/track-a-decision.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "timestamp_utc", "run_id", "batch_id", "attempt_n", "request_id",
+    "scenario_id", "scenario_category", "configuration", "signing_backend",
+    "principal", "action", "scope", "context", "workflow_id", "nonce",
+    "proof_id", "canonical_intent_hash", "expected_decision", "decision",
+    "rejection_reason", "http_status", "state_changed", "latency_ms",
+    "rp_commit", "authenticator_commit", "scenario_commit", "random_seed"
+  ],
+  "properties": {
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "run_id": {"type": "string"},
+    "batch_id": {"type": "string"},
+    "attempt_n": {"type": "integer", "minimum": 1},
+    "request_id": {"type": "string"},
+    "scenario_id": {"type": "string"},
+    "scenario_category": {"type": "string"},
+    "configuration": {"enum": ["session_only", "poia_webauthn", "poia_zt_authenticator"]},
+    "signing_backend": {"type": ["string", "null"]},
+    "principal": {"type": "string", "description": "Pseudonymous experiment principal only."},
+    "action": {"type": "string"},
+    "scope": {"type": "object"},
+    "context": {"type": "object"},
+    "workflow_id": {"type": ["string", "null"]},
+    "nonce": {"type": ["string", "null"], "description": "Opaque nonce identifier or digest, never secret material."},
+    "proof_id": {"type": ["string", "null"]},
+    "canonical_intent_hash": {"type": ["string", "null"]},
+    "expected_decision": {"enum": ["accept", "reject"]},
+    "decision": {"enum": ["accept", "reject", "error"]},
+    "rejection_reason": {"type": ["string", "null"]},
+    "http_status": {"type": "integer", "minimum": 100, "maximum": 599},
+    "state_changed": {"type": "boolean"},
+    "latency_ms": {"type": "number", "minimum": 0},
+    "rp_commit": {"type": "string"},
+    "authenticator_commit": {"type": ["string", "null"]},
+    "scenario_commit": {"type": "string"},
+    "random_seed": {"type": "integer"}
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "scenario_set": "track_a_security_effectiveness",
+  "scenarios": [
+    {
+      "id": "replay",
+      "category": "replay",
+      "description": "Reuse an already consumed proof and request identifier for the same protected transfer.",
+      "protected_action": "transfer",
+      "attack_mutation": "repeat_consumed_execution",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["proof_consumed", "nonce_consumed", "replay"],
+      "prohibited_state_change": "additional_transfer_transaction"
+    },
+    {
+      "id": "relay_phishing",
+      "category": "relay_phishing",
+      "description": "Relay a proof created for an attacker-controlled relying-party context to the protected relying party.",
+      "protected_action": "transfer",
+      "attack_mutation": "replace_rp_context",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["rp_mismatch", "context_mismatch", "invalid_signature"],
+      "prohibited_state_change": "transfer_transaction"
+    },
+    {
+      "id": "session_hijacking_or_misuse",
+      "category": "session_hijacking_or_misuse",
+      "description": "Use a valid authenticated session without a proof for the requested protected operation.",
+      "protected_action": "transfer",
+      "attack_mutation": "omit_operation_proof",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["proof_missing", "intent_not_approved"],
+      "prohibited_state_change": "transfer_transaction"
+    },
+    {
+      "id": "request_tampering",
+      "category": "request_tampering",
+      "description": "Change the amount, currency, or target after authorization while retaining the original proof.",
+      "protected_action": "transfer",
+      "attack_mutation": "replace_authorized_scope",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["scope_mismatch", "intent_hash_mismatch", "invalid_signature"],
+      "prohibited_state_change": "mutated_transfer_transaction"
+    },
+    {
+      "id": "token_reuse",
+      "category": "token_reuse",
+      "description": "Reuse a valid bearer token to invoke a different high-risk API action.",
+      "protected_action": "api_key_rotate",
+      "attack_mutation": "reuse_token_for_different_action",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["action_mismatch", "proof_missing", "intent_hash_mismatch"],
+      "prohibited_state_change": "api_key_rotation"
+    },
+    {
+      "id": "confused_deputy",
+      "category": "confused_deputy",
+      "description": "Ask an authorized intermediary to invoke a downstream operation outside its delegated user intent.",
+      "protected_action": "ledger_post",
+      "attack_mutation": "replace_delegated_action_or_principal",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["delegation_mismatch", "principal_mismatch", "action_mismatch"],
+      "prohibited_state_change": "downstream_ledger_entry"
+    },
+    {
+      "id": "multi_step_abuse",
+      "category": "multi_step_abuse",
+      "description": "Reuse authorization from one beneficiary workflow to transfer through another workflow.",
+      "protected_action": "transfer",
+      "attack_mutation": "replace_workflow_id_or_prior_step",
+      "expected_decision": "reject",
+      "expected_rejection_reasons": ["workflow_mismatch", "target_mismatch", "scope_mismatch"],
+      "prohibited_state_change": "cross_workflow_transfer_transaction"
+    }
+  ]
+}
