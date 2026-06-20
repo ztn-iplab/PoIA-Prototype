@@ -154,6 +154,10 @@ class TrackARecorder:
                     "SELECT COUNT(*) FROM poia_workflows WHERE user_id = ? AND status = 'consumed'",
                     (principal_id,),
                 ).fetchone()[0],
+                "api_operations": conn.execute(
+                    "SELECT COUNT(*) FROM experiment_api_operations WHERE user_id = ?",
+                    (principal_id,),
+                ).fetchone()[0],
             }
         snapshot: Dict[str, Any] = {
             "principal": _opaque("principal", principal_id),

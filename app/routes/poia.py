@@ -616,6 +616,160 @@ def api_poia_experiment_delegation_start(payload: dict, request: Request) -> Res
     )
 
 
+def _bearer_token(request: Request) -> str:
+    authorization = request.headers.get("authorization", "")
+    scheme, _, value = authorization.partition(" ")
+    return value.strip() if scheme.lower() == "bearer" else ""
+
+
+@router.post("/api/poia/experiment/token/issue")
+def api_poia_experiment_token_issue(payload: dict, request: Request) -> Response:
+    if not POIA_EXPERIMENT_MODE:
+        return Response(content=json.dumps({"status": "disabled"}), media_type="application/json", status_code=403)
+    user = get_current_user(request)
+    if not require_login(user):
+        return Response(content=json.dumps({"status": "denied", "reason": "unauthorized"}), media_type="application/json", status_code=401)
+    intended_action = str(payload.get("intended_action") or "deploy_config")
+    if intended_action not in {"deploy_config", "api_key_rotate"}:
+        return Response(content=json.dumps({"status": "denied", "reason": "invalid_action"}), media_type="application/json", status_code=400)
+    raw_token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+    expires_at = int(time.time()) + 900
+    with db_connect() as conn:
+        conn.execute(
+            "INSERT INTO experiment_bearer_tokens "
+            "(token_hash, user_id, token_scope, intended_action, expires_at, created_at) "
+            "VALUES (?, ?, 'high_risk_api', ?, ?, ?)",
+            (token_hash, user["id"], intended_action, expires_at, int(time.time())),
+        )
+    return Response(
+        content=json.dumps(
+            {
+                "status": "issued",
+                "access_token": raw_token,
+                "token_type": "Bearer",
+                "scope": "high_risk_api",
+                "intended_action": intended_action,
+                "expires_at": expires_at,
+            }
+        ),
+        media_type="application/json",
+        status_code=201,
+    )
+
+
+@router.post("/api/poia/experiment/token/intent/start")
+def api_poia_experiment_token_intent_start(payload: dict, request: Request) -> Response:
+    if not POIA_EXPERIMENT_MODE:
+        return Response(content=json.dumps({"status": "disabled"}), media_type="application/json", status_code=403)
+    user = get_current_user(request)
+    if not require_login(user):
+        return Response(content=json.dumps({"status": "denied", "reason": "unauthorized"}), media_type="application/json", status_code=401)
+    action = str(payload.get("action") or "")
+    scope = payload.get("scope")
+    if action not in {"deploy_config", "api_key_rotate"} or not isinstance(scope, dict):
+        return Response(content=json.dumps({"status": "denied", "reason": "invalid_action"}), media_type="application/json", status_code=400)
+    intent_id = create_poia_intent(
+        action=action,
+        scope=scope,
+        context={"rp_id": "poia-api", "user_id": user["id"]},
+    )
+    return Response(
+        content=json.dumps(
+            {"status": "pending", "intent_id": intent_id, "approval_url": f"/poia/approve/{intent_id}"}
+        ),
+        media_type="application/json",
+        status_code=201,
+    )
+
+
+@router.post("/api/poia/experiment/token/action")
+def api_poia_experiment_token_action(payload: dict, request: Request) -> Response:
+    if not POIA_EXPERIMENT_MODE:
+        return Response(content=json.dumps({"status": "disabled"}), media_type="application/json", status_code=403)
+    started_ns = time.perf_counter_ns()
+    raw_token = _bearer_token(request)
+    token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest() if raw_token else ""
+    with db_connect() as conn:
+        token = conn.execute(
+            "SELECT * FROM experiment_bearer_tokens WHERE token_hash = ? AND expires_at >= ?",
+            (token_hash, int(time.time())),
+        ).fetchone()
+    if token is None:
+        return Response(content=json.dumps({"status": "denied", "reason": "invalid_token"}), media_type="application/json", status_code=401)
+    action = str(payload.get("action") or "")
+    scope = payload.get("scope")
+    if action not in {"deploy_config", "api_key_rotate"} or not isinstance(scope, dict) or not scope.get("object_id"):
+        return Response(content=json.dumps({"status": "denied", "reason": "invalid_action"}), media_type="application/json", status_code=400)
+    configuration = (
+        track_a_recorder.manifest.get("configuration")
+        if track_a_recorder.enabled
+        else "poia_webauthn"
+    )
+    requested = {
+        "action": action,
+        "scope": scope,
+        "context": {"rp_id": "poia-api", "user_id": token["user_id"]},
+        "constraints": {"expires_in_seconds": INTENT_TTL_SECONDS},
+    }
+    intent_id = str(payload.get("intent_id") or "")
+    challenge = poia_store.challenges.get(intent_id)
+    intent_record = poia_store.intents.get(intent_id)
+    before = (
+        track_a_recorder.capture_state(token["user_id"], action, scope)
+        if track_a_recorder.enabled
+        else {"digest": "unavailable"}
+    )
+    if configuration == "session_only":
+        accepted, reason = True, "session_token_accepted"
+    elif intent_record is None or challenge is None:
+        accepted, reason = False, "proof_missing"
+    else:
+        accepted, reason, _, _ = poia_store.reserve_execution(
+            intent_id, token["user_id"], time.time(), requested
+        )
+    if accepted:
+        with db_connect() as conn:
+            conn.execute(
+                "INSERT INTO experiment_api_operations (user_id, action, object_id, created_at) "
+                "VALUES (?, ?, ?, ?)",
+                (token["user_id"], action, str(scope["object_id"]), int(time.time())),
+            )
+        response = Response(content=json.dumps({"status": "accepted"}), media_type="application/json", status_code=201)
+        decision, rejection_reason = "accept", None
+    else:
+        response = Response(content=json.dumps({"status": "denied", "reason": reason}), media_type="application/json", status_code=403)
+        decision, rejection_reason = "reject", reason
+    if track_a_recorder.enabled:
+        after = track_a_recorder.capture_state(token["user_id"], action, scope)
+        approved_body = (
+            intent_record.intent_body
+            if intent_record
+            else {
+                "action": token["intended_action"],
+                "scope": {"token_scope": token["token_scope"]},
+                "context": {"rp_id": "poia-api", "user_id": token["user_id"]},
+                "constraints": {"expires_at": token["expires_at"]},
+            }
+        )
+        track_a_recorder.record(
+            request=request,
+            intent_id=intent_id or f"baseline-{token_hash[:16]}",
+            intent_body=requested,
+            nonce=(challenge.nonce if challenge else None),
+            expected_decision=track_a_recorder.expected_decision_for(request),
+            decision=decision,
+            rejection_reason=rejection_reason,
+            http_status=response.status_code,
+            started_ns=started_ns,
+            before=before,
+            after=after,
+            approved_intent_body=approved_body,
+            requested_intent_body=requested,
+        )
+    return response
+
+
 @router.post("/api/poia/experiment/workflow/start")
 def api_poia_experiment_workflow_start(payload: dict, request: Request) -> Response:
     if not POIA_EXPERIMENT_MODE:

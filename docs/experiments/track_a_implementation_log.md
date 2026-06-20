@@ -177,3 +177,27 @@ The dependency-backed tests verified:
 
 The full dependency-backed suite passed 22 tests. These are implementation
 regressions, not the preregistered `n=200` observations.
+
+## Bearer-token cross-action reuse
+
+Date: 2026-06-20
+
+The lab API can issue a short-lived synthetic bearer token with a broad
+`high_risk_api` scope and an intended action. The raw token is returned only to
+the experiment client; the database stores its SHA-256 digest, and evidence
+contains neither the token nor the Authorization header.
+
+The same protected endpoint implements both frozen configurations:
+
+- `session_only`: a valid broad token is sufficient for either high-risk API
+  action, exposing the cross-action misuse condition;
+- PoIA: the token remains necessary but is insufficient; execution also
+  requires an approved intent matching the exact action, object, principal,
+  context, and validity constraints.
+
+The HTTP regression issued a token intended for `deploy_config` and reused it
+for `api_key_rotate`. Session-only accepted the wrong action and inserted one
+protected API-operation record. PoIA rejected the identical substitution as
+`action_mismatch` with no state change, retained the proof, and then accepted
+the exact `deploy_config` request. Baseline and PoIA observations were written
+under separate manifests. The full dependency-backed suite passed 23 tests.
