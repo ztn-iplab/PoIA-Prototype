@@ -18,6 +18,35 @@ and writes a sanitized manifest. It does not run an experiment. The printed
 `run_id` must be supplied to the later trial runner so every request, decision,
 snapshot, and timing record can be joined.
 
+For a real WebAuthn legitimate-action batch, start the application with the
+container-visible manifest path and an explicit expected decision:
+
+```bash
+export POIA_TRACK_A_MANIFEST=/experiments/track_a/raw/<run_id>/manifest.json
+export POIA_TRACK_A_SCENARIO_ID=exact_legitimate_match
+export POIA_TRACK_A_EXPECTED_DECISION=accept
+export POIA_TEST_MODE=false
+./run.sh --build
+```
+
+The execution gate automatically appends one JSONL decision and one pre/post
+state snapshot per completed operation. Browser-driven attempts receive
+monotonic attempt numbers. Automated harnesses may provide
+`X-PoIA-Request-Id`, `X-PoIA-Attempt`, `X-PoIA-Scenario-Id`,
+`X-PoIA-Scenario-Category`, and `X-PoIA-Expected-Decision` headers.
+
+Generate an honest progress table at any point:
+
+```bash
+python3 scripts/analyze_track_a.py \
+  experiments/track_a/raw/<run_id> --allow-incomplete
+```
+
+Omit `--allow-incomplete` for the final table. Final analysis refuses to run
+unless there are exactly 200 uniquely numbered decisions. A measured zero is
+reported with its Wilson 95% confidence interval, never as an unsupported bare
+`0%`.
+
 Generated run data is intentionally excluded from Git until it has been
 reviewed for secrets and assigned an artifact checksum. Scenario definitions,
 schemas, analysis code, and empty directory placeholders remain versioned.

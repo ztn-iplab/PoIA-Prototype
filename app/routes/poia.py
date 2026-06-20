@@ -19,6 +19,7 @@ from ..core import (
     require_login,
 )
 from ..poia_metrics import log_poia_event
+from ..track_a_recorder import track_a_recorder
 from ..model import ProofRecord
 from ..db import db_connect
 from ..routes.banking import (
@@ -302,9 +303,20 @@ def poia_status(intent_id: str, request: Request) -> Response:
 
 @router.get("/poia/execute/{intent_id}")
 def poia_execute(intent_id: str, request: Request) -> Response:
+    started_ns = time.perf_counter_ns()
     user = get_current_user(request)
     if not require_login(user):
         return RedirectResponse(url="/login", status_code=302)
+    existing_intent = poia_store.intents.get(intent_id)
+    existing_challenge = poia_store.challenges.get(intent_id)
+    if track_a_recorder.enabled and existing_intent is not None:
+        before = track_a_recorder.capture_state(
+            user["id"],
+            existing_intent.intent_body.get("action", "unknown"),
+            existing_intent.intent_body.get("scope", {}),
+        )
+    else:
+        before = {"digest": "unavailable"}
     reserved, reason, intent_record, challenge_record = poia_store.reserve_execution(
         intent_id, user["id"], time.time()
     )
@@ -325,11 +337,42 @@ def poia_execute(intent_id: str, request: Request) -> Response:
             "proof_consumed": "Intent proof has already been used.",
             "principal_mismatch": "Intent belongs to another user.",
         }
-        return render(
+        response = render(
             request,
             "result.html",
             {"status": "Rejected", "message": messages.get(reason, "Intent not approved.")},
         )
+        if track_a_recorder.enabled:
+            body = (
+                intent_record.intent_body
+                if intent_record is not None
+                else {
+                    "action": "unknown",
+                    "scope": {},
+                    "context": {"user_id": user["id"], "rp_id": None},
+                }
+            )
+            after = (
+                track_a_recorder.capture_state(
+                    user["id"], body.get("action", "unknown"), body.get("scope", {})
+                )
+                if intent_record is not None
+                else before
+            )
+            track_a_recorder.record(
+                request=request,
+                intent_id=intent_id,
+                intent_body=body,
+                nonce=(challenge_record.nonce if challenge_record else None),
+                expected_decision=track_a_recorder.expected_decision_for(request),
+                decision="reject",
+                rejection_reason=reason,
+                http_status=response.status_code,
+                started_ns=started_ns,
+                before=before,
+                after=after,
+            )
+        return response
 
     action = intent_record.intent_body["action"]
     log_poia_event(
@@ -343,12 +386,12 @@ def poia_execute(intent_id: str, request: Request) -> Response:
         expires_at=challenge_record.expires_at,
     )
     if action == "transfer":
-        return execute_transfer(request, user, intent_record.intent_body)
-    if action == "beneficiary_add":
-        return execute_beneficiary_add(request, user, intent_record.intent_body)
-    if action in {"withdrawal", "deposit"}:
-        return execute_cash(request, user, intent_record.intent_body)
-    if action == "statement_export":
+        response = execute_transfer(request, user, intent_record.intent_body)
+    elif action == "beneficiary_add":
+        response = execute_beneficiary_add(request, user, intent_record.intent_body)
+    elif action in {"withdrawal", "deposit"}:
+        response = execute_cash(request, user, intent_record.intent_body)
+    elif action == "statement_export":
         scope = intent_record.intent_body.get("scope", {})
         query = urllib.parse.urlencode(
             {
@@ -359,17 +402,36 @@ def poia_execute(intent_id: str, request: Request) -> Response:
             }
         )
         download_url = f"/statements.csv?{query}&poia=1" if query else "/statements.csv?poia=1"
-        return render(
+        response = render(
             request,
             "statements_download.html",
             {"download_url": download_url, "redirect_url": "/statements"},
         )
-    if action == "admin_audit_view":
-        return RedirectResponse(url="/admin/audit?poia=1", status_code=302)
-    if action == "admin_mfa_view":
-        return RedirectResponse(url="/admin/mfa?poia=1", status_code=302)
+    elif action == "admin_audit_view":
+        response = RedirectResponse(url="/admin/audit?poia=1", status_code=302)
+    elif action == "admin_mfa_view":
+        response = RedirectResponse(url="/admin/mfa?poia=1", status_code=302)
+    else:
+        response = render(request, "result.html", {"status": "Approved", "message": "Action completed."})
 
-    return render(request, "result.html", {"status": "Approved", "message": "Action completed."})
+    if track_a_recorder.enabled:
+        after = track_a_recorder.capture_state(
+            user["id"], action, intent_record.intent_body.get("scope", {})
+        )
+        track_a_recorder.record(
+            request=request,
+            intent_id=intent_id,
+            intent_body=intent_record.intent_body,
+            nonce=challenge_record.nonce,
+            expected_decision=track_a_recorder.expected_decision_for(request),
+            decision="accept",
+            rejection_reason=None,
+            http_status=response.status_code,
+            started_ns=started_ns,
+            before=before,
+            after=after,
+        )
+    return response
 
 
 @router.get("/api/poia/pending")

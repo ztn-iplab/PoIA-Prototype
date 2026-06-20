@@ -64,3 +64,43 @@ The complete local unit suite passed 11 tests after this change. Route-level
 application startup was not validated in this shell because FastAPI is not
 installed and Docker is unavailable. That limitation must be cleared before a
 confirmatory run and must not be represented as successful end-to-end testing.
+
+## Manifest-bound evidence recording
+
+Date: 2026-06-20
+
+The execution gate now activates a confirmatory recorder only when
+`POIA_TRACK_A_MANIFEST` identifies a prepared run. Every completed execution
+attempt writes:
+
+- one append-only JSONL decision matching the preregistered field contract;
+- one linked pre/post protected-state snapshot;
+- a request identifier and unique attempt number;
+- authorization latency measured with a monotonic high-resolution clock;
+- the frozen RP, authenticator, scenario, configuration, and seed metadata;
+- hashed nonce, proof, principal, account, and sensitive target identifiers.
+
+For manual browser sessions, attempt numbers increment automatically. A harness
+can provide explicit request, attempt, scenario, category, and expected-decision
+headers. Recording refuses to start when the scenario or expected decision is
+unspecified, preventing unlabeled observations from entering the dataset.
+
+`scripts/analyze_track_a.py` generates interim tables on demand and final tables
+only at exactly 200 uniquely numbered decisions. Binary outcomes include
+two-sided Wilson 95% confidence intervals. Latency is reported separately as
+median, IQR, P95, and P99.
+
+### Verification performed
+
+The pinned application dependencies were installed in a temporary environment.
+The complete FastAPI application imported with 81 routes. An HTTP regression
+test then executed an approved transfer twice through the real execution route:
+
+- first request: accepted, one transfer inserted, balance changed once, linked
+  decision and snapshot written;
+- second request: rejected with `proof_consumed`, no additional transaction or
+  balance change, linked decision and unchanged snapshot written.
+
+The dependency-backed suite passed 19 tests. The standard-library suite also
+passed, with the HTTP test explicitly skipped when optional application test
+dependencies are unavailable.
