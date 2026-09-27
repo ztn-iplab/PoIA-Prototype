@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="study-console">
+  <header class="study-console__header">
+    <div>
+      <p class="study-kicker">Human interaction study</p>
+      <h1>Run a participant trial</h1>
+    </div>
+    <div class="study-account">
+      <span>Signed-in participant account</span>
+      <strong>{{ study_readiness.email }}</strong>
+    </div>
+  </header>
+
+  <div class="study-blocker" role="note">
+    <strong>Spontaneous-behavior session</strong>
+    <span>Use the participant workspace for the concealed, step-by-step journal study. This console remains available for instructed and diagnostic trials.</span>
+    <div class="actions"><a class="primary" href="/poia/experiment/participant">Open participant workspace</a></div>
+  </div>
+
+  <div class="study-readiness{% if not study_readiness.ready %} study-readiness--blocked{% endif %}" aria-label="Participant account readiness">
+    {% set readiness_labels = {
+      'active_user': 'Active user',
+      'active_account': 'Bank account',
+      'webauthn_registered': 'WebAuthn passkey',
+      'zt_authenticator_enabled': 'ZT enabled',
+      'zt_authenticator_registered': 'ZT device'
+    } %}
+    {% for key, label in readiness_labels.items() %}
+      <span class="study-check{% if study_readiness.checks[key] %} study-check--ready{% else %} study-check--missing{% endif %}">
+        <span aria-hidden="true">{{ '✓' if study_readiness.checks[key] else '!' }}</span>{{ label }}
+      </span>
+    {% endfor %}
+  </div>
+
+  {% if not study_readiness.ready %}
+    <div class="study-blocker" role="alert">
+      <strong>This account is not ready for participant trials.</strong>
+      <span>Finish the missing WebAuthn and ZT-Authenticator setup before starting.</span>
+      <div class="actions">
+        <a class="ghost" href="/webauthn/setup">Set up WebAuthn</a>
+        <a class="ghost" href="/settings">Open account settings</a>
+      </div>
+    </div>
+  {% endif %}
+
+  <form id="study-form" class="study-flow">
+    <input id="study-run-id" type="hidden" value="human-study-main-01" />
+    <section class="study-step" aria-labelledby="study-step-participant">
+      <div class="study-step__heading">
+        <span>1</span>
+        <div>
+          <h2 id="study-step-participant">Participant and signer</h2>
+          <p>The signed-in account owns the operation and receives the signing request.</p>
+        </div>
+      </div>
+      <div class="study-grid study-grid--participant">
+        <label>
+          Participant code
+          <input id="participant-id" value="P01" maxlength="32" pattern="[A-Za-z0-9_.-]+" required />
+        </label>
+        <fieldset class="study-signer">
+          <legend>Send this trial to</legend>
+          <label class="study-choice">
+            <input type="radio" name="signing-backend" value="webauthn" checked />
+            <span><strong>WebAuthn</strong><small>Passkey registered to {{ study_readiness.email }}</small></span>
+          </label>
+          <label class="study-choice">
+            <input type="radio" name="signing-backend" value="zt_authenticator" />
+            <span><strong>ZT-Authenticator</strong><small>Enrolled mobile authenticator</small></span>
+          </label>
+        </fieldset>
+      </div>
+    </section>
+
+    <section class="study-step" aria-labelledby="study-step-scenario">
+      <div class="study-step__heading">
+        <span>2</span>
+        <div>
+          <h2 id="study-step-scenario">Choose the trial</h2>
+          <p>Select the operation area first, then the exact study condition.</p>
+        </div>
+      </div>
+      <div class="study-grid study-grid--scenario">
+        <label>
+          Operation area
+          <select id="operation-family">
+            <option value="transfer">Money transfer</option>
+            <option value="statement">Statement export</option>
+            <option value="cloud">Protected cloud files</option>
+          </select>
+        </label>
+        <label>
+          Trial condition
+          <select id="study-condition"></select>
+        </label>
+      </div>
+
+      <div class="study-scenario-summary" aria-live="polite">
+        <div><span>Participant started</span><strong id="scenario-started"></strong></div>
+        <div><span>Controlled change</span><strong id="scenario-change"></strong></div>
+        <div><span>Participant response</span><strong id="scenario-response"></strong></div>
+        <div><span>Expected server result</span><strong id="scenario-result"></strong></div>
+      </div>
+
+      <div class="study-parameters" id="transfer-parameters">
+        <h3>Transfer details</h3>
+        <div class="study-grid study-grid--parameters">
+          <label>
+            Source account
+            <select id="from-account">
+              {% for account in accounts %}
+                <option value="{{ account.id }}">{{ account.account_type | title }} · {{ "%.2f"|format(account.balance) }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label>
+            Amount
+            <input id="amount" type="number" min="1" step="0.01" value="100" required />
+          </label>
+          <label>
+            External account
+            <input id="external-account" inputmode="numeric" pattern="[0-9]+" value="9007" required />
+          </label>
+        </div>
+      </div>
+
+      <div class="study-parameters" id="statement-parameters" hidden>
+        <h3>Statement export details</h3>
+        <div class="study-grid study-grid--parameters">
+          <label>Date from<input id="date-from" type="date" value="2026-08-01" /></label>
+          <label>Date to<input id="date-to" type="date" value="2026-08-28" /></label>
+        </div>
+      </div>
+
+      <div class="study-parameters" id="cloud-parameters" hidden>
+        <h3>Protected cloud file</h3>
+        <div class="study-grid study-grid--parameters">
+          <label>
+            File used in this trial
+            <select id="cloud-resource">
+              {% for resource in cloud_resources %}
+                <option value="{{ resource.resource_id }}" data-name="{{ resource.resource_name }}" data-classification="{{ resource.classification }}">{{ resource.resource_name }} · {{ resource.classification }} · {{ resource.status }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <button class="ghost study-restore" id="reset-cloud" type="button">Restore study files</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-step study-step--launch" aria-labelledby="study-step-launch">
+      <div class="study-step__heading">
+        <span>3</span>
+        <div>
+          <h2 id="study-step-launch">Start the trial</h2>
+          <p id="launch-instruction">The WebAuthn intent will open for this signed-in participant.</p>
+        </div>
+      </div>
+      <button class="primary study-start" type="submit" {% if not study_readiness.ready %}disabled{% endif %}>Start trial</button>
+      <p class="study-form-error" id="study-form-error" role="alert" hidden></p>
+    </section>
+  </form>
+
+  <section class="study-progress" id="study-result" hidden aria-live="polite">
+    <div class="study-progress__status">
+      <span id="progress-state">Trial created</span>
+      <strong id="progress-title">Waiting for participant</strong>
+      <p id="progress-message"></p>
+    </div>
+    <dl class="study-progress__facts">
+      <div><dt>Participant</dt><dd id="result-participant">-</dd></div>
+      <div><dt>Trial</dt><dd id="result-trial">-</dd></div>
+      <div><dt>Signer</dt><dd id="result-signer">-</dd></div>
+      <div><dt>Condition</dt><dd id="result-condition">-</dd></div>
+    </dl>
+    <div class="actions">
+      <a class="primary" id="open-intent" href="#" target="_blank" rel="noopener">Open WebAuthn intent</a>
+      <button class="ghost" id="check-status" type="button">Check result now</button>
+      <button class="ghost" id="new-trial" type="button" hidden>Prepare next trial</button>
+    </div>
+    <details class="study-technical">
+      <summary>Technical trial record</summary>
+      <pre class="study-output" id="trial-output"></pre>
+    </details>
+  </section>
+</section>
+
+<script>
+  const scenarios = {
+    unchanged: { family: 'transfer', label: 'Control · exact transfer', stage: 'none', type: 'none', started: 'Transfer the entered amount to the entered external account.', change: 'No change.', response: 'Sign after checking every field.', result: 'Accept and execute the transfer.' },
+    session_target: { family: 'transfer', label: 'Repurpose · change destination account', stage: 'session_repurpose', type: 'target', started: 'Transfer to external account 9007.', change: 'Destination becomes account 7781.', response: 'Refuse the displayed intent.', result: 'Reject against the original request.' },
+    session_scope: { family: 'transfer', label: 'Repurpose · increase amount', stage: 'session_repurpose', type: 'scope', started: 'Transfer the entered amount.', change: 'Amount is increased tenfold.', response: 'Refuse the displayed intent.', result: 'Reject against the original request.' },
+    session_context: { family: 'transfer', label: 'Repurpose · change relying party', stage: 'session_repurpose', type: 'context', started: 'Transfer through PoIA Bank.', change: 'Relying-party context becomes another service.', response: 'Refuse the displayed intent.', result: 'Reject the context mismatch.' },
+    session_subtle: { family: 'transfer', label: 'Repurpose · subtle amount change', stage: 'session_repurpose', type: 'subtle_parameter', started: 'Transfer the entered amount.', change: 'Amount is increased by 0.01.', response: 'Refuse the displayed intent.', result: 'Reject against the original request.' },
+    session_multiple: { family: 'transfer', label: 'Repurpose · change amount and destination', stage: 'session_repurpose', type: 'multiple_field', started: 'Transfer the entered amount to account 9007.', change: 'Amount and destination both change.', response: 'Refuse the displayed intent.', result: 'Reject against the original request.' },
+    pre_amount: { family: 'transfer', label: 'Post-order · change amount before display', stage: 'pre_display', type: 'scope', started: 'Submit the entered transfer.', change: 'Amount changes before the signing display.', response: 'Refuse the displayed intent.', result: 'Reject against the original request.' },
+    pre_context: { family: 'transfer', label: 'Post-order · change context before display', stage: 'pre_display', type: 'context', started: 'Submit the transfer through PoIA Bank.', change: 'Relying-party context changes before display.', response: 'Refuse the displayed intent.', result: 'Reject the context mismatch.' },
+    post_amount: { family: 'transfer', label: 'Post-signature · change amount', stage: 'post_signature', type: 'scope', started: 'Sign the exact entered transfer.', change: 'Amount changes after signature.', response: 'Sign the correct displayed intent.', result: 'Reject the changed execution.' },
+    post_multiple: { family: 'transfer', label: 'Post-signature · change amount and destination', stage: 'post_signature', type: 'multiple_field', started: 'Sign the exact entered transfer.', change: 'Amount and destination change after signature.', response: 'Sign the correct displayed intent.', result: 'Reject the changed execution.' },
+    statement_export_control: { family: 'statement', label: 'Control · exact statement export', stage: 'none', type: 'statement_export_control', started: 'Export statements for the selected account and dates.', change: 'No change.', response: 'Sign after checking the account and dates.', result: 'Accept the statement export.' },
+    session_transfer_to_export: { family: 'statement', label: 'Repurpose · transfer becomes statement export', stage: 'session_repurpose', type: 'cross_operation_statement_export', started: 'Make the entered money transfer.', change: 'The request becomes a statement export for the selected dates.', response: 'Refuse the statement-export intent.', result: 'Reject against the original transfer.' },
+    cloud_view_control: { family: 'cloud', label: 'Control · view protected file', stage: 'none', type: 'cloud_view_control', started: 'View the selected protected file.', change: 'No change.', response: 'Sign after checking the file and action.', result: 'Accept the file view.' },
+    cloud_delete_control: { family: 'cloud', label: 'Control · delete protected file', stage: 'none', type: 'cloud_delete_control', started: 'Delete the selected synthetic file.', change: 'No change.', response: 'Sign only if deletion is intended.', result: 'Accept and mark the synthetic file deleted.' },
+    session_cloud_view_to_delete: { family: 'cloud', label: 'Repurpose · view becomes delete', stage: 'session_repurpose', type: 'cross_operation_cloud_delete', started: 'View the selected protected file.', change: 'The action becomes delete.', response: 'Refuse the delete intent.', result: 'Reject; the file remains unchanged.' },
+    session_cloud_download_to_share: { family: 'cloud', label: 'Repurpose · download becomes public sharing', stage: 'session_repurpose', type: 'cross_operation_public_share', started: 'Download the selected protected file.', change: 'The action becomes public sharing.', response: 'Refuse the public-sharing intent.', result: 'Reject; access remains private.' },
+    session_cloud_view_to_overwrite: { family: 'cloud', label: 'Repurpose · view becomes overwrite', stage: 'session_repurpose', type: 'cross_operation_overwrite', started: 'View the selected protected file.', change: 'The action becomes overwrite.', response: 'Refuse the overwrite intent.', result: 'Reject; the file version remains unchanged.' },
+    post_cloud_view_to_delete: { family: 'cloud', label: 'Post-signature · view becomes delete', stage: 'post_signature', type: 'post_signature_cloud_delete', started: 'Sign an exact file-view intent.', change: 'Execution changes to delete after signature.', response: 'Sign the correct file-view intent.', result: 'Reject the changed execution; the file remains.' },
+  };
+
+  const form = document.getElementById('study-form');
+  const familySelect = document.getElementById('operation-family');
+  const conditionSelect = document.getElementById('study-condition');
+  const result = document.getElementById('study-result');
+  const technicalOutput = document.getElementById('trial-output');
+  const openIntent = document.getElementById('open-intent');
+  const checkStatus = document.getElementById('check-status');
+  const newTrial = document.getElementById('new-trial');
+  const formError = document.getElementById('study-form-error');
+  let activeTrial = null;
+  let pollTimer = null;
+  let executionStarted = false;
+
+  function selectedBackend() { return document.querySelector('input[name="signing-backend"]:checked').value; }
+
+  function rebuildConditions() {
+    conditionSelect.replaceChildren();
+    Object.entries(scenarios).forEach(([value, scenario]) => {
+      if (scenario.family !== familySelect.value) return;
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = scenario.label;
+      conditionSelect.appendChild(option);
+    });
+    updateScenario();
+  }
+
+  function updateScenario() {
+    const scenario = scenarios[conditionSelect.value];
+    if (!scenario) return;
+    document.getElementById('scenario-started').textContent = scenario.started;
+    document.getElementById('scenario-change').textContent = scenario.change;
+    document.getElementById('scenario-response').textContent = scenario.response;
+    document.getElementById('scenario-result').textContent = scenario.result;
+    const needsTransfer = scenario.family === 'transfer' || conditionSelect.value === 'session_transfer_to_export';
+    document.getElementById('transfer-parameters').hidden = !needsTransfer;
+    document.getElementById('statement-parameters').hidden = scenario.family !== 'statement';
+    document.getElementById('cloud-parameters').hidden = scenario.family !== 'cloud';
+  }
+
+  function buildCondition(name, amount) {
+    const scenario = scenarios[name];
+    const changedAmount = Math.max(1000, amount * 10);
+    const fromAccount = Number(document.getElementById('from-account').value);
+    const transferScope = { from_account: fromAccount, amount, currency: 'USD', external_account: document.getElementById('external-account').value.trim() };
+    const statementScope = { account_id: String(fromAccount), txn_type: '', date_from: document.getElementById('date-from').value, date_to: document.getElementById('date-to').value };
+    const resourceSelect = document.getElementById('cloud-resource');
+    const selectedResource = resourceSelect.options[resourceSelect.selectedIndex];
+    const cloudScope = { resource_id: resourceSelect.value, resource_name: selectedResource?.dataset.name || '', classification: selectedResource?.dataset.classification || '' };
+    const definitions = {
+      unchanged: ['transfer', transferScope, []],
+      session_target: ['transfer', transferScope, [{ path: 'scope.external_account', value: '7781' }]],
+      session_scope: ['transfer', transferScope, [{ path: 'scope.amount', value: changedAmount }]],
+      session_context: ['transfer', transferScope, [{ path: 'context.rp_id', value: 'other-rp' }]],
+      session_subtle: ['transfer', transferScope, [{ path: 'scope.amount', value: amount + 0.01 }]],
+      session_multiple: ['transfer', transferScope, [{ path: 'scope.amount', value: changedAmount }, { path: 'scope.external_account', value: '7781' }]],
+      pre_amount: ['transfer', transferScope, [{ path: 'scope.amount', value: changedAmount }]],
+      pre_context: ['transfer', transferScope, [{ path: 'context.rp_id', value: 'other-rp' }]],
+      post_amount: ['transfer', transferScope, [{ path: 'scope.amount', value: changedAmount }]],
+      post_multiple: ['transfer', transferScope, [{ path: 'scope.amount', value: changedAmount }, { path: 'scope.external_account', value: '7781' }]],
+      statement_export_control: ['statement_export', statementScope, []],
+      session_transfer_to_export: ['transfer', transferScope, [{ path: 'action', value: 'statement_export' }, { path: 'scope', value: statementScope }]],
+      cloud_view_control: ['cloud_file_view', cloudScope, []],
+      cloud_delete_control: ['cloud_file_delete', cloudScope, []],
+      session_cloud_view_to_delete: ['cloud_file_view', cloudScope, [{ path: 'action', value: 'cloud_file_delete' }]],
+      session_cloud_download_to_share: ['cloud_file_download', cloudScope, [{ path: 'action', value: 'cloud_file_share_public' }]],
+      session_cloud_view_to_overwrite: ['cloud_file_view', cloudScope, [{ path: 'action', value: 'cloud_file_overwrite' }]],
+      post_cloud_view_to_delete: ['cloud_file_view', cloudScope, [{ path: 'action', value: 'cloud_file_delete' }]],
+    };
+    const [action, scope, mutations] = definitions[name];
+    return { action, scope, mutations, stage: scenario.stage, type: scenario.type };
+  }
+
+  function showError(message) { formError.textContent = message; formError.hidden = false; }
+  function updateLaunchInstruction() {
+    document.getElementById('launch-instruction').textContent = selectedBackend() === 'webauthn'
+      ? 'The WebAuthn intent will open for this signed-in participant.'
+      : 'The intent will be sent to this account’s enrolled ZT-Authenticator.';
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    formError.hidden = true;
+    if (!form.reportValidity()) return;
+    const amount = Number(document.getElementById('amount').value);
+    const definition = buildCondition(conditionSelect.value, amount);
+    const payload = { study_run_id: document.getElementById('study-run-id').value, participant_id: document.getElementById('participant-id').value.trim(), signing_backend: selectedBackend(), mutation_stage: definition.stage, mutation_type: definition.type, action: definition.action, scope: definition.scope, mutations: definition.mutations };
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Creating trial…';
+    const response = await fetch('/api/poia/experiment/human-study/start', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload) });
+    const data = await response.json();
+    submitButton.disabled = false;
+    submitButton.textContent = 'Start trial';
+    technicalOutput.textContent = JSON.stringify(data, null, 2);
+    if (!response.ok) {
+      const messages = { account_not_study_ready: 'This participant account is missing a required account or signing setup.', invalid_study_operation: 'One or more operation fields are incomplete.', invalid_study_trial: data.detail || 'The selected trial could not be created.' };
+      showError(messages[data.reason] || `Trial could not start: ${data.reason || 'unknown error'}`);
+      return;
+    }
+    activeTrial = { ...data, ...payload, condition: conditionSelect.value };
+    executionStarted = false;
+    result.hidden = false;
+    document.getElementById('result-participant').textContent = payload.participant_id;
+    document.getElementById('result-trial').textContent = data.trial_id;
+    document.getElementById('result-signer').textContent = payload.signing_backend === 'webauthn' ? 'WebAuthn' : 'ZT-Authenticator';
+    document.getElementById('result-condition').textContent = scenarios[conditionSelect.value].label;
+    document.getElementById('progress-state').textContent = 'Signing request ready';
+    document.getElementById('progress-title').textContent = 'Waiting for participant';
+    document.getElementById('progress-message').textContent = payload.signing_backend === 'webauthn' ? 'Open the intent and ask the participant to verify every field before signing or refusing.' : 'The intent is available in the participant’s enrolled ZT-Authenticator.';
+    openIntent.href = data.approval_url;
+    openIntent.hidden = payload.signing_backend !== 'webauthn';
+    newTrial.hidden = true;
+    checkStatus.hidden = false;
+    clearInterval(pollTimer);
+    pollTimer = setInterval(checkTrialStatus, 1500);
+    result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  async function finishExecution(variant) {
+    if (executionStarted || !activeTrial) return;
+    executionStarted = true;
+    document.getElementById('progress-title').textContent = 'Checking protected execution';
+    const response = await fetch('/api/poia/experiment/human-study/execute', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify({ trial_id: activeTrial.trial_id, variant }) });
+    const data = await response.json();
+    technicalOutput.textContent += `\n\nExecution\n${JSON.stringify(data, null, 2)}`;
+    clearInterval(pollTimer);
+    document.getElementById('progress-state').textContent = data.status === 'accept' ? 'Accepted' : 'Rejected as expected';
+    document.getElementById('progress-title').textContent = data.status === 'accept' ? 'Trial completed and the exact operation executed' : 'Trial completed and the changed operation was blocked';
+    document.getElementById('progress-message').textContent = data.status === 'accept' ? 'The signed intent matched the protected execution.' : `No unauthorized state change occurred${data.reason ? ` (${data.reason.replaceAll('_', ' ')})` : ''}.`;
+    checkStatus.hidden = true;
+    newTrial.hidden = false;
+  }
+
+  async function checkTrialStatus() {
+    if (!activeTrial) return;
+    const response = await fetch(`/api/poia/experiment/human-study/status?trial_id=${encodeURIComponent(activeTrial.trial_id)}`, { credentials: 'include' });
+    const data = await response.json();
+    if (!response.ok) return;
+    technicalOutput.textContent = `${JSON.stringify(activeTrial, null, 2)}\n\nStatus\n${JSON.stringify(data, null, 2)}`;
+    if (data.proof_status === 'approved') {
+      clearInterval(pollTimer);
+      if (activeTrial.mutation_stage === 'post_signature') await finishExecution('mutated');
+      else if (activeTrial.mutation_stage === 'none') await finishExecution('exact');
+      return;
+    }
+    if (data.system_decision === 'reject' || data.system_decision === 'user_refused' || data.proof_status === 'denied') {
+      clearInterval(pollTimer);
+      document.getElementById('progress-state').textContent = 'Rejected';
+      document.getElementById('progress-title').textContent = data.system_decision === 'user_refused' ? 'Participant refused the changed intent' : 'PoIA blocked the mismatched intent';
+      document.getElementById('progress-message').textContent = data.rejection_reason ? `Recorded reason: ${data.rejection_reason.replaceAll('_', ' ')}.` : 'No protected operation was executed.';
+      checkStatus.hidden = true;
+      newTrial.hidden = false;
+    } else if (data.proof_status === 'expired') {
+      clearInterval(pollTimer);
+      document.getElementById('progress-state').textContent = 'Expired';
+      document.getElementById('progress-title').textContent = 'The participant did not decide in time';
+      document.getElementById('progress-message').textContent = 'Start a new trial when the participant is ready.';
+      checkStatus.hidden = true;
+      newTrial.hidden = false;
+    }
+  }
+
+  familySelect.addEventListener('change', rebuildConditions);
+  conditionSelect.addEventListener('change', updateScenario);
+  document.querySelectorAll('input[name="signing-backend"]').forEach((input) => input.addEventListener('change', updateLaunchInstruction));
+  checkStatus.addEventListener('click', checkTrialStatus);
+  newTrial.addEventListener('click', () => { activeTrial = null; result.hidden = true; clearInterval(pollTimer); form.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  document.getElementById('reset-cloud').addEventListener('click', async () => {
+    const response = await fetch('/api/poia/experiment/human-study/cloud/reset', { method: 'POST', credentials: 'include' });
+    const data = await response.json();
+    if (!response.ok) { showError(data.reason || 'Study files could not be restored.'); return; }
+    window.location.reload();
+  });
+  rebuildConditions();
+  updateLaunchInstruction();
+</script>
+{% endblock %}

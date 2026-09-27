@@ -1,0 +1,31 @@
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal-models/proofs/atomic_referent_binding_verified.spthy
+
+  output:          formal-models/proofs/certificate_rechecked.spthy
+  processing time: 1.42s
+  
+  executable (exists-trace): verified (22 steps)
+  single_execution (all-traces): verified (23 steps)
+  resource_origin (all-traces): verified (30 steps)
+  version_origin (all-traces): verified (30 steps)
+  key_secrecy (all-traces): verified (5 steps)
+  approval_origin (all-traces): verified (5 steps)
+  signature_origin (all-traces): verified (12 steps)
+  causal_authorization (all-traces): verified (6 steps)
+  retired_version_not_read (all-traces): verified (31 steps)
+  no_execution_after_version_change (all-traces): verified (3 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory Atomic_Referent_Binding] Theory loaded
+[Theory Atomic_Referent_Binding] Theory translated
+[Theory Atomic_Referent_Binding] Derivation checks started
+[Theory Atomic_Referent_Binding] Derivation checks ended
+[Theory Atomic_Referent_Binding] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done

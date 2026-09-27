@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step done">1. Set up TOTP</div>
+    <div class="step active">2. Verify TOTP</div>
+    <div class="step">3. Device approval</div>
+  </div>
+  <h1>Use a recovery code</h1>
+  <p class="note">Enter one of the 8 backup codes ZT-Authenticator showed you when you enrolled. Each code works once. Using one clears your current TOTP enrollment so you can set it up again on a device you control.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/mfa/recovery">
+    <label>
+      Recovery code
+      <input type="text" name="code" autocomplete="off" required />
+    </label>
+    <button class="primary" type="submit">Use recovery code</button>
+  </form>
+  <div class="note">
+    <a href="/mfa/verify">Back to TOTP verification</a>
+  </div>
+</section>
+{% endblock %}

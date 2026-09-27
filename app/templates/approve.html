@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Confirm and sign</h1>
+  <p>Check every field below against what you intended. Signing binds your passkey to exactly this content — nothing else.</p>
+  <table class="table poia-fields" aria-label="What you are about to sign">
+    <tbody>
+      {% for label, value in fields %}
+        <tr>
+          <th scope="row">{{ label }}</th>
+          <td>{{ value }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="meta">
+    <div><strong>Expires:</strong> <span id="poia-countdown" data-expires-at="{{ expires_at }}">{{ expires_at }}</span></div>
+  </div>
+  <div class="actions">
+    <button id="poia-approve" class="primary" type="button">Sign with passkey</button>
+    <a class="ghost" id="poia-refuse" href="/dashboard">Cancel — don't sign</a>
+  </div>
+  <p id="poia-status" class="note" role="status" aria-live="polite"></p>
+  <details class="poia-raw-details">
+    <summary>View raw signed data (advanced)</summary>
+    <pre>{{ intent | tojson(indent=2) }}</pre>
+  </details>
+</section>
+<script>
+  function base64urlToBuffer(value) {
+    const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4 ? '='.repeat(4 - (base64.length % 4)) : '';
+    const binary = atob(base64 + pad);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  function bufferToBase64url(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let str = '';
+    for (const byte of bytes) {
+      str += String.fromCharCode(byte);
+    }
+    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  const statusEl = document.getElementById('poia-status');
+  const approveBtn = document.getElementById('poia-approve');
+  const refuseLink = document.getElementById('poia-refuse');
+  const countdownEl = document.getElementById('poia-countdown');
+
+  if (countdownEl) {
+    const expiresAtMs = parseInt(countdownEl.dataset.expiresAt, 10) * 1000;
+    const tick = () => {
+      const remaining = Math.max(0, Math.round((expiresAtMs - Date.now()) / 1000));
+      countdownEl.textContent = remaining > 0 ? `${remaining}s remaining` : 'Expired — cancel and start again';
+      if (remaining <= 10 && remaining > 0) {
+        countdownEl.style.color = '#c24b41';
+      }
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  fetch('/api/poia/telemetry', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ event: 'intent_loaded', intent_id: '{{ intent_id }}', method: 'webauthn' }),
+  }).catch(() => {});
+
+  refuseLink.addEventListener('click', async (event) => {
+    event.preventDefault();
+    await fetch('/api/poia/deny', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ intent_id: '{{ intent_id }}', reason: 'user_cancelled' }),
+    }).catch(() => {});
+    window.location.href = '/dashboard';
+  });
+
+  approveBtn.addEventListener('click', async () => {
+    try {
+      statusEl.textContent = 'Waiting for passkey signature...';
+      statusEl.style.color = '';
+      const beginRes = await fetch('/poia/assertion-begin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ intent_id: '{{ intent_id }}' }),
+      });
+      const beginText = await beginRes.text();
+      const beginData = beginText ? JSON.parse(beginText) : {};
+      if (!beginRes.ok) {
+        statusEl.textContent = beginData.detail || beginData.error || 'Unable to start PoIA signing.';
+        statusEl.style.color = '#c24b41';
+        return;
+      }
+      const publicKey = beginData.public_key;
+      publicKey.challenge = base64urlToBuffer(publicKey.challenge);
+      if (publicKey.allowCredentials) {
+        publicKey.allowCredentials = publicKey.allowCredentials.map(cred => ({
+          ...cred,
+          id: base64urlToBuffer(cred.id),
+        }));
+      }
+      const assertion = await navigator.credentials.get({ publicKey });
+      const payload = {
+        credentialId: bufferToBase64url(assertion.rawId),
+        clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
+        authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+        signature: bufferToBase64url(assertion.response.signature),
+        userHandle: assertion.response.userHandle ? bufferToBase64url(assertion.response.userHandle) : null,
+      };
+      const completeRes = await fetch('/poia/assertion-complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(payload),
+      });
+      const contentType = completeRes.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        const data = await completeRes.json();
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+        if (data.error) {
+          statusEl.textContent = data.detail || data.error;
+          statusEl.style.color = '#c24b41';
+          return;
+        }
+      }
+      const html = await completeRes.text();
+      document.open();
+      document.write(html);
+      document.close();
+    } catch (err) {
+      statusEl.textContent = err.message || 'PoIA signing failed.';
+      statusEl.style.color = '#c24b41';
+    }
+  });
+</script>
+{% endblock %}

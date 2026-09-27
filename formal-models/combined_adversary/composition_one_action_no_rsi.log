@@ -1,0 +1,379 @@
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory PoIA_Composition_OneAction_NoRSI] Theory loaded
+[Theory PoIA_Composition_OneAction_NoRSI] Theory translated
+[Theory PoIA_Composition_OneAction_NoRSI] Derivation checks started
+[Theory PoIA_Composition_OneAction_NoRSI] Derivation checks ended
+[Theory PoIA_Composition_OneAction_NoRSI] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done
+theory PoIA_Composition_OneAction_NoRSI
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+/* looping facts with injective instances: Current/1 */
+
+restriction Equality:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  */
+
+restriction AtMostOneAdversarialAction:
+  "∀ a b #i #j.
+    ((AdversarialAction( a ) @ #i) ∧ (AdversarialAction( b ) @ #j)) ⇒
+    (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ a b #i #j.
+    ((AdversarialAction( a ) @ #i) ∧ (AdversarialAction( b ) @ #j)) ⇒
+    (#i = #j)"
+  */
+
+rule (modulo E) Init_Signer:
+   [ Fr( sk ) ] --[ InitSigner( ) ]-> [ !SignKey( sk ), !SignPub( pk(sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Init_Capture:
+   [ Fr( content ), Fr( v0 ) ]
+  --[ Captured( content ), InitReferent( v0, content ) ]->
+   [ !Referent( v0, content ), Current( v0 ), Out( v0 ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Mutate_Referent:
+   [ Current( v ), In( content2 ), Fr( v2 ) ]
+  --[ MutateReferent( v, v2, content2 ), AdversarialAction( 'mutate' ) ]->
+   [ !Referent( v2, content2 ), Current( v2 ), Out( v2 ) ]
+
+  // loop breaker: [0]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Commit_Intent:
+   [ Current( v ), !Referent( v, content ) ]
+  --[ Committed( v, content, h(content) ) ]->
+   [ !CommittedIntent( <v, h(content)> ), Current( v ) ]
+
+  // loop breaker: [0]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RootA_Honest:
+   [ !CommittedIntent( i ) ] --[ RootAReport( i ) ]-> [ ReportA( i ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RootB_Honest:
+   [ !CommittedIntent( i ) ] --[ RootBReport( i ) ]-> [ ReportB( i ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Compromise_RootA:
+   [ In( evil ) ]
+  --[ RootACompromisedWith( evil ), AdversarialAction( 'rootA' ) ]->
+   [ ReportA( evil ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Compromise_RootB:
+   [ In( evil ) ]
+  --[ RootBCompromisedWith( evil ), AdversarialAction( 'rootB' ) ]->
+   [ ReportB( evil ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Sign_K2:
+   [ !SignKey( sk ), ReportA( iA ), ReportB( iB ) ]
+  --[ Eq( iA, iB ), Signed( iA ) ]->
+   [ Out( <iA, sign(iA, sk)> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Execute_NoRecheck:
+   [
+   !SignPub( pk ), In( <<v, d>, sig> ), Current( vc ),
+   !Referent( vc, content )
+   ]
+  --[ Eq( verify(sig, <v, d>, pk), true ), Executed( vc, d, content ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Execute_NoRecheck:
+     [
+     !SignPub( pk ), In( <<v, d>, sig> ), Current( vc ),
+     !Referent( vc, content )
+     ]
+    --[ Eq( z, true ), Executed( vc, d, content ) ]->
+     [ ]
+    variants (modulo AC)
+    1. d     = d.8
+       pk    = pk.8
+       sig   = sig.8
+       v     = v.8
+       z     = verify(sig.8, <v.8, d.8>, pk.8)
+    
+    2. d     = x.8
+       pk    = pk(x.9)
+       sig   = sign(<x.10, x.8>, x.9)
+       v     = x.10
+       z     = true
+  */
+
+lemma pipeline_executable:
+  exists-trace "∃ v d content #i. Executed( v, d, content ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ v d content #i. (Executed( v, d, content ) @ #i)"
+*/
+simplify
+solve( !SignPub( pk(x) ) ▶₀ #i )
+  case Init_Signer
+  solve( Current( v.1 ) ▶₂ #i )
+    case Commit_Intent_case_1
+    solve( !Referent( ~n.1, content ) ▶₃ #i )
+      case Init_Capture
+      solve( !KU( sign(<v, d>, ~n) ) @ #vk.4 )
+        case Sign_K2_case_1
+        solve( Current( ~n.3 ) ▶₀ #vr.1 )
+          case Commit_Intent
+          solve( Current( ~n.1 ) ▶₀ #vr.7 )
+            case Commit_Intent
+            solve( Current( ~n.1 ) ▶₀ #vr.8 )
+              case Commit_Intent
+              solve( Current( ~n.3 ) ▶₀ #vr.10 )
+                case Init_Capture
+                solve( Current( ~n.1 ) ▶₀ #vr.11 )
+                  case Init_Capture
+                  solve( Current( ~n.1 ) ▶₀ #vr.12 )
+                    case Init_Capture
+                    solve( !KU( ~n.1 ) @ #vk.3 )
+                      case Init_Capture
+                      solve( !KU( h(~n.2) ) @ #vk.4 )
+                        case Sign_K2_case_1
+                        solve( Current( ~n.1 ) ▶₀ #vr.16 )
+                          case Init_Capture
+                          solve( Current( ~n.1 ) ▶₀ #vr.17 )
+                            case Init_Capture
+                            SOLVED // trace found
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma full_lifecycle_non_reconstitution:
+  all-traces
+  "∀ v d c #e.
+    (Executed( v, d, c ) @ #e) ⇒
+    (∃ #k. (Committed( v, c, d ) @ #k) ∧ (#k < #e))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ v d c #e.
+  (Executed( v, d, c ) @ #e)
+ ∧
+  ∀ #k. (Committed( v, c, d ) @ #k) ⇒ ¬(#k < #e)"
+*/
+simplify
+solve( !SignPub( pk(x) ) ▶₀ #e )
+  case Init_Signer
+  solve( Current( v.1 ) ▶₂ #e )
+    case Commit_Intent_case_1
+    solve( !Referent( ~n.1, c ) ▶₃ #e )
+      case Init_Capture
+      solve( !KU( sign(<v, d>, ~n) ) @ #vk.4 )
+        case Sign_K2_case_1
+        solve( Current( ~n.3 ) ▶₀ #vr.1 )
+          case Commit_Intent
+          solve( Current( ~n.1 ) ▶₀ #vr.7 )
+            case Commit_Intent
+            solve( Current( ~n.1 ) ▶₀ #vr.8 )
+              case Commit_Intent
+              solve( Current( ~n.3 ) ▶₀ #vr.10 )
+                case Init_Capture
+                solve( Current( ~n.1 ) ▶₀ #vr.11 )
+                  case Init_Capture
+                  solve( Current( ~n.1 ) ▶₀ #vr.12 )
+                    case Init_Capture
+                    solve( !KU( ~n.1 ) @ #vk.3 )
+                      case Init_Capture
+                      solve( !KU( h(~n.2) ) @ #vk.4 )
+                        case Sign_K2_case_1
+                        solve( Current( ~n.1 ) ▶₀ #vr.16 )
+                          case Init_Capture
+                          solve( Current( ~n.1 ) ▶₀ #vr.17 )
+                            case Init_Capture
+                            SOLVED // trace found
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma norsi_attack_shape:
+  exists-trace
+  "∃ v0 c0 d v2 c2 #k #s #m #x.
+    ((((((Committed( v0, c0, d ) @ #k) ∧ (Signed( <v0, d> ) @ #s)) ∧
+        (MutateReferent( v0, v2, c2 ) @ #m)) ∧
+       (Executed( v2, d, c2 ) @ #x)) ∧
+      (#k < #s)) ∧
+     (#s < #m)) ∧
+    (#m < #x)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ v0 c0 d v2 c2 #k #s #m #x.
+  (Committed( v0, c0, d ) @ #k) ∧
+  (Signed( <v0, d> ) @ #s) ∧
+  (MutateReferent( v0, v2, c2 ) @ #m) ∧
+  (Executed( v2, d, c2 ) @ #x)
+ ∧
+  (#k < #s) ∧ (#s < #m) ∧ (#m < #x)"
+*/
+simplify
+solve( !Referent( v0, c0 ) ▶₁ #k )
+  case Init_Capture
+  solve( !SignKey( sk ) ▶₀ #s )
+    case Init_Signer
+    solve( ReportA( <~n, h(~n.1)> ) ▶₁ #s )
+      case RootA_Honest
+      solve( ReportB( <~n, h(~n.1)> ) ▶₂ #s )
+        case RootB_Honest
+        solve( !SignPub( pk(x.1) ) ▶₀ #x )
+          case Init_Signer
+          solve( Current( ~n.2 ) ▶₂ #x )
+            case Commit_Intent
+            solve( !Referent( ~n.2, c2 ) ▶₃ #x )
+              case Mutate_Referent
+              solve( !KU( sign(<v, h(~n.1)>, ~n.4) ) @ #vk.5 )
+                case Sign_K2_case_1
+                solve( Current( ~n ) ▶₀ #k )
+                  case Commit_Intent
+                  solve( Current( ~n ) ▶₀ #m )
+                    case Commit_Intent
+                    solve( Current( ~n ) ▶₀ #vr.3 )
+                      case Commit_Intent
+                      solve( Current( ~n ) ▶₀ #vr.5 )
+                        case Commit_Intent
+                        solve( Current( ~n.2 ) ▶₀ #vr.7 )
+                          case Commit_Intent
+                          solve( Current( ~n ) ▶₀ #vr.12 )
+                            case Commit_Intent
+                            solve( Current( ~n ) ▶₀ #vr.13 )
+                              case Commit_Intent
+                              solve( Current( ~n ) ▶₀ #vr.14 )
+                                case Commit_Intent
+                                solve( Current( ~n ) ▶₀ #vr.15 )
+                                  case Commit_Intent
+                                  solve( Current( ~n ) ▶₀ #vr.16 )
+                                    case Commit_Intent
+                                    solve( Current( ~n ) ▶₀ #vr.17 )
+                                      case Init_Capture
+                                      solve( Current( ~n.2 ) ▶₀ #vr.18 )
+                                        case Mutate_Referent
+                                        solve( Current( ~n ) ▶₀ #vr.19 )
+                                          case Init_Capture
+                                          solve( Current( ~n ) ▶₀ #vr.18 )
+                                            case Init_Capture
+                                            solve( Current( ~n ) ▶₀ #vr.17 )
+                                              case Init_Capture
+                                              solve( Current( ~n ) ▶₀ #vr.16 )
+                                                case Commit_Intent
+                                                solve( Current( ~n ) ▶₀ #vr.17 )
+                                                  case Init_Capture
+                                                  solve( Current( ~n ) ▶₀ #vr.15 )
+                                                    case Init_Capture
+                                                    solve( !KU( ~n ) @ #vk.4 )
+                                                      case Init_Capture
+                                                      solve( !KU( h(~n.1) ) @ #vk.5 )
+                                                        case Sign_K2_case_1
+                                                        solve( Current( ~n ) ▶₀ #vr.18 )
+                                                          case Init_Capture
+                                                          solve( Current( ~n ) ▶₀ #vr.19 )
+                                                            case Init_Capture
+                                                            SOLVED // trace found
+                                                          qed
+                                                        qed
+                                                      qed
+                                                    qed
+                                                  qed
+                                                qed
+                                              qed
+                                            qed
+                                          qed
+                                        qed
+                                      qed
+                                    qed
+                                  qed
+                                qed
+                              qed
+                            qed
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: 82780bbaf3328a45f624ddb41e51bf75425f851c (with uncommited changes), branch: master
+Compiled at: 2026-03-07 14:22:39.174278293 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: composition_one_action_no_rsi.spthy
+
+  processing time: 166.80s
+  
+  pipeline_executable (exists-trace): verified (16 steps)
+  full_lifecycle_non_reconstitution (all-traces): falsified - found trace (16 steps)
+  norsi_attack_shape (exists-trace): verified (32 steps)
+
+==============================================================================

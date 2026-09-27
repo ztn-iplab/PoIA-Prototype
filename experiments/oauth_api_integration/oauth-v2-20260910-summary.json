@@ -1,0 +1,143 @@
+{
+  "cells": [
+    {
+      "accepted": 200,
+      "action_endpoint_latency": {
+        "iqr_ms": 1.3308115000000003,
+        "median_ms": 6.3394165000000005,
+        "n": 200,
+        "p95_ms": 8.94418305,
+        "p99_ms": 14.942422169999999
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_only",
+      "protected_state_transitions": 200,
+      "scenario": "exact_request"
+    },
+    {
+      "accepted": 200,
+      "action_endpoint_latency": {
+        "iqr_ms": 0.9654889999999998,
+        "median_ms": 6.331854,
+        "n": 200,
+        "p95_ms": 8.292299649999995,
+        "p99_ms": 16.195911159999994
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_only",
+      "protected_state_transitions": 200,
+      "scenario": "cross_action_substitution"
+    },
+    {
+      "accepted": 200,
+      "action_endpoint_latency": {
+        "iqr_ms": 0.9690097499999997,
+        "median_ms": 8.054229,
+        "n": 200,
+        "p95_ms": 16.28105385,
+        "p99_ms": 26.686405169999993
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_only",
+      "protected_state_transitions": 200,
+      "scenario": "target_object_substitution"
+    },
+    {
+      "accepted": 200,
+      "action_endpoint_latency": {
+        "iqr_ms": 0.6952082500000003,
+        "median_ms": 7.8025415,
+        "n": 200,
+        "p95_ms": 9.627717299999984,
+        "p99_ms": 15.868443659999995
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_only",
+      "protected_state_transitions": 200,
+      "scenario": "scope_parameter_substitution"
+    },
+    {
+      "accepted": 200,
+      "action_endpoint_latency": {
+        "iqr_ms": 1.6012184999999999,
+        "median_ms": 8.004833,
+        "n": 200,
+        "p95_ms": 9.690210699999993,
+        "p99_ms": 15.44580976
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_plus_poia",
+      "protected_state_transitions": 200,
+      "scenario": "exact_request"
+    },
+    {
+      "accepted": 0,
+      "action_endpoint_latency": {
+        "iqr_ms": 0.23144849999999995,
+        "median_ms": 2.270667,
+        "n": 200,
+        "p95_ms": 2.7075681499999984,
+        "p99_ms": 2.89285967
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_plus_poia",
+      "protected_state_transitions": 0,
+      "scenario": "cross_action_substitution"
+    },
+    {
+      "accepted": 0,
+      "action_endpoint_latency": {
+        "iqr_ms": 0.18885400000000008,
+        "median_ms": 2.5291249999999996,
+        "n": 200,
+        "p95_ms": 2.885396449999999,
+        "p99_ms": 3.2956827399999975
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_plus_poia",
+      "protected_state_transitions": 0,
+      "scenario": "target_object_substitution"
+    },
+    {
+      "accepted": 0,
+      "action_endpoint_latency": {
+        "iqr_ms": 0.14377174999999998,
+        "median_ms": 2.3303125,
+        "n": 200,
+        "p95_ms": 2.7341836499999994,
+        "p99_ms": 2.93233142
+      },
+      "attempts": 200,
+      "correct_decisions": 200,
+      "false_acceptances": 0,
+      "false_rejections": 0,
+      "mode": "oauth_plus_poia",
+      "protected_state_transitions": 0,
+      "scenario": "scope_parameter_substitution"
+    }
+  ],
+  "median_exact_request_overhead_ms": 1.6654164999999992,
+  "requests": 1600,
+  "run_id": "oauth-v2-20260910"
+}

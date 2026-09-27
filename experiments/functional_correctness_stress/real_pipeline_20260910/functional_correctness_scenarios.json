@@ -1,0 +1,72 @@
+{
+  "categories": [
+    "exact_valid_match",
+    "canonical_equivalent_unicode",
+    "canonical_equivalent_numeric",
+    "action_mismatch",
+    "scope_mismatch",
+    "context_mismatch",
+    "expired_intent",
+    "nonce_reuse",
+    "malformed_serialization"
+  ],
+  "table_rows": [
+    [
+      "Exact valid match",
+      [
+        "exact_valid_match"
+      ],
+      "Accept"
+    ],
+    [
+      "Canonical equivalent",
+      [
+        "canonical_equivalent_unicode",
+        "canonical_equivalent_numeric"
+      ],
+      "Accept"
+    ],
+    [
+      "Action mismatch",
+      [
+        "action_mismatch"
+      ],
+      "Reject"
+    ],
+    [
+      "Scope mismatch",
+      [
+        "scope_mismatch"
+      ],
+      "Reject"
+    ],
+    [
+      "Context mismatch",
+      [
+        "context_mismatch"
+      ],
+      "Reject"
+    ],
+    [
+      "Expired intent",
+      [
+        "expired_intent"
+      ],
+      "Reject"
+    ],
+    [
+      "Nonce reuse",
+      [
+        "nonce_reuse"
+      ],
+      "Reject"
+    ],
+    [
+      "Malformed serialization",
+      [
+        "malformed_serialization"
+      ],
+      "Reject"
+    ]
+  ]
+}

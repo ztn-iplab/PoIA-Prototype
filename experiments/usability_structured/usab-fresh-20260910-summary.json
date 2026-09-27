@@ -1,0 +1,37 @@
+{
+  "backends": [
+    {
+      "backend": "webauthn",
+      "browser_intent_modal_shown": true,
+      "cryptographic_action_locus": "platform WebAuthn ceremony",
+      "detectable_mutations": 24,
+      "evidence_kind": "synthetic_prompt_contract_not_ui_validation",
+      "field_coverage_percent": 100.0,
+      "full_intent_at_application_signing_surface": false,
+      "mutation_visibility_percent": 100.0,
+      "mutations": 24,
+      "semantic_fields": 35,
+      "semantic_review_locus": "relying-party browser modal",
+      "vague_only_prompts": 0,
+      "visible_fields": 35
+    },
+    {
+      "backend": "zt_authenticator",
+      "browser_intent_modal_shown": false,
+      "cryptographic_action_locus": "dedicated authenticator app dialog",
+      "detectable_mutations": 24,
+      "evidence_kind": "synthetic_prompt_contract_not_ui_validation",
+      "field_coverage_percent": 100.0,
+      "full_intent_at_application_signing_surface": true,
+      "mutation_visibility_percent": 100.0,
+      "mutations": 24,
+      "semantic_fields": 35,
+      "semantic_review_locus": "dedicated authenticator app dialog",
+      "vague_only_prompts": 0,
+      "visible_fields": 35
+    }
+  ],
+  "human_outcomes_measured": false,
+  "human_participants": 0,
+  "run_id": "usab-fresh-20260910"
+}

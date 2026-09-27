@@ -1,0 +1,49 @@
+{
+  "checks": {
+    "exact_control": {
+      "attempts": 510,
+      "correct": 510,
+      "incorrect": 0
+    },
+    "mutated_exact_control": {
+      "attempts": 510,
+      "correct": 510,
+      "incorrect": 0
+    },
+    "post_order_pre_approval": {
+      "attempts": 510,
+      "correct": 510,
+      "incorrect": 0
+    },
+    "post_signature_execution": {
+      "attempts": 510,
+      "correct": 510,
+      "incorrect": 0
+    },
+    "replay_control": {
+      "attempts": 510,
+      "correct": 510,
+      "incorrect": 0
+    }
+  },
+  "experiment": "original_request_and_execution_binding",
+  "mutation_types": [
+    "action",
+    "target",
+    "scope",
+    "context",
+    "subtle_parameter",
+    "multiple_field"
+  ],
+  "notes": [
+    "This run validates production canonical binding and state-machine logic.",
+    "Each attack value is also submitted as a fresh exact operation and must be accepted.",
+    "It does not replace live WebAuthn, ZT-Authenticator, or participant trials.",
+    "No conference CSV or prior approval dataset was read."
+  ],
+  "repetitions_per_mutation": 85,
+  "run_id": "original-binding-confirmatory-fresh-chunk3-20260910",
+  "signing_backend": "protocol_fixture_no_human_or_authenticator_claim",
+  "total_attempts": 2550,
+  "total_incorrect": 0
+}

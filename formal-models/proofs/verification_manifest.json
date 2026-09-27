@@ -1,0 +1,98 @@
+{
+  "reference_commit": "4d823a783a57c80725adba0be2cf0f1fcb634ccf",
+  "rule_premises_and_conclusions_unchanged": true,
+  "original_four_formulas_unchanged": true,
+  "attacker_restrictions_added": false,
+  "results": [
+    {
+      "command": [
+        "tamarin-prover",
+        "formal-models/atomic_referent_binding.spthy",
+        "--prove",
+        "--quit-on-warning",
+        "--oraclename=formal-models/oracle",
+        "--output=formal-models/proofs/atomic_referent_binding_verified.spthy",
+        "--bound=10"
+      ],
+      "outcomes": {
+        "executable": "verified",
+        "single_execution": "verified",
+        "resource_origin": "verified",
+        "version_origin": "verified",
+        "key_secrecy": "verified",
+        "approval_origin": "verified",
+        "signature_origin": "verified",
+        "causal_authorization": "verified",
+        "retired_version_not_read": "verified",
+        "no_execution_after_version_change": "verified"
+      }
+    },
+    {
+      "command": [
+        "tamarin-prover",
+        "formal-models/proofs/atomic_referent_binding_verified.spthy",
+        "--quit-on-warning",
+        "--oraclename=formal-models/oracle",
+        "--output=formal-models/proofs/certificate_rechecked.spthy"
+      ],
+      "outcomes": {
+        "executable": "verified",
+        "single_execution": "verified",
+        "resource_origin": "verified",
+        "version_origin": "verified",
+        "key_secrecy": "verified",
+        "approval_origin": "verified",
+        "signature_origin": "verified",
+        "causal_authorization": "verified",
+        "retired_version_not_read": "verified",
+        "no_execution_after_version_change": "verified"
+      }
+    },
+    {
+      "command": [
+        "tamarin-prover",
+        "formal-models/proofs/without_signature.spthy",
+        "--prove",
+        "--quit-on-warning",
+        "--oraclename=formal-models/oracle",
+        "--output=formal-models/proofs/without_signature_counterexample.spthy",
+        "--bound=20",
+        "--stop-on-trace=BFS"
+      ],
+      "outcomes": {
+        "causal_authorization": "falsified"
+      }
+    },
+    {
+      "command": [
+        "tamarin-prover",
+        "formal-models/proofs/without_current_version.spthy",
+        "--prove",
+        "--quit-on-warning",
+        "--oraclename=formal-models/oracle",
+        "--output=formal-models/proofs/without_current_version_counterexample.spthy",
+        "--bound=20",
+        "--stop-on-trace=BFS"
+      ],
+      "outcomes": {
+        "no_execution_after_version_change": "falsified"
+      }
+    }
+  ],
+  "sha256": {
+    "formal-models/atomic_referent_binding.spthy": "1c1cccb1a036847d2cbfe8f06cec0e7b44a4db39e8370aea7605d2e797ca0174",
+    "formal-models/oracle": "22d8f3c66394a4b30d8018ba0bf52e9cf67475f3a431dbe5705fa42169b4cbce",
+    "scripts/verify_atomic_referent_binding.py": "823569c0420f284e6ee4a6ed713b5be16ca8176338c4063b47932b397f473a18",
+    "formal-models/proofs/atomic_referent_binding_verified.spthy": "e63898c49fe44c321fc1f5856da5a8cf7b071626b46e92f617307cea781a0966",
+    "formal-models/proofs/without_current_version_counterexample.spthy": "97e459e964907cb559e8027a4ef3efa07439d695ba6b756b86411f616773d0e0",
+    "formal-models/proofs/without_signature.spthy": "b068894c2260878ecb946921a6d59a3a9afdee67e78baab2a6a35b1c19ea1c8e",
+    "formal-models/proofs/without_signature_counterexample.spthy": "6e3cca83899e7fbbea9b3ad91d7619cdfd1607e2dd47101663b184abdf892ab2",
+    "formal-models/proofs/reference_model.spthy": "a09b16c44d13365952fcd69822e404733c527d90bb81c31aa8f425f761e8f901",
+    "formal-models/proofs/without_current_version.spthy": "2684f7cf8af95c575c7941e7d0cdd46f1e7c8a5b234a719151801e569b95b214",
+    "formal-models/proofs/certificate_rechecked.spthy": "ede7223a4cb2b5e3473d1a5f553741a4796c874aea18f6eb1f06a31fd8b09ffb",
+    "formal-models/proofs/without_signature.log": "7999f8d763a0f3d6ac4c1778218a72d6032a91fac0a09d35fa7bcd994283b109",
+    "formal-models/proofs/certificate_recheck.log": "19662b4f374702e83cc34a13717e1b421f96d756f166acc144d900cb990a7cc7",
+    "formal-models/proofs/verification.log": "8d6417fa6c1a832ffde1fe4fc4c0288e15e1ae91da206dc2aba5bbbe1ffeaca8",
+    "formal-models/proofs/without_current_version.log": "ef8fb76430671c353b49112cda5421c604650dea3e77302a2fa6da317260d1e7"
+  }
+}

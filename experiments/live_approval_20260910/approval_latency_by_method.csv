@@ -1,0 +1,3 @@
+method,label,source,endpoint,n,mean_ms,median_ms,p95_ms,p99_ms,min_ms,max_ms
+webauthn,PoIA WebAuthn approval,experiments/live_approval_20260910/poia_experiments_live.csv,server intent creation to recorded approval; protected execution excluded,113,6921.601769911505,6244.0,10800.0,16348.359999999991,4716.0,17663.0
+zt_authenticator,PoIA ZT-Authenticator approval,experiments/live_approval_20260910/poia_experiments_live.csv,server intent creation to recorded approval; protected execution excluded,112,9936.410714285714,7486.5,35901.49999999993,43945.740000000005,1624.0,45405.0

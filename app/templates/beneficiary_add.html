@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Add beneficiary</h1>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/beneficiaries/add">
+    <label>
+      Name
+      <input type="text" name="name" required />
+    </label>
+    <label>
+      Bank
+      <input type="text" name="bank" required />
+    </label>
+    <label>
+      Account number
+      <input type="text" name="account_number" minlength="4" maxlength="34" pattern="[0-9]+" inputmode="numeric" autocomplete="off" required />
+    </label>
+    <label>
+      Confirm account number
+      <input type="text" name="confirm_account_number" minlength="4" maxlength="34" pattern="[0-9]+" inputmode="numeric" autocomplete="off" required />
+    </label>
+    <p class="note">Re-enter the account number to confirm it — this catches typos before they send money to the wrong place.</p>
+    <button class="primary" type="submit">Request PoIA approval</button>
+  </form>
+</section>
+{% endblock %}

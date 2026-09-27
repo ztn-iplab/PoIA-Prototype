@@ -1,0 +1,98 @@
+{
+  "experiment": "p256_verification_throughput_matrix",
+  "date": "2026-09-10",
+  "crypto": "P-256 ECDSA (SECP256R1, SHA-256) via cryptography",
+  "canonicalizer": "app.intent_codec.canonical_json (prototype's real canonicalizer)",
+  "repetitions_per_configuration": 3,
+  "note": "Error count is 0 by construction: the harness raises and aborts on any failed verification, so a completed run contains no failed decisions.",
+  "rows": [
+    {
+      "concurrency": 1,
+      "encoding": "WebAuthn",
+      "operations_per_configuration": 3000,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 4320.3,
+      "verification_median_ms": 0.1131,
+      "verification_p95_ms": 0.1263,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 1,
+      "encoding": "ZT-Authenticator",
+      "operations_per_configuration": 3000,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 4183.4,
+      "verification_median_ms": 0.114,
+      "verification_p95_ms": 0.1408,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 10,
+      "encoding": "WebAuthn",
+      "operations_per_configuration": 3000,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 3151.0,
+      "verification_median_ms": 0.3243,
+      "verification_p95_ms": 2.282,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 10,
+      "encoding": "ZT-Authenticator",
+      "operations_per_configuration": 3000,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 2942.4,
+      "verification_median_ms": 0.4572,
+      "verification_p95_ms": 1.3949,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 80,
+      "encoding": "WebAuthn",
+      "operations_per_configuration": 2960,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 5792.6,
+      "verification_median_ms": 0.1395,
+      "verification_p95_ms": 6.9538,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 80,
+      "encoding": "ZT-Authenticator",
+      "operations_per_configuration": 2960,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 6036.9,
+      "verification_median_ms": 0.1335,
+      "verification_p95_ms": 6.064,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 120,
+      "encoding": "WebAuthn",
+      "operations_per_configuration": 3000,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 5812.6,
+      "verification_median_ms": 0.1339,
+      "verification_p95_ms": 4.4888,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    },
+    {
+      "concurrency": 120,
+      "encoding": "ZT-Authenticator",
+      "operations_per_configuration": 3000,
+      "repetitions": 3,
+      "requests_per_second_median_of_reps": 5948.4,
+      "verification_median_ms": 0.1344,
+      "verification_p95_ms": 5.2353,
+      "verification_p99_ms": 0,
+      "error_count": 0
+    }
+  ]
+}

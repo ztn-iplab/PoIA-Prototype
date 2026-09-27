@@ -1,0 +1,116 @@
+{
+  "tamarin_version": "tamarin-prover 1.12.0, (C) David Basin, Cas Cremers, Jannik Dreier, Simon Meier, Ralf Sasse, Benedikt Schmidt, 2010-2023\n\nThis program comes with ABSOLUTELY NO WARRANTY. It is free software, and you\nare welcome to redistribute it according to its LICENSE, see\n'https://github.com/tamarin-prover/tamarin-prover/blob/master/LICENSE'.\n\nGenerated from:\nTamarin version 1.12.0\nMaude version 3.5.1\nGit revision: UNKNOWN, branch: UNKNOWN\nCompiled at: 2026-03-08 09:49:47.765662 UTC",
+  "oracle_used": false,
+  "generated_utc": "2026-09-25T09:08:43Z",
+  "all_expected": true,
+  "results": [
+    {
+      "theory": "referent_state_integrity.spthy",
+      "sha256": "a496b4491c06ffb7f44b99b6950b507e72bed3a737c05e41088584232080dfbe",
+      "command": [
+        "tamarin-prover",
+        "--prove",
+        "--quit-on-warning",
+        "formal-models/referent_state_integrity.spthy"
+      ],
+      "log": "referent_state_integrity.log",
+      "seconds": 3.1,
+      "expected": {
+        "legacy_executable": "verified",
+        "rsi_executable": "verified",
+        "legacy_vulnerable_to_referent_substitution": "verified",
+        "rsi_accept_uses_committed_version": "verified"
+      },
+      "outcomes": {
+        "legacy_executable": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "rsi_executable": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "legacy_vulnerable_to_referent_substitution": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "rsi_accept_uses_committed_version": {
+          "kind": "all-traces",
+          "result": "verified"
+        }
+      }
+    },
+    {
+      "theory": "kofn_confinement.spthy",
+      "sha256": "33afaa7573482cd4c32814adf0a30bb0d293c4c89ace90eafca0d622359a3bc1",
+      "command": [
+        "tamarin-prover",
+        "--prove",
+        "--quit-on-warning",
+        "formal-models/kofn_confinement.spthy"
+      ],
+      "log": "kofn_confinement.log",
+      "seconds": 0.5,
+      "expected": {
+        "k1_executable": "verified",
+        "k2_executable": "verified",
+        "k1_vulnerable_to_single_root_compromise": "verified",
+        "k2_resists_single_root_compromise": "verified",
+        "k2_never_signs_substituted_value": "verified"
+      },
+      "outcomes": {
+        "k1_executable": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "k2_executable": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "k1_vulnerable_to_single_root_compromise": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "k2_resists_single_root_compromise": {
+          "kind": "all-traces",
+          "result": "verified"
+        },
+        "k2_never_signs_substituted_value": {
+          "kind": "all-traces",
+          "result": "verified"
+        }
+      }
+    },
+    {
+      "theory": "full_lifecycle_non_reconstitution.spthy",
+      "sha256": "b98f0a25afc6935478e19945eec7e50e828a325b04a303ac6face0eb46562e91",
+      "command": [
+        "tamarin-prover",
+        "--prove",
+        "--quit-on-warning",
+        "formal-models/full_lifecycle_non_reconstitution.spthy"
+      ],
+      "log": "full_lifecycle_non_reconstitution.log",
+      "seconds": 8.6,
+      "expected": {
+        "pipeline_executable": "verified",
+        "full_lifecycle_non_reconstitution": "verified",
+        "weak_pipeline_vulnerable_to_single_compromise": "verified"
+      },
+      "outcomes": {
+        "pipeline_executable": {
+          "kind": "exists-trace",
+          "result": "verified"
+        },
+        "full_lifecycle_non_reconstitution": {
+          "kind": "all-traces",
+          "result": "verified"
+        },
+        "weak_pipeline_vulnerable_to_single_compromise": {
+          "kind": "exists-trace",
+          "result": "verified"
+        }
+      }
+    }
+  ]
+}

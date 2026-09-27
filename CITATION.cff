@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use this artifact, please cite the paper below."
+title: "PoIA — Proof-of-Intent Authorization: research artifact"
+abstract: >-
+  Relying-party prototype, symbolic models, evaluation harness and recorded
+  measurements for Proof-of-Intent Authorization (PoIA), an authorization
+  contract requiring a fresh single-use proof over a canonical intent,
+  normalized execution correspondence, referent version-and-digest agreement
+  atomic with the protected effect, and k-of-n independent commitment
+  confinement before signing.
+type: software
+license: MIT
+repository-code: "https://github.com/ztn-iplab/PoIA-Prototype"
+authors:
+  - family-names: Mutabazi
+    given-names: Patrick
+    affiliation: "Nara Institute of Science and Technology"
+  - family-names: Ndalama
+    given-names: Festus Edward
+    affiliation: "Nara Institute of Science and Technology"
+  - family-names: Taenaka
+    given-names: Yuzo
+    affiliation: "Nara Institute of Science and Technology"
+  - family-names: Kadobayashi
+    given-names: Youki
+    affiliation: "Nara Institute of Science and Technology"
+keywords:
+  - authorization
+  - intent integrity
+  - WebAuthn
+  - formal verification
+  - Tamarin
+preferred-citation:
+  type: conference-paper
+  title: "Proof-of-Intent Authorization (PoIA): Cryptographic Binding of Verified Intent to Action Semantics"
+  collection-title: "Proceedings of the 2026 10th International Conference on Cryptography, Security and Privacy (CSP)"
+  location:
+    name: "Sapporo, Japan"
+  year: 2026
+  month: 4
+  authors:
+    - family-names: Mutabazi
+      given-names: Patrick
+    - family-names: Ndalama
+      given-names: Festus Edward
+    - family-names: Taenaka
+      given-names: Yuzo
+    - family-names: Kadobayashi
+      given-names: Youki

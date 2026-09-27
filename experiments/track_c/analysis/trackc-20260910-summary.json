@@ -1,0 +1,150 @@
+{
+  "fault_cells": [
+    {
+      "detection_latency": {
+        "iqr_ms": 3.4515632500000004,
+        "median_ms": 1.3258334999999999,
+        "n": 200,
+        "p95_ms": 6.8388305999999925,
+        "p99_ms": 11.31513018
+      },
+      "failed_closed": 200,
+      "incorrect_executions": 0,
+      "outage_n": 200,
+      "recovered_accepts": 200,
+      "recovery_ms": 345.099208,
+      "topology": "shared_verifier"
+    },
+    {
+      "detection_latency": {
+        "iqr_ms": 0.1309997500000002,
+        "median_ms": 0.9380625,
+        "n": 200,
+        "p95_ms": 4.202812499999999,
+        "p99_ms": 4.829115089999998
+      },
+      "failed_closed": 200,
+      "incorrect_executions": 0,
+      "outage_n": 200,
+      "recovered_accepts": 200,
+      "recovery_ms": 322.365958,
+      "topology": "hybrid"
+    }
+  ],
+  "manifest": "experiments/track_c/manifests/trackc-20260910.json",
+  "normal_cells": [
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.06619825000000001,
+        "median_ms": 0.6818960000000001,
+        "n": 2000,
+        "p95_ms": 0.815233,
+        "p99_ms": 0.9658412499999999
+      },
+      "n": 2000,
+      "topology": "gateway_only",
+      "workload": "legitimate"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.006593500000000002,
+        "median_ms": 0.146292,
+        "n": 2000,
+        "p95_ms": 0.16610175,
+        "p99_ms": 0.22213666999999998
+      },
+      "n": 2000,
+      "topology": "gateway_only",
+      "workload": "semantic_mismatch"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.03175075000000005,
+        "median_ms": 0.7063125,
+        "n": 2000,
+        "p95_ms": 0.7962122,
+        "p99_ms": 0.8778245
+      },
+      "n": 2000,
+      "topology": "service_local",
+      "workload": "legitimate"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.02630224999999997,
+        "median_ms": 0.703333,
+        "n": 2000,
+        "p95_ms": 0.7629181500000001,
+        "p99_ms": 0.822102
+      },
+      "n": 2000,
+      "topology": "service_local",
+      "workload": "semantic_mismatch"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.13342699999999996,
+        "median_ms": 1.284917,
+        "n": 2000,
+        "p95_ms": 1.55892295,
+        "p99_ms": 1.78204042
+      },
+      "n": 2000,
+      "topology": "shared_verifier",
+      "workload": "legitimate"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.2964905,
+        "median_ms": 1.396292,
+        "n": 2000,
+        "p95_ms": 1.9545993499999998,
+        "p99_ms": 5.807140919999996
+      },
+      "n": 2000,
+      "topology": "shared_verifier",
+      "workload": "semantic_mismatch"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.13912524999999998,
+        "median_ms": 1.469521,
+        "n": 2000,
+        "p95_ms": 1.9902996499999996,
+        "p99_ms": 3.83768467
+      },
+      "n": 2000,
+      "topology": "hybrid",
+      "workload": "legitimate"
+    },
+    {
+      "incorrect_accepts": 0,
+      "incorrect_rejects": 0,
+      "latency": {
+        "iqr_ms": 0.005854749999999992,
+        "median_ms": 0.146167,
+        "n": 2000,
+        "p95_ms": 0.1603771,
+        "p99_ms": 0.17318641999999998
+      },
+      "n": 2000,
+      "topology": "hybrid",
+      "workload": "semantic_mismatch"
+    }
+  ],
+  "run_id": "trackc-20260910"
+}

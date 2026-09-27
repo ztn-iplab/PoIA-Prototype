@@ -1,0 +1,37 @@
+{
+  "events_per_mode": 200,
+  "modes": [
+    {
+      "ambiguity_rate_mean_percent": 28.57142857142857,
+      "automated_reconstruction_latency": {
+        "iqr_ms": 0.0015000000000000013,
+        "median_ms": 0.0305,
+        "n": 200,
+        "p95_ms": 0.0383381,
+        "p99_ms": 0.04936649999999997
+      },
+      "incidents": 200,
+      "incorrect_fields": 0,
+      "log_type": "baseline",
+      "missing_evidence_rate_mean_percent": 28.57142857142857,
+      "reconstruction_completeness_mean_percent": 42.857142857142854
+    },
+    {
+      "ambiguity_rate_mean_percent": 0.0,
+      "automated_reconstruction_latency": {
+        "iqr_ms": 0.003270750000000003,
+        "median_ms": 0.0833335,
+        "n": 200,
+        "p95_ms": 0.0940851,
+        "p99_ms": 0.09906407999999998
+      },
+      "incidents": 200,
+      "incorrect_fields": 0,
+      "log_type": "poia",
+      "missing_evidence_rate_mean_percent": 0.0,
+      "reconstruction_completeness_mean_percent": 100.0
+    }
+  ],
+  "reconstruction_records": 400,
+  "run_id": "audit-fresh-20260910"
+}

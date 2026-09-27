@@ -1,0 +1,4 @@
+mode,configuration,users,operations,server_side_throughput_ops_per_second,intent_construction_median_ms,canonicalization_median_ms,signature_generation_median_ms,verification_median_ms,server_side_latency_median_ms,end_to_end_latency_median_ms,end_to_end_latency_p95_ms,modeled_user_interaction_ms
+baseline,Baseline session authorization,200,30000,30500.046989448307,0.000333,0.003917,0.0,0.005875,0.010958,0.010958,0.0205,0.0
+poia_webauthn,PoIA with WebAuthn,200,30000,5360.635005486827,0.002375,0.023,0.3596875,0.31125,0.7411245,5500.7411245,5520.29060175,5500.0
+poia_zt_authenticator,PoIA with ZT-Authenticator,200,30000,5183.705031454265,0.002541,0.02325,0.28025,0.145625,0.564042,3400.564042,3410.30386635,3400.0

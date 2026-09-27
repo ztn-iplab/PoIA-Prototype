@@ -1,0 +1,22 @@
+{
+  "contains_reusable_proofs": false,
+  "events_per_mode": 200,
+  "field_scores": 2800,
+  "fields": [
+    "principal",
+    "action",
+    "scope",
+    "time",
+    "context",
+    "proof",
+    "rationale"
+  ],
+  "preregistration_sha256": "ecf4b827b2b85f7e09c00b3591222877f46496f94f591570bcf8c9ddf2b0dc25",
+  "python_version": "3.10.12",
+  "reconstruction_records": 400,
+  "repository_commit": "4d823a783a57c80725adba0be2cf0f1fcb634ccf",
+  "repository_dirty": true,
+  "run_id": "audit-fresh-20260910",
+  "runner_sha256": "a0b2254e5f5f5705a5e627a882a083f18453e738be35a762bbe861c0e5cc0c91",
+  "tree_clean": false
+}

@@ -1,0 +1,31 @@
+{
+  "created_at_utc": "2026-09-10T07:24:34Z",
+  "run_id": "original-binding-confirmatory-merged-v2-20260910",
+  "script": "scripts/merge_original_request_binding_chunks.py",
+  "source_chunks": [
+    {
+      "chunk_dir": "experiments/human_pilot/protocol_enforcement/original-binding-confirmatory-timing-20260910",
+      "chunk_run_id": "original-binding-confirmatory-timing-20260910",
+      "decisions_csv_sha256": "366cfdd5272a78b7b5c57af193adce4ef379b6fb45abf985b3efaa3953183f89",
+      "repetitions_per_mutation": 25,
+      "total_attempts": 750,
+      "total_incorrect": 0
+    },
+    {
+      "chunk_dir": "experiments/human_pilot/protocol_enforcement/original-binding-confirmatory-fresh-chunk2-20260910",
+      "chunk_run_id": "original-binding-confirmatory-fresh-chunk2-20260910",
+      "decisions_csv_sha256": "1cfff1ebf3e27815297c5988d9e169bcf16a46c5f40b409d785ab136cd674bee",
+      "repetitions_per_mutation": 90,
+      "total_attempts": 2700,
+      "total_incorrect": 0
+    },
+    {
+      "chunk_dir": "experiments/human_pilot/protocol_enforcement/original-binding-confirmatory-fresh-chunk3-20260910",
+      "chunk_run_id": "original-binding-confirmatory-fresh-chunk3-20260910",
+      "decisions_csv_sha256": "8b95028e439ab0a1cfb446cefb295c67a6985bcc4e6494e97251a2fd0ca91328",
+      "repetitions_per_mutation": 85,
+      "total_attempts": 2550,
+      "total_incorrect": 0
+    }
+  ]
+}

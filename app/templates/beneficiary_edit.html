@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Edit beneficiary</h1>
+  <p class="warn" role="alert">
+    Changing these details changes where <strong>future</strong> transfers to this beneficiary go.
+    Any transfer you already approved for the old details will be checked again at execution
+    time and rejected if this edit changed what it referred to — you'll need to re-approve it.
+  </p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/beneficiaries/{{ beneficiary.id }}/edit">
+    <label>
+      Name
+      <input type="text" name="name" value="{{ beneficiary.name }}" required />
+    </label>
+    <label>
+      Bank
+      <input type="text" name="bank" value="{{ beneficiary.bank }}" required />
+    </label>
+    <label>
+      Account number
+      <input type="text" name="account_number" value="{{ beneficiary.account_number }}" minlength="4" maxlength="34" pattern="[0-9]+" inputmode="numeric" autocomplete="off" required />
+    </label>
+    <label>
+      Confirm account number
+      <input type="text" name="confirm_account_number" value="{{ beneficiary.account_number }}" minlength="4" maxlength="34" pattern="[0-9]+" inputmode="numeric" autocomplete="off" required />
+    </label>
+    <p class="note">Re-enter the account number to confirm it — this catches typos before they send money to the wrong place.</p>
+    <div class="actions">
+      <button class="primary" type="submit">Request PoIA approval</button>
+      <a class="ghost" href="/beneficiaries">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

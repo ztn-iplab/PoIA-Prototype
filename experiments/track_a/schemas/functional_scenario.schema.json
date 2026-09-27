@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://poia.local/schemas/track-a-functional-scenarios.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scenario_set", "scenarios"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "scenario_set": {"const": "track_a_functional_correctness_verifier_only"},
+    "scenarios": {
+      "type": "array",
+      "minItems": 16,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "mutation", "expected_decision"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "category": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "mutation": {"type": "string", "pattern": "^[a-z0-9_]+$"},
+          "expected_decision": {"enum": ["accept", "reject"]}
+        }
+      }
+    }
+  }
+}

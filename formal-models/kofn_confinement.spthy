@@ -1,0 +1,174 @@
+/**
+ * PoIA v2 - k-of-n Independent Commitment Confinement.
+ *
+ * Two commitment roots (RootA, RootB) independently compute a digest of
+ * the true content the user is meant to be shown. Two signer policies are
+ * compared:
+ *   - K1: sign whatever digest RootA reports (n=1 effectively - this is
+ *     plain WebAuthn: one display, trusted unconditionally).
+ *   - K2: sign only if RootA and RootB's digests AGREE (k=2, n=2).
+ *
+ * The adversary can compromise at most one root (restriction
+ * AtMostOneCompromise - modeling "fewer than k=2 roots controlled",
+ * which is exactly the k-of-n threat model's precondition) via In(),
+ * i.e. it may substitute any term it can derive/construct for that
+ * root's reported digest - not just a fresh, structurally-uncollidable
+ * placeholder. This is the standard Dolev-Yao adversary, not a weakened
+ * one.
+ *
+ * Applies the three fixes established while building the Referent-State
+ * Integrity model (referent_state_integrity_v4.spthy) from the start:
+ * content lives in a persistent fact touched by no mutable linear
+ * self-loop; the one repeatable adversary rule (Compromise) is bounded to
+ * a single exercise per trace; no identity/session variable is threaded
+ * through both a persistent key-fact and the signed/network tuple (this
+ * model needs none - one implicit global signer, one implicit global
+ * content instance).
+ */
+
+theory PoIA_KofN begin
+
+builtins: signing, hashing
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ #i ==> x = y"
+
+restriction AtMostOneCompromise:
+  "All a b #i #j.
+     RootCompromised(a) @ #i & RootCompromised(b) @ #j ==> #i = #j"
+
+rule Init_Signer:
+  [ Fr(sk) ]
+  --[ InitSigner() ]->
+  [ !SignKey(sk), !SignPub(pk(sk)) ]
+
+rule Init_Content:
+  [ Fr(content) ]
+  --[ InitContent(content) ]->
+  [ !TrueContent(content) ]
+
+// Honest roots: each independently computes h(content) straight from the
+// true content - no network involved, nothing for an adversary to touch.
+rule RootA_Honest:
+  [ !TrueContent(content) ]
+  --[ RootADigest(content, h(content)) ]->
+  [ DigestA(h(content)) ]
+
+rule RootB_Honest:
+  [ !TrueContent(content) ]
+  --[ RootBDigest(content, h(content)) ]->
+  [ DigestB(h(content)) ]
+
+// Compromise: the adversary supplies this root's reported digest instead
+// of the root honestly computing it - modeling a corrupted display,
+// corrupted canonicalizer, or malicious client on that one channel.
+// evil is anything In()-derivable, not merely a fresh atom.
+rule Compromise_RootA:
+  [ In(evil) ]
+  --[ RootCompromised('A'), RootACompromisedWith(evil) ]->
+  [ DigestA(evil) ]
+
+rule Compromise_RootB:
+  [ In(evil) ]
+  --[ RootCompromised('B'), RootBCompromisedWith(evil) ]->
+  [ DigestB(evil) ]
+
+// K1 POLICY (n=1 in effect): sign whatever the one consulted root says.
+rule Sign_K1:
+  [ !SignKey(sk), DigestA(dA) ]
+  --[ SignK1(dA) ]->
+  [ Out(<dA, sign(dA, sk)>) ]
+
+rule Accept_K1:
+  [ !SignPub(pk), In(<d, sig>) ]
+  --[ Eq(verify(sig, d, pk), true), AcceptK1(d) ]->
+  [ ]
+
+// K2 POLICY (k=2, n=2): sign only if both roots agree.
+rule Sign_K2:
+  [ !SignKey(sk), DigestA(dA), DigestB(dB) ]
+  --[ Eq(dA, dB), SignK2(dA) ]->
+  [ Out(<dA, sign(dA, sk)>) ]
+
+rule Accept_K2:
+  [ !SignPub(pk), In(<d, sig>) ]
+  --[ Eq(verify(sig, d, pk), true), AcceptK2(d) ]->
+  [ ]
+
+// --- Sanity: both policies are executable ---
+
+lemma k1_executable:
+  exists-trace
+  "Ex d #i. SignK1(d) @ #i"
+
+lemma k2_executable:
+  exists-trace
+  "Ex d #i. SignK2(d) @ #i"
+
+// --- The results that matter ---
+
+// FALSIFICATION target: with only ONE root consulted (K1 policy),
+// compromising that root produces an ACCEPTED signature over an
+// arbitrary, attacker-chosen digest. No independent channel exists to
+// catch it. This is the formal statement of "trusting a single display
+// gives no real guarantee against a compromised display" - upgraded from
+// an admitted limitation in the papers to a machine-checked witness.
+//
+// The witness must establish the causal chain, not merely the
+// co-existence of a compromise and a signature. An earlier form of this
+// lemma asserted only
+//     Ex evil #r #s #a. RootCompromised('A') @ #r
+//                     & SignK1(evil) @ #s & AcceptK1(evil) @ #a
+// whose three conjuncts are mutually unconstrained: nothing tied `evil`
+// to the compromised root, nothing required it to differ from the honest
+// digest, and nothing ordered compromise before signing. An entirely
+// honest run coexisting with an unrelated compromise event satisfies it,
+// so it did not witness the claim its comment made. The form below binds
+// the signed value to the value the compromised root reported
+// (RootACompromisedWith), orders compromise < sign < accept, and requires
+// the accepted digest to differ from the true content's hash.
+lemma k1_vulnerable_to_single_root_compromise:
+  exists-trace
+  "Ex content evil #c #r #s #a.
+     (InitContent(content) @ #c)
+     & (RootACompromisedWith(evil) @ #r)
+     & (SignK1(evil) @ #s)
+     & (AcceptK1(evil) @ #a)
+     & (#c < #r) & (#r < #s) & (#s < #a)
+     & not(evil = h(content))"
+
+// If the search above does not terminate quickly, replace the inequality
+// with a concrete attacker-chosen constant, which implies it (a public
+// constant cannot equal the hash of a Fresh term) and makes the trace
+// immediate:
+//     & (evil = 'forged_digest')
+// and drop the `not(...)` conjunct.
+
+// SAFETY target: with the K2 policy, whenever a signature is produced,
+// the digest it covers is the TRUE content's hash - even though the
+// adversary is allowed to compromise one of the two roots (bounded to
+// one, per the k-of-n threat model's own precondition: "fewer than k
+// roots controlled"). The agreement check forces the signed digest back
+// to the honest value, because the compromised root's In()-derived
+// substitute cannot be made to equal h(content) without already knowing
+// the Fresh, secret `content` - the standard Dolev-Yao unforgeability
+// argument, machine-checked here for the two-root agreement construction
+// specifically rather than assumed.
+lemma k2_resists_single_root_compromise:
+  all-traces
+  "All d #s.
+     (SignK2(d) @ #s)
+     ==> (Ex content #h. RootADigest(content, d) @ #h)"
+
+// NEW (needs verification alongside the above): the confinement claim
+// stated directly - if K2 ever signs the value a compromised root
+// supplied, then the honest second root independently computed that same
+// value, i.e. the substitution was not a substitution at all. This is the
+// contrapositive of "disagreement is a policy-level rejection".
+lemma k2_never_signs_substituted_value:
+  all-traces
+  "All evil #r #s.
+     (RootACompromisedWith(evil) @ #r) & (SignK2(evil) @ #s)
+     ==> (Ex content #h. RootBDigest(content, evil) @ #h)"
+
+end

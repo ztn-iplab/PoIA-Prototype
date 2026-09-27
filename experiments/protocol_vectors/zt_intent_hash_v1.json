@@ -1,0 +1,24 @@
+{
+  "vector_id": "zt-intent-hash-v1-integral-float",
+  "purpose": "Cross-client regression vector for the server-issued PoIA proof hash.",
+  "intent_as_transmitted": {
+    "action": "deposit",
+    "scope": {
+      "amount": 50.0,
+      "account": "primary"
+    },
+    "context": {
+      "rp_id": "poia-demo-bank",
+      "user_id": 3
+    },
+    "constraints": {
+      "expires_in_seconds": 60
+    }
+  },
+  "canonical_intent_utf8": "{\"action\":\"deposit\",\"constraints\":{\"expires_in_seconds\":60},\"context\":{\"rp_id\":\"poia-demo-bank\",\"user_id\":3},\"scope\":{\"account\":\"primary\",\"amount\":50}}",
+  "intent_body_hash_base64url": "Lqc6zlI6eyQJ6vc3nQBGqbqRd8bV7Gd84nW0jLAdHcU=",
+  "nonce": "test-nonce",
+  "expires_at": 1781957861,
+  "canonical_proof_payload_utf8": "{\"expires_at\":1781957861,\"intent_hash\":\"Lqc6zlI6eyQJ6vc3nQBGqbqRd8bV7Gd84nW0jLAdHcU=\",\"nonce\":\"test-nonce\"}",
+  "proof_hash_sha256_hex": "f80b34dd36ed706a584dca73fa3d2f002330bf4f54df8980ecdb86b4e4bf5f50"
+}

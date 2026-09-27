@@ -1,0 +1,10 @@
+{
+  "created_at_utc": "2026-09-10T07:20:05Z",
+  "excluded_inputs": [
+    "conference data",
+    "existing CSV approval files"
+  ],
+  "repetitions_per_mutation": 25,
+  "run_id": "original-binding-confirmatory-timing-20260910",
+  "script": "scripts/run_original_request_binding_experiment.py"
+}

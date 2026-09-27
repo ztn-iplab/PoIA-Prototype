@@ -1,0 +1,10 @@
+{
+  "created_at_utc": "2026-09-10T07:23:33Z",
+  "excluded_inputs": [
+    "conference data",
+    "existing CSV approval files"
+  ],
+  "repetitions_per_mutation": 85,
+  "run_id": "original-binding-confirmatory-fresh-chunk3-20260910",
+  "script": "scripts/run_original_request_binding_experiment.py"
+}

@@ -1,0 +1,30 @@
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal-models/proofs/without_signature.spthy
+
+  output:          formal-models/proofs/without_signature_counterexample.spthy
+  processing time: 3.41s
+  
+  causal_authorization (all-traces): falsified - found trace (78 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory without_signature] Theory loaded
+[Theory without_signature] Theory translated
+[Theory without_signature] Derivation checks started
+[Theory without_signature] Derivation checks ended
+[Theory without_signature] Theory closed
+searching for attacks at depth: 1
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done
+searching for attacks at depth: 2
+searching for attacks at depth: 3
+searching for attacks at depth: 4
+searching for attacks at depth: 5
+searching for attacks at depth: 6
+searching for attacks at depth: 7
+attack found at depth: 7

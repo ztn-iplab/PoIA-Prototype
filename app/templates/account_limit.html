@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Change daily transfer limit</h1>
+  <p>
+    Account #{{ account.id }} ({{ account.account_type }}) current daily transfer limit is
+    <strong>{{ "%.2f"|format(account.daily_transfer_limit) }}</strong>.
+    This limit applies to transfers and cash withdrawals from this account.
+  </p>
+  {% if error %}<p class="warn" role="alert">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/accounts/{{ account.id }}/limit">
+    <label>
+      New daily limit
+      <input
+        type="number"
+        name="new_daily_limit"
+        step="0.01"
+        min="0.01"
+        value="{{ account.daily_transfer_limit }}"
+        required
+      />
+    </label>
+    <div class="actions">
+      <button class="primary" type="submit">Request PoIA approval</button>
+      <a class="ghost" href="/accounts/{{ account.id }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

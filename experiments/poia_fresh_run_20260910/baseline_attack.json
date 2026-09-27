@@ -1,0 +1,26 @@
+{
+  "replay": {
+    "approved": 30,
+    "trials": 30,
+    "errors": 0,
+    "success_rate": 100.0
+  },
+  "relay_phishing": {
+    "approved": 30,
+    "trials": 30,
+    "errors": 0,
+    "success_rate": 100.0
+  },
+  "session_misuse": {
+    "approved": 30,
+    "trials": 30,
+    "errors": 0,
+    "success_rate": 100.0
+  },
+  "intent_substitution": {
+    "approved": 30,
+    "trials": 30,
+    "errors": 0,
+    "success_rate": 100.0
+  }
+}

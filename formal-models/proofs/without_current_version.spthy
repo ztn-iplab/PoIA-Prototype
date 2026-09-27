@@ -1,0 +1,37 @@
+// Trusted issuer and atomic executor; untrusted transport and mutable referents.
+// Content is public and attacker-selected. Mutations are not bounded.
+// Version identifiers are unique and never reused. No display assurance is modeled.
+theory without_current_version begin
+builtins: signing, hashing
+
+rule Key:
+  [ Fr(u), Fr(sk) ] --[ KeyCreated(u,sk) ]-> [ !Key(u,sk), Out(pk(sk)) ]
+
+rule Resource:
+  [ Fr(r), Fr(v), In(c) ] --[ ResourceCreated(r), NewVersion(r,v) ]-> [ Current(r,v), !Version(r,v,c), Out(<r,v,c>) ]
+
+rule Mutate:
+  [ Current(r,v), Fr(w), In(c) ]
+  --[ Mutated(r,v,w), ReadVersion(r,v), NewVersion(r,w) ]-> [ Current(r,w), !Version(r,w,c), Out(<r,w,c>) ]
+
+rule Issue:
+  [ !Key(u,sk), Current(r,v), !Version(r,v,c), Fr(n), In(a) ]
+  --[ Issued(u,n,a,r,v,h(c)), ReadVersion(r,v) ]->
+  [ Current(r,v), Pending(u,n,a,r,v,h(c)),
+    !IssuedRecord(u,n,a,r,v,h(c)), Out(<u,n,a,r,v,h(c)>) ]
+
+rule Approve:
+  [ !Key(u,sk), !IssuedRecord(u,n,a,r,v,d) ]
+  --[ Approved(u,n,a,r,v,d) ]->
+  [ Out(sign(<u,n,a,r,v,d>,sk)) ]
+
+rule Execute:
+  [ !Key(u,sk), Pending(u,n,a,r,v,h(c)), !Version(r,v,c),
+    In(sign(<u,n,a,r,v,h(c)>,sk)) ]
+  --[ Executed(u,n,a,r,v,h(c)), ReadVersion(r,v) ]-> [ ]
+
+lemma no_execution_after_version_change:
+  "All u n a r v d w #i #m #e.
+   Issued(u,n,a,r,v,d) @ i & Mutated(r,v,w) @ m & Executed(u,n,a,r,v,d) @ e
+   & i < m & m < e ==> F"
+end

@@ -1,0 +1,50 @@
+{
+  "algorithm": "ECDSA P-256 with SHA-256",
+  "canonicalizer_sha256": "1fec14593ad29718ccbb8a74ec44c469b32fab38b305152901be09c120059990",
+  "configuration": {
+    "complexities": [
+      "flat",
+      "nested"
+    ],
+    "compute_samples_per_cell": 200,
+    "concurrencies": [
+      1,
+      10,
+      50,
+      100
+    ],
+    "concurrency_operations_per_cell": 500,
+    "modeled_delays_s": [
+      0,
+      29,
+      30,
+      31,
+      59,
+      60,
+      61,
+      119,
+      120,
+      121,
+      150
+    ],
+    "parameter_counts": [
+      5,
+      20,
+      50,
+      100
+    ],
+    "ttls_s": [
+      30,
+      60,
+      120
+    ]
+  },
+  "cryptography_version": "50.0.1",
+  "platform": "Linux-6.8.0-136-generic-aarch64-with-glibc2.35",
+  "preregistration_sha256": "e57ba0d8078650f18d508506d7f02aa4b5ea988ac3e871e40724d14e29dbf2fa",
+  "python_version": "3.10.12",
+  "repository_commit": "4d823a783a57c80725adba0be2cf0f1fcb634ccf",
+  "repository_dirty": true,
+  "run_id": "sens-v2-20260910",
+  "runner_sha256": "12efeb1568d28935ca89f49982a6ff240e4b1dff6956b97bd2044bded88247da"
+}

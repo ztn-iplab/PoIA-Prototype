@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step active">1. Login</div>
+    <div class="step">2. TOTP</div>
+    <div class="step">3. Device approval</div>
+  </div>
+  <h1>Login</h1>
+  <p>Use your account password to start. The administrator account is the one set in <code>POIA_ADMIN_EMAIL</code> and <code>POIA_ADMIN_PASSWORD</code>.</p>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  {% if message %}<p class="note">{{ message }}</p>{% endif %}
+  <form class="form" method="post" action="/login">
+    <label>
+      Email
+      <input type="email" name="email" required />
+    </label>
+    <label>
+      Password
+      <input type="password" name="password" required />
+    </label>
+    <button class="primary" type="submit">Continue to MFA</button>
+  </form>
+  <div class="note">
+    <a href="/forgot-password">Forgot password?</a>
+  </div>
+</section>
+{% endblock %}

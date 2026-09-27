@@ -1,0 +1,211 @@
+{
+  "actions": [
+    {
+      "action": "beneficiary_add",
+      "max_ms": 6682.0,
+      "mean_ms": 5807.0,
+      "median_ms": 5698.5,
+      "method": "webauthn",
+      "min_ms": 5149.0,
+      "n": 4,
+      "p95_ms": 6551.5,
+      "p99_ms": 6655.9
+    },
+    {
+      "action": "beneficiary_edit",
+      "max_ms": 9753.0,
+      "mean_ms": 9753.0,
+      "median_ms": 9753.0,
+      "method": "webauthn",
+      "min_ms": 9753.0,
+      "n": 1,
+      "p95_ms": 9753.0,
+      "p99_ms": 9753.0
+    },
+    {
+      "action": "deposit",
+      "max_ms": 9734.0,
+      "mean_ms": 6620.862068965517,
+      "median_ms": 6206.0,
+      "method": "webauthn",
+      "min_ms": 4871.0,
+      "n": 29,
+      "p95_ms": 9229.199999999997,
+      "p99_ms": 9727.84
+    },
+    {
+      "action": "limit_change",
+      "max_ms": 9190.0,
+      "mean_ms": 6470.857142857143,
+      "median_ms": 6057.0,
+      "method": "webauthn",
+      "min_ms": 5187.0,
+      "n": 7,
+      "p95_ms": 8646.699999999999,
+      "p99_ms": 9081.339999999998
+    },
+    {
+      "action": "statement_export",
+      "max_ms": 8507.0,
+      "mean_ms": 6548.692307692308,
+      "median_ms": 6448.0,
+      "method": "webauthn",
+      "min_ms": 5212.0,
+      "n": 13,
+      "p95_ms": 8380.4,
+      "p99_ms": 8481.68
+    },
+    {
+      "action": "transfer",
+      "max_ms": 17663.0,
+      "mean_ms": 7083.2558139534885,
+      "median_ms": 6275.0,
+      "method": "webauthn",
+      "min_ms": 4716.0,
+      "n": 43,
+      "p95_ms": 13937.099999999995,
+      "p99_ms": 16465.159999999996
+    },
+    {
+      "action": "withdrawal",
+      "max_ms": 16558.0,
+      "mean_ms": 7634.125,
+      "median_ms": 6840.0,
+      "method": "webauthn",
+      "min_ms": 5137.0,
+      "n": 16,
+      "p95_ms": 13219.0,
+      "p99_ms": 15890.199999999999
+    },
+    {
+      "action": "beneficiary_add",
+      "max_ms": 39601.0,
+      "mean_ms": 12812.461538461539,
+      "median_ms": 9196.0,
+      "method": "zt_authenticator",
+      "min_ms": 4103.0,
+      "n": 13,
+      "p95_ms": 29257.599999999977,
+      "p99_ms": 37532.319999999985
+    },
+    {
+      "action": "deposit",
+      "max_ms": 44481.0,
+      "mean_ms": 6971.0,
+      "median_ms": 3297.0,
+      "method": "zt_authenticator",
+      "min_ms": 1624.0,
+      "n": 28,
+      "p95_ms": 18721.699999999997,
+      "p99_ms": 37539.03000000001
+    },
+    {
+      "action": "limit_change",
+      "max_ms": 10865.0,
+      "mean_ms": 7776.0,
+      "median_ms": 8472.0,
+      "method": "zt_authenticator",
+      "min_ms": 3522.0,
+      "n": 5,
+      "p95_ms": 10741.6,
+      "p99_ms": 10840.32
+    },
+    {
+      "action": "statement_export",
+      "max_ms": 39544.0,
+      "mean_ms": 19994.8,
+      "median_ms": 17242.0,
+      "method": "zt_authenticator",
+      "min_ms": 6427.0,
+      "n": 5,
+      "p95_ms": 35699.799999999996,
+      "p99_ms": 38775.159999999996
+    },
+    {
+      "action": "transfer",
+      "max_ms": 45405.0,
+      "mean_ms": 10507.69387755102,
+      "median_ms": 7256.0,
+      "method": "zt_authenticator",
+      "min_ms": 2236.0,
+      "n": 49,
+      "p95_ms": 36823.99999999996,
+      "p99_ms": 42625.799999999974
+    },
+    {
+      "action": "withdrawal",
+      "max_ms": 18864.0,
+      "mean_ms": 8116.416666666667,
+      "median_ms": 7311.0,
+      "method": "zt_authenticator",
+      "min_ms": 2180.0,
+      "n": 12,
+      "p95_ms": 17555.0,
+      "p99_ms": 18602.2
+    }
+  ],
+  "approval_rows_used": {
+    "webauthn": 113,
+    "zt_authenticator": 112
+  },
+  "baseline_comparability": "different endpoint; no end-to-end overhead ratio is estimated",
+  "event_counts": {
+    "approval_success": 113,
+    "intent_approve": 112,
+    "intent_created": 240,
+    "intent_deny": 6,
+    "intent_execute": 222,
+    "intent_expired": 6,
+    "intent_loaded": 240,
+    "passkey_assertion": 113,
+    "passkey_begin": 114,
+    "passkey_complete": 113,
+    "pending_served": 370,
+    "zt_auto_start": 126,
+    "zt_status_approved": 108,
+    "zt_status_expired": 5
+  },
+  "evidence_class": "successful live approval intervals; not isolated signing or execution latency",
+  "invalid_timing_rows": {
+    "webauthn": 0,
+    "zt_authenticator": 0
+  },
+  "method_counts": {
+    "": 462,
+    "browser": 6,
+    "webauthn": 568,
+    "zt_authenticator": 852
+  },
+  "source_csv": "experiments/live_approval_20260910/poia_experiments_live.csv",
+  "source_csv_sha256": "6cfa861ce513fc9775a5685ff7904ec4da7421a22347106877340bf1b679ddba",
+  "summaries": [
+    {
+      "endpoint": "server intent creation to recorded approval; protected execution excluded",
+      "label": "PoIA WebAuthn approval",
+      "max_ms": 17663.0,
+      "mean_ms": 6921.601769911505,
+      "median_ms": 6244.0,
+      "method": "webauthn",
+      "min_ms": 4716.0,
+      "n": 113,
+      "p95_ms": 10800.0,
+      "p99_ms": 16348.359999999991,
+      "source": "experiments/live_approval_20260910/poia_experiments_live.csv"
+    },
+    {
+      "endpoint": "server intent creation to recorded approval; protected execution excluded",
+      "label": "PoIA ZT-Authenticator approval",
+      "max_ms": 45405.0,
+      "mean_ms": 9936.410714285714,
+      "median_ms": 7486.5,
+      "method": "zt_authenticator",
+      "min_ms": 1624.0,
+      "n": 112,
+      "p95_ms": 35901.49999999993,
+      "p99_ms": 43945.740000000005,
+      "source": "experiments/live_approval_20260910/poia_experiments_live.csv"
+    }
+  ],
+  "test_mode_approved_rows": 0,
+  "total_rows": 1888
+}

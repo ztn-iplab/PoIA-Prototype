@@ -1,0 +1,8 @@
+-r requirements.txt
+# Starlette's TestClient (used throughout tests/) requires httpx at runtime.
+# Pin it explicitly rather than relying on it arriving as someone else's
+# transitive dependency. (Previously this line read "httpx2==2.12.0" -- a
+# real but unrelated package, unused anywhere in this codebase; almost
+# certainly a typo for "httpx". Tests only passed before because httpx
+# happened to be pulled in transitively.)
+httpx==0.28.1

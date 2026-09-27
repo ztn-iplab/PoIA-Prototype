@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Recover account access</h1>
+  <p class="warn" role="alert">
+    Account #{{ account.id }} ({{ account.account_type }}) is currently
+    <strong>{{ account.status }}</strong> and cannot send or withdraw funds.
+    Approving this request restores normal access to it.
+  </p>
+  {% if error %}<p class="warn" role="alert">{{ error }}</p>{% endif %}
+  <form class="form" method="post" action="/accounts/{{ account.id }}/recover">
+    <div class="actions">
+      <button class="primary" type="submit">Request PoIA approval</button>
+      <a class="ghost" href="/dashboard">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

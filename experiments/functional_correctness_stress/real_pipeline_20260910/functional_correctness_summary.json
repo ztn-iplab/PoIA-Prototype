@@ -1,0 +1,163 @@
+{
+  "canonicalizer": "app.intent_codec.canonical_json (production), cross-checked against an independently written normalizer",
+  "category_count": 9,
+  "experiment": "functional_correctness_real_pipeline",
+  "false_acceptances": 0,
+  "false_rejections": 0,
+  "far_pct": 0.0,
+  "frr_pct": 0.0,
+  "invalid_cases": 1200,
+  "per_category": {
+    "action_mismatch": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "oracle_disagreements": 0,
+      "reasons": [
+        "action_mismatch"
+      ]
+    },
+    "canonical_equivalent_numeric": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Accept",
+      "oracle_disagreements": 0,
+      "reasons": []
+    },
+    "canonical_equivalent_unicode": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Accept",
+      "oracle_disagreements": 0,
+      "reasons": []
+    },
+    "context_mismatch": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "oracle_disagreements": 0,
+      "reasons": [
+        "rp_mismatch"
+      ]
+    },
+    "exact_valid_match": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Accept",
+      "oracle_disagreements": 0,
+      "reasons": []
+    },
+    "expired_intent": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "oracle_disagreements": 0,
+      "reasons": [
+        "expired"
+      ]
+    },
+    "malformed_serialization": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "oracle_disagreements": 0,
+      "reasons": [
+        "exception:TypeError",
+        "exception:ValueError"
+      ]
+    },
+    "nonce_reuse": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "oracle_disagreements": 0,
+      "reasons": [
+        "proof_consumed"
+      ]
+    },
+    "scope_mismatch": {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "oracle_disagreements": 0,
+      "reasons": [
+        "scope_mismatch"
+      ]
+    }
+  },
+  "scope_note": "Canonicalization and state machine only; signature unforgeability is out of scope (fixture approvals).",
+  "seed": 20260910,
+  "table_rows": [
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Accept",
+      "row": "Exact valid match"
+    },
+    {
+      "cases": 400,
+      "correct": 400,
+      "errors": 0,
+      "expected": "Accept",
+      "row": "Canonical equivalent"
+    },
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "row": "Action mismatch"
+    },
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "row": "Scope mismatch"
+    },
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "row": "Context mismatch"
+    },
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "row": "Expired intent"
+    },
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "row": "Nonce reuse"
+    },
+    {
+      "cases": 200,
+      "correct": 200,
+      "errors": 0,
+      "expected": "Reject",
+      "row": "Malformed serialization"
+    }
+  ],
+  "total_cases": 1800,
+  "total_errors": 0,
+  "total_oracle_disagreements": 0,
+  "trials_per_category": 200,
+  "valid_cases": 600,
+  "verifier": "app.core / app.model poia_store.reserve_execution (production pipeline)"
+}

@@ -1,0 +1,78 @@
+// Trusted issuer and atomic executor; untrusted transport and mutable referents.
+// Content is public and attacker-selected. Mutations are not bounded.
+// Version identifiers are unique and never reused. No display assurance is modeled.
+theory Atomic_Referent_Binding begin
+builtins: signing, hashing
+
+rule Key:
+  [ Fr(u), Fr(sk) ] --[ KeyCreated(u,sk) ]-> [ !Key(u,sk), Out(pk(sk)) ]
+
+rule Resource:
+  [ Fr(r), Fr(v), In(c) ] --[ ResourceCreated(r), NewVersion(r,v) ]-> [ Current(r,v), !Version(r,v,c), Out(<r,v,c>) ]
+
+rule Mutate:
+  [ Current(r,v), Fr(w), In(c) ]
+  --[ Mutated(r,v,w), ReadVersion(r,v), NewVersion(r,w) ]-> [ Current(r,w), !Version(r,w,c), Out(<r,w,c>) ]
+
+rule Issue:
+  [ !Key(u,sk), Current(r,v), !Version(r,v,c), Fr(n), In(a) ]
+  --[ Issued(u,n,a,r,v,h(c)), ReadVersion(r,v) ]->
+  [ Current(r,v), Pending(u,n,a,r,v,h(c)),
+    !IssuedRecord(u,n,a,r,v,h(c)), Out(<u,n,a,r,v,h(c)>) ]
+
+rule Approve:
+  [ !Key(u,sk), !IssuedRecord(u,n,a,r,v,d) ]
+  --[ Approved(u,n,a,r,v,d) ]->
+  [ Out(sign(<u,n,a,r,v,d>,sk)) ]
+
+rule Execute:
+  [ !Key(u,sk), Pending(u,n,a,r,v,h(c)), Current(r,v), !Version(r,v,c),
+    In(sign(<u,n,a,r,v,h(c)>,sk)) ]
+  --[ Executed(u,n,a,r,v,h(c)), ReadVersion(r,v) ]-> [ Current(r,v) ]
+
+lemma executable:
+  exists-trace "Ex u n a r v d #i. Executed(u,n,a,r,v,d) @ i"
+
+
+lemma single_execution [use_induction]:
+  "All u n a r v d #i #j.
+   Executed(u,n,a,r,v,d) @ i & Executed(u,n,a,r,v,d) @ j ==> #i = #j"
+
+
+lemma resource_origin [heuristic=o,reuse,use_induction]:
+  "All r v #t. ReadVersion(r,v) @ t ==> Ex #s. ResourceCreated(r) @ s & s < t"
+
+
+lemma version_origin [heuristic=o,reuse,use_induction]:
+  "All r v #t. ReadVersion(r,v) @ t ==> Ex #s. NewVersion(r,v) @ s & s < t"
+
+
+lemma key_secrecy [heuristic=o,reuse,use_induction]:
+  "All u sk #i #j. KeyCreated(u,sk) @ i & K(sk) @ j ==> F"
+
+
+lemma approval_origin [heuristic=o,reuse]:
+  "All u n a r v d #s. Approved(u,n,a,r,v,d) @ s ==>
+   Ex #i. Issued(u,n,a,r,v,d) @ i & i < s"
+
+
+lemma signature_origin [heuristic=o,reuse,use_induction]:
+  "All u sk n a r v d #k #t.
+   KeyCreated(u,sk) @ k & K(sign(<u,n,a,r,v,d>,sk)) @ t ==>
+   Ex #s. Approved(u,n,a,r,v,d) @ s & s < t"
+
+
+lemma causal_authorization [heuristic=o,use_induction]:
+  "All u n a r v d #e. Executed(u,n,a,r,v,d) @ e ==>
+   Ex #i #s. Issued(u,n,a,r,v,d) @ i & Approved(u,n,a,r,v,d) @ s & i < s & s < e"
+
+
+lemma retired_version_not_read [hide_lemma=version_origin,hide_lemma=resource_origin,heuristic=o,reuse,use_induction]:
+  "All r v w #m #t. Mutated(r,v,w) @ m & ReadVersion(r,v) @ t & m < t ==> F"
+
+
+lemma no_execution_after_version_change [heuristic=o,use_induction]:
+  "All u n a r v d w #i #m #e.
+   Issued(u,n,a,r,v,d) @ i & Mutated(r,v,w) @ m & Executed(u,n,a,r,v,d) @ e
+   & i < m & m < e ==> F"
+end

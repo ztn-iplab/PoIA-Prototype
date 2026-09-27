@@ -1,0 +1,501 @@
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal-models/atomic_referent_binding.spthy
+
+  output:          formal-models/proofs/atomic_referent_binding_verified.spthy
+  processing time: 8.58s
+  
+  executable (exists-trace): verified (10 steps)
+  single_execution (all-traces): verified (23 steps)
+  resource_origin (all-traces): verified (30 steps)
+  version_origin (all-traces): verified (30 steps)
+  key_secrecy (all-traces): verified (5 steps)
+  approval_origin (all-traces): verified (5 steps)
+  signature_origin (all-traces): verified (12 steps)
+  causal_authorization (all-traces): verified (6 steps)
+  retired_version_not_read (all-traces): verified (31 steps)
+  no_execution_after_version_change (all-traces): verified (3 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory Atomic_Referent_Binding] Theory loaded
+[Theory Atomic_Referent_Binding] Theory translated
+[Theory Atomic_Referent_Binding] Derivation checks started
+[Theory Atomic_Referent_Binding] Derivation checks ended
+[Theory Atomic_Referent_Binding] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+[Saturating Sources] Done
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: ReadVersion( ~n, v.1 ) @ #t
+1:  (last(#t))  ∥ (∃ #s. (NewVersion( ~n, v.1 ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !Key( u, sk ) ▶₀ #s
+1: !IssuedRecord( u, n, a, r, v, d ) ▶₁ #s
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !KU( ~n.1 ) @ #vk
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: ReadVersion( r, v ) @ #t
+1:  (last(#t))  ∥ (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: ReadVersion( r, v ) @ #t
+1: Current( r, v ) ▶₀ #m
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#e))  ∥ (∃ #i #s.   (Issued( u, n, a, ~n.1, v, h(c) ) @ #i) ∧   (Approved( u, n, a, ~n.1, v, h(c) ) @ #s)  ∧   (¬(last(#s))) ∧ (¬(last(#i))) ∧ (#i < #s) ∧ (#s < #e))
+1: !Key( u, sk ) ▶₀ #e
+2: Pending( u, n, a, ~n.1, v, h(c) ) ▶₁ #e
+3: Current( ~n.1, v ) ▶₂ #e
+4: !Version( ~n.1, v, c ) ▶₃ #e
+5: !KU( sign(<u, n, a, ~n.1, v, h(c)>, sk) ) @ #vk
+6: NewVersion( ~n.1, v ) @ #s.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+6
+5
+2
+4
+3
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#t))  ∥ (∃ #s. (NewVersion( ~n, v ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+1: !Key( u, sk ) ▶₀ #t
+2: Current( ~n, v ) ▶₁ #t
+3: !Version( ~n, v, c.1 ) ▶₂ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+2
+1
+3
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !KU( sign(<~n, n.2, a, r, v, d>, ~n.1) ) @ #vk
+1:  (last(#t))  ∥ (∃ #s.   (Approved( ~n, n.2, a, r, v, d ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+1
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#t))  ∥ (∃ #s. (NewVersion( ~n, v ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+1: !Key( u, sk ) ▶₀ #t
+2: Pending( u, n.2, a, ~n, v, h(c.1) ) ▶₁ #t
+3: Current( ~n, v ) ▶₂ #t
+4: !Version( ~n, v, c.1 ) ▶₃ #t
+5: !KU( sign(<u, n.2, a, ~n, v, h(c.1)>, sk) ) @ #vk.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+3
+1
+2
+4
+5
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#t))  ∥ (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+1: !Key( u, sk ) ▶₀ #t
+2: Current( r, v ) ▶₁ #t
+3: !Version( r, v, c ) ▶₂ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+2
+1
+3
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !IssuedRecord( ~n, n.2, a, r, v, d ) ▶₁ #s
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#t))  ∥ (∃ #s. (NewVersion( ~n, v ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+1: Current( ~n, v ) ▶₀ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#t))  ∥ (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+1: !Key( u, sk ) ▶₀ #t
+2: Pending( u, n, a, r, v, h(c) ) ▶₁ #t
+3: Current( r, v ) ▶₂ #t
+4: !Version( r, v, c ) ▶₃ #t
+5: !KU( sign(<u, n, a, r, v, h(c)>, sk) ) @ #vk
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+3
+1
+2
+4
+5
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0:  (last(#t))  ∥ (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t))
+1: Current( r, v ) ▶₀ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, v ) ▶₀ #m
+1: !Key( u, sk ) ▶₀ #t
+2: Pending( u, n.1, a, r, v, h(c.1) ) ▶₁ #t
+3: Current( r, v ) ▶₂ #t
+4: !Version( r, v, c.1 ) ▶₃ #t
+5: !KU( sign(<u, n.1, a, r, v, h(c.1)>, sk) ) @ #vk.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+3
+0
+1
+2
+4
+5
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !Key( u, sk ) ▶₀ #t
+1: Pending( u, n.2, a, ~n, v, h(c.1) ) ▶₁ #t
+2: Current( ~n, v ) ▶₂ #t
+3: !Version( ~n, v, c.1 ) ▶₃ #t
+4: !KU( sign(<u, n.2, a, ~n, v, h(c.1)>, sk) ) @ #vk.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+2
+0
+1
+3
+4
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, v ) ▶₀ #m
+1: !Key( u, sk ) ▶₀ #t
+2: Current( r, v ) ▶₁ #t
+3: !Version( r, v, c.1 ) ▶₂ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+2
+0
+1
+3
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !Key( u, sk ) ▶₀ #e
+1: Pending( u, n, a, ~n.1, v, h(c) ) ▶₁ #e
+2: Current( ~n.1, v ) ▶₂ #e
+3: !Version( ~n.1, v, c ) ▶₃ #e
+4: !KU( sign(<u, n, a, ~n.1, v, h(c)>, sk) ) @ #vk
+5: NewVersion( ~n.1, v ) @ #s.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+5
+4
+1
+3
+2
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, v ) ▶₀ #m
+1: Current( r, v ) ▶₀ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+1
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !KU( sign(<~n, n.2, a, r, v, d>, ~n.1) ) @ #vk
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !Key( u, sk ) ▶₀ #t
+1: Pending( u, n, a, r, v, h(c) ) ▶₁ #t
+2: Current( r, v ) ▶₂ #t
+3: !Version( r, v, c ) ▶₃ #t
+4: !KU( sign(<u, n, a, r, v, h(c)>, sk) ) @ #vk
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+2
+0
+1
+3
+4
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: (#vr.4, 0) ~~> (#vk, 0)
+1: Current( ~n.4, ~n.5 ) ▶₁ #vr
+2: Current( ~n.4, v ) ▶₀ #vr.6
+3: NewVersion( ~n.4, ~n.5 ) @ #s.1
+4: NewVersion( ~n.4, v ) @ #s.2
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+3
+4
+1
+2
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, ~n ) ▶₀ #m
+1: !Key( u, sk ) ▶₀ #t
+2: Pending( u, n.2, a, r, ~n, h(c.1) ) ▶₁ #t
+3: !Version( r, ~n, c.1 ) ▶₃ #t
+4: !KU( sign(<u, n.2, a, r, ~n, h(c.1)>, sk) ) @ #vk.1
+5: Current( r, v ) ▶₀ #vr
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+5
+1
+2
+3
+4
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: (#vr.1, 0) ~~> (#vk, 0)
+1: Current( ~n.2, v ) ▶₀ #vr
+2: NewVersion( ~n.2, v ) @ #s.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+2
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !Key( u, sk ) ▶₀ #t
+1: Current( ~n, v ) ▶₁ #t
+2: !Version( ~n, v, c.1 ) ▶₂ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+1
+0
+2
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !Key( u, sk ) ▶₀ #t
+1: Current( r, v ) ▶₁ #t
+2: !Version( r, v, c ) ▶₂ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+1
+0
+2
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !KU( ~n.1 ) @ #vk.2
+1: !KU( ~n ) @ #vk.3
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, ~n ) ▶₀ #m
+1: !Key( u, sk ) ▶₀ #t
+2: !Version( r, ~n, c.1 ) ▶₂ #t
+3: Current( r, v ) ▶₀ #vr
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+3
+1
+2
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( ~n, v ) ▶₀ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, v ) ▶₀ #t
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: Current( r, ~n ) ▶₀ #m
+1: Current( r, v ) ▶₀ #vr
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+0
+1
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !KU( ~n ) @ #vk.3
+1: (#vr.1, 0) ~~> (#vk.1, 0)
+2: Current( ~n.3, v.1 ) ▶₀ #vr
+3: NewVersion( ~n.3, v.1 ) @ #s.1
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+1
+3
+0
+2
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+
+>>>>>>>>>>>>>>>>>>>>>>>> START INPUT
+0: !KU( ~n ) @ #vk.3
+1: (#vr.4, 0) ~~> (#vk.1, 0)
+2: Current( ~n.5, ~n.6 ) ▶₁ #vr
+3: Current( ~n.5, v.1 ) ▶₀ #vr.6
+4: NewVersion( ~n.5, ~n.6 ) @ #s.1
+5: NewVersion( ~n.5, v.1 ) @ #s.2
+
+>>>>>>>>>>>>>>>>>>>>>>>> START OUTPUT
+1
+4
+5
+0
+2
+3
+
+>>>>>>>>>>>>>>>>>>>>>>>> END Oracle call
+

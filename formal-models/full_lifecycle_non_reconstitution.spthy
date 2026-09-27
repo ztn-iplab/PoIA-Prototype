@@ -1,0 +1,178 @@
+/**
+ * PoIA v2 - Full-Lifecycle Non-Reconstitution (Candidate 3), composing
+ * Referent-State Integrity and k-of-n Independent Commitment Confinement
+ * into a single staged pipeline with one composed lemma.
+ *
+ * Stages: Captured -> Commit -> Display (k-of-n roots) -> Sign (k=2
+ * agreement) -> Execute (RSI referent re-check) -> [Audit, not modeled
+ * separately here - it would only observe, not gate, so it adds no new
+ * proof obligation].
+ *
+ * Scope, stated plainly: this is a SINGLE-SESSION model (no explicit
+ * session/identity correlator threaded through the wire - see fix (3) in
+ * referent_state_integrity_v4.spthy's header; adding one back in here was
+ * not attempted because it is exactly the pattern already shown to
+ * reintroduce non-termination). The adversary gets ONE adversarial action
+ * total, its choice of WHICH stage to spend it at: compromise RootA,
+ * compromise RootB, or mutate the referent after signing
+ * (restriction AtMostOneAdversarialAction). This is a smaller claim than
+ * an unbounded, fully general adversary, but it is exactly what makes the
+ * result decidable, and it is still a genuine composition: the single
+ * lemma below can only hold because BOTH the k-of-n agreement check (over
+ * the commit/display/sign transitions) AND the RSI re-check (over the
+ * sign/execute transition) are active simultaneously and each closes off
+ * the single-point compromise at its own stage - matching the two
+ * standalone results already proved in kofn_confinement.spthy and
+ * referent_state_integrity_v4.spthy.
+ */
+
+theory PoIA_FullLifecycle begin
+
+builtins: signing, hashing
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ #i ==> x = y"
+
+restriction AtMostOneAdversarialAction:
+  "All a b #i #j.
+     AdversarialAction(a) @ #i & AdversarialAction(b) @ #j ==> #i = #j"
+
+rule Init_Signer:
+  [ Fr(sk) ]
+  --[ InitSigner() ]->
+  [ !SignKey(sk), !SignPub(pk(sk)) ]
+
+// CAPTURE: the ground truth, as it entered the system.
+rule Init_Capture:
+  [ Fr(content), Fr(v0) ]
+  --[ Captured(content), InitReferent(v0, content) ]->
+  [ !TrueCaptured(content), !Referent(v0, content), Current(v0) ]
+
+// One adversary-controlled mutation of the live referent, any time after
+// capture (models an edit path anywhere in the app - see
+// referent_state_integrity_v4.spthy for the detailed justification).
+rule Mutate_Referent:
+  [ Current(v), Fr(content2), Fr(v2) ]
+  --[ MutateReferent(v, v2, content2), AdversarialAction('mutate') ]->
+  [ !Referent(v2, content2), Current(v2) ]
+
+// COMMIT: the RP canonicalizes and hashes the CURRENT referent content.
+rule Commit_Intent:
+  [ Current(v), !Referent(v, content) ]
+  --[ Committed(v, content, h(content)) ]->
+  [ !CommittedDigest(h(content)), Current(v) ]
+
+// DISPLAY (honest): each of two independent commitment roots reports the
+// committed digest faithfully.
+rule RootA_Honest:
+  [ !CommittedDigest(d) ]
+  --[ RootADigest(d) ]->
+  [ DigestA(d) ]
+
+rule RootB_Honest:
+  [ !CommittedDigest(d) ]
+  --[ RootBDigest(d) ]->
+  [ DigestB(d) ]
+
+// DISPLAY (compromised): a root reports an attacker-chosen digest
+// instead. evil is anything In()-derivable (full Dolev-Yao), not merely a
+// fresh, structurally-uncollidable placeholder.
+rule Compromise_RootA:
+  [ In(evil) ]
+  --[ RootACompromisedWith(evil), AdversarialAction('rootA') ]->
+  [ DigestA(evil) ]
+
+rule Compromise_RootB:
+  [ In(evil) ]
+  --[ RootBCompromisedWith(evil), AdversarialAction('rootB') ]->
+  [ DigestB(evil) ]
+
+// SIGN (k=2 policy): only if both roots agree.
+rule Sign_K2:
+  [ !SignKey(sk), DigestA(dA), DigestB(dB) ]
+  --[ Eq(dA, dB), Signed(dA) ]->
+  [ Out(<dA, sign(dA, sk)>) ]
+
+// EXECUTE (RSI policy): re-reads the CURRENT referent content immediately
+// before execution and requires its hash to still equal what was signed.
+rule Execute_RSI:
+  [ !SignPub(pk), In(<d, sig>), Current(v), !Referent(v, content) ]
+  --[ Eq(verify(sig, d, pk), true),
+      Eq(h(content), d),
+      Executed(d, content) ]->
+  [ Current(v) ]
+
+// --- WEAK pipeline (for contrast only): k=1 display trust + Legacy
+// execution gate, i.e. today's actual design pattern end to end.
+
+rule Sign_K1:
+  [ !SignKey(sk), DigestA(dA) ]
+  --[ SignedWeak(dA) ]->
+  [ Out(<dA, sign(dA, sk)>) ]
+
+rule Execute_Legacy:
+  [ !SignPub(pk), In(<d, sig>) ]
+  --[ Eq(verify(sig, d, pk), true),
+      ExecutedWeak(d) ]->
+  [ ]
+
+// --- Sanity ---
+
+lemma pipeline_executable:
+  exists-trace
+  "Ex d content #i. Executed(d, content) @ #i"
+
+// --- The composed result ---
+
+// Whenever the full strong pipeline (k=2 display agreement + RSI
+// execution re-check) accepts and executes, the content actually
+// executed is IDENTICAL to what was COMMITTED under that same digest -
+// i.e. to what was displayed (both roots agreed on it) and signed. Note
+// this is deliberately NOT anchored to the very first Captured event: a
+// referent legitimately changing and then being freshly committed,
+// displayed, and signed again is not an attack (that is an ordinary new
+// transaction over updated data, and an earlier draft of this lemma that
+// required equality with the original capture was correctly FALSIFIED by
+// Tamarin - a real witness trace where the referent was updated BEFORE
+// commit, then honestly committed/displayed/signed/executed on the new
+// value, which is legitimate behavior, not a substitution). The actual
+// property is that nothing can substitute a DIFFERENT value between
+// commit and execute - i.e. after the value has already been displayed
+// and signed - which is exactly what this lemma states, and it is not
+// provable from either sub-property alone with the other absent (a k=1
+// or Legacy-gated pipeline is independently shown vulnerable in
+// kofn_confinement.spthy / referent_state_integrity_v4.spthy), only from
+// both operating together.
+lemma full_lifecycle_non_reconstitution:
+  all-traces
+  "All d content2 #e.
+     (Executed(d, content2) @ #e)
+     ==> (Ex v content0 #c. (Committed(v, content0, d) @ #c) & content0 = content2)"
+
+// --- The contrast: today's actual (weak) pipeline, for comparison ---
+
+// The weak pipeline - k=1 display trust (plain WebAuthn-shaped: one
+// display, trusted unconditionally) feeding a Legacy execution gate (no
+// referent re-check, matching the current prototype) - lets a single
+// compromised root's attacker-chosen value ride straight through to
+// execution, with nothing downstream to catch it. This is the same
+// single adversarial-action budget as the strong-pipeline lemma above;
+// the only difference is which pipeline is gating it.
+// As with the k-of-n theory, the witness must show the compromised value
+// travelling through the pipeline, not merely that a compromise and an
+// execution both occurred. This form keeps the binding to the compromised
+// root's reported value (which the earlier form already had), and adds
+// what it lacked: compromise strictly precedes signing and execution, and
+// the value that executes is not the honestly committed digest -- without
+// which an adversary supplying the correct value would satisfy the lemma.
+lemma weak_pipeline_vulnerable_to_single_compromise:
+  exists-trace
+  "Ex v content evil #c #r #s #e.
+     (Committed(v, content, h(content)) @ #c)
+     & (RootACompromisedWith(evil) @ #r)
+     & (SignedWeak(evil) @ #s)
+     & (ExecutedWeak(evil) @ #e)
+     & (#r < #s) & (#s < #e)
+     & not(evil = h(content))"
+
+end

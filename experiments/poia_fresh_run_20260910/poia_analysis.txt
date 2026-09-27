@@ -1,0 +1,15 @@
+Attack success rates (PoIA):
+- replay: 0.0% (n=30)
+- relay_phishing: 0.0% (n=30)
+- session_misuse: 0.0% (n=30)
+- intent_substitution: 0.0% (n=30)
+
+Attack success rates (baseline):
+- replay: 100.0% (n=30)
+- relay_phishing: 100.0% (n=30)
+- session_misuse: 100.0% (n=30)
+- intent_substitution: 100.0% (n=30)
+
+Latency summary (PoIA approvals):
+{'method': 'poia_webauthn', 'median': None, 'mean': None, 'p95': None, 'max': None, 'stdev': None, 'n': 0}
+{'method': 'poia_zt_authenticator', 'median': 35.0, 'mean': 37.65833333333333, 'p95': 48.0, 'max': 50.0, 'stdev': 6.753389066897367, 'n': 120}

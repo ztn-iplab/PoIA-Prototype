@@ -1,0 +1,25 @@
+{
+  "host": {
+    "machine": "aarch64",
+    "platform": "Linux-6.8.0-136-generic-aarch64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "outage_samples": 200,
+  "preregistration_sha256": "0cb8317b4d2c0f6445465ae348e4629508f151a3ccd9a3fdcc8a2616d40bc101",
+  "recovery_samples": 200,
+  "repository_commit": "4d823a783a57c80725adba0be2cf0f1fcb634ccf",
+  "repository_dirty": true,
+  "run_id": "trackc-20260910",
+  "runner_sha256": "2fadd6e381cf4707b1c983a593aecb26520d5bbb99bf61e744c6e2fbd571e56b",
+  "samples_per_workload": 2000,
+  "topologies": [
+    "gateway_only",
+    "service_local",
+    "shared_verifier",
+    "hybrid"
+  ],
+  "track": "C2",
+  "transport": "loopback HTTP with separate processes",
+  "tree_clean": false,
+  "warmup": 200
+}

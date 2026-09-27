@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": "E1_exact_intent_matching",
+  "description": "Exact intent matching and semantic mutation scenarios for the journal manuscript run.",
+  "scenarios": [
+    {"id": "exact_valid_match", "category": "Exact valid match", "class": "valid", "mutation_class": "none", "mutation": "none", "expected_decision": "accept"},
+    {"id": "canonical_reordered_fields", "category": "Canonical equivalent", "class": "valid", "mutation_class": "M7_canonicalization", "mutation": "reverse_object_order", "expected_decision": "accept"},
+    {"id": "canonical_unicode_numeric_equivalence", "category": "Canonical equivalent", "class": "valid", "mutation_class": "M7_canonicalization", "mutation": "unicode_and_integer_float_equivalence", "expected_decision": "accept"},
+    {"id": "action_grant_to_revoke", "category": "Action mismatch", "class": "invalid", "mutation_class": "M1_action", "mutation": "replace_action", "expected_decision": "reject"},
+    {"id": "target_resource_substitution", "category": "Scope mismatch", "class": "invalid", "mutation_class": "M2_target", "mutation": "replace_target_resource", "expected_decision": "reject"},
+    {"id": "scope_privilege_escalation", "category": "Scope mismatch", "class": "invalid", "mutation_class": "M3_scope", "mutation": "replace_role", "expected_decision": "reject"},
+    {"id": "scope_permission_expansion", "category": "Scope mismatch", "class": "invalid", "mutation_class": "M3_scope", "mutation": "expand_permissions", "expected_decision": "reject"},
+    {"id": "scope_quantity_substitution", "category": "Scope mismatch", "class": "invalid", "mutation_class": "M3_scope", "mutation": "replace_quantity", "expected_decision": "reject"},
+    {"id": "context_rp_substitution", "category": "Context mismatch", "class": "invalid", "mutation_class": "M4_context", "mutation": "replace_rp", "expected_decision": "reject"},
+    {"id": "context_endpoint_substitution", "category": "Context mismatch", "class": "invalid", "mutation_class": "M4_context", "mutation": "replace_endpoint", "expected_decision": "reject"},
+    {"id": "context_session_substitution", "category": "Context mismatch", "class": "invalid", "mutation_class": "M4_context", "mutation": "replace_session", "expected_decision": "reject"},
+    {"id": "context_device_substitution", "category": "Context mismatch", "class": "invalid", "mutation_class": "M4_context", "mutation": "replace_device", "expected_decision": "reject"},
+    {"id": "nonce_substitution", "category": "Nonce reuse", "class": "invalid", "mutation_class": "M5_nonce", "mutation": "replace_nonce", "expected_decision": "reject"},
+    {"id": "expired_proof", "category": "Expired intent", "class": "invalid", "mutation_class": "M6_expiration", "mutation": "submit_after_expiry", "expected_decision": "reject"},
+    {"id": "canonical_omitted_scope", "category": "Malformed serialization", "class": "invalid", "mutation_class": "M7_canonicalization", "mutation": "omit_scope", "expected_decision": "reject"},
+    {"id": "canonical_case_sensitive_action", "category": "Malformed serialization", "class": "invalid", "mutation_class": "M7_canonicalization", "mutation": "case_change_action", "expected_decision": "reject"},
+    {"id": "canonical_type_changed_quantity_string", "category": "Malformed serialization", "class": "invalid", "mutation_class": "M7_canonicalization", "mutation": "quantity_as_string", "expected_decision": "reject"},
+    {"id": "canonical_unicode_key_collision", "category": "Malformed serialization", "class": "invalid", "mutation_class": "M7_canonicalization", "mutation": "unicode_key_collision", "expected_decision": "reject"},
+    {"id": "canonical_nonfinite_number", "category": "Malformed serialization", "class": "invalid", "mutation_class": "M7_canonicalization", "mutation": "nonfinite_number", "expected_decision": "reject"}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "command": "tamarin-prover --prove tamarin/poia_protocol.spthy",
+  "maude_version": "3.5.1",
+  "model_sha256": "b7b69789eba179bfcc81332cfb91d24d66a380ab43b67702551969355ed48503",
+  "preregistration_sha256": "6ce995a6fd70aefe7ab983e9450b1e65a72ced609ddb5feff8b5653c39f7b32a",
+  "python_version": "3.14.6",
+  "repository_commit": "fd18212c25ea770c47ca45fac9c840498e44bf53",
+  "run_id": "track-d-confirmatory-01",
+  "runner_sha256": "f7fa501091da735ab31ef6c0b3a11bc9d3db2fa48718a1d4e6970333bd3ad130",
+  "tamarin_version": "checking version: tamarin-prover 1.12.0, (C) David Basin, Cas Cremers, Jannik Dreier, Simon Meier, Ralf Sasse, Benedikt Schmidt, 2010-2023",
+  "tree_clean": true
+  ,"valid": false
+  ,"invalid_reason": "Artifact parser expected exists-traces; Tamarin reports exists-trace. Prover output verified all eight lemmas, but the evidence gate rejected the run."
+}

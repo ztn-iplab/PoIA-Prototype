@@ -1,0 +1,698 @@
+theory Atomic_Referent_Binding
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+/* looping facts with injective instances: Current/2 */
+
+rule (modulo E) Key:
+   [ Fr( u ), Fr( sk ) ]
+  --[ KeyCreated( u, sk ) ]->
+   [ !Key( u, sk ), Out( pk(sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Resource:
+   [ Fr( r ), Fr( v ), In( c ) ]
+  --[ ResourceCreated( r ), NewVersion( r, v ) ]->
+   [ Current( r, v ), !Version( r, v, c ), Out( <r, v, c> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Mutate:
+   [ Current( r, v ), Fr( w ), In( c ) ]
+  --[ Mutated( r, v, w ), ReadVersion( r, v ), NewVersion( r, w ) ]->
+   [ Current( r, w ), !Version( r, w, c ), Out( <r, w, c> ) ]
+
+  // loop breaker: [0]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Issue:
+   [ !Key( u, sk ), Current( r, v ), !Version( r, v, c ), Fr( n ), In( a ) ]
+  --[ Issued( u, n, a, r, v, h(c) ), ReadVersion( r, v ) ]->
+   [
+   Current( r, v ), Pending( u, n, a, r, v, h(c) ),
+   !IssuedRecord( u, n, a, r, v, h(c) ), Out( <u, n, a, r, v, h(c)> )
+   ]
+
+  // loop breaker: [1]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Approve:
+   [ !Key( u, sk ), !IssuedRecord( u, n, a, r, v, d ) ]
+  --[ Approved( u, n, a, r, v, d ) ]->
+   [ Out( sign(<u, n, a, r, v, d>, sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Execute:
+   [
+   !Key( u, sk ), Pending( u, n, a, r, v, h(c) ), Current( r, v ),
+   !Version( r, v, c ), In( sign(<u, n, a, r, v, h(c)>, sk) )
+   ]
+  --[ Executed( u, n, a, r, v, h(c) ), ReadVersion( r, v ) ]->
+   [ Current( r, v ) ]
+
+  // loop breaker: [2]
+  /* has exactly the trivial AC variant */
+
+lemma executable:
+  exists-trace "∃ u n a r v d #i. Executed( u, n, a, r, v, d ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ u n a r v d #i. (Executed( u, n, a, r, v, d ) @ #i)"
+*/
+simplify
+solve( !Key( u, sk ) ▶₀ #i )
+  case Key
+  solve( Pending( ~n, n.2, a, r, v, h(c) ) ▶₁ #i )
+    case Issue_case_1
+    solve( !Version( ~n.3, ~n.4, c ) ▶₃ #i )
+      case Resource
+      solve( !KU( sign(<~n, ~n.2, a, ~n.3, ~n.4, h(c)>, ~n.1) ) @ #vk )
+        case Approve
+        solve( Current( ~n.3, ~n.4 ) ▶₂ #i )
+          case Execute
+          by sorry
+        next
+          case Issue
+          solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.1 )
+            case Execute
+            by sorry
+          next
+            case Issue
+            by sorry
+          next
+            case Resource
+            solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.4 )
+              case Execute
+              by sorry
+            next
+              case Issue
+              solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.6 )
+                case Execute
+                by sorry
+              next
+                case Issue
+                by sorry
+              next
+                case Resource
+                SOLVED // trace found
+              qed
+            next
+              case Resource
+              by sorry
+            qed
+          qed
+        next
+          case Resource
+          by sorry
+        qed
+      next
+        case Issue
+        by sorry
+      next
+        case Mutate
+        by sorry
+      next
+        case c_sign
+        by sorry
+      qed
+    qed
+  next
+    case Issue_case_2
+    by sorry
+  qed
+qed
+
+lemma single_execution [use_induction]:
+  all-traces
+  "∀ u n a r v d #i #j.
+    ((Executed( u, n, a, r, v, d ) @ #i) ∧
+     (Executed( u, n, a, r, v, d ) @ #j)) ⇒
+    (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u n a r v d #i #j.
+  (Executed( u, n, a, r, v, d ) @ #i) ∧ (Executed( u, n, a, r, v, d ) @ #j)
+ ∧
+  ¬(#i = #j)"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( (#i < #j)  ∥ (#j < #i) )
+    case case_1
+    solve( !Key( u, sk ) ▶₀ #i )
+      case Key
+      solve( Pending( ~n, n.2, a, r, v, h(c) ) ▶₁ #i )
+        case Issue_case_1
+        solve( !Version( ~n.3, ~n.4, c ) ▶₃ #i )
+          case Resource
+          solve( !Key( ~n, sk ) ▶₀ #j )
+            case Key
+            solve( Pending( ~n, ~n.2, a, ~n.3, ~n.4, h(c) ) ▶₁ #j )
+              case Issue
+              by contradiction
+            qed
+          qed
+        qed
+      next
+        case Issue_case_2
+        solve( !Version( r, ~n.3, c ) ▶₃ #i )
+          case Mutate
+          solve( !Key( ~n, sk ) ▶₀ #j )
+            case Key
+            solve( Pending( ~n, ~n.2, a, r, ~n.3, h(c) ) ▶₁ #j )
+              case Issue
+              by contradiction
+            qed
+          qed
+        qed
+      qed
+    qed
+  next
+    case case_2
+    solve( !Key( u, sk ) ▶₀ #i )
+      case Key
+      solve( Pending( ~n, n.2, a, r, v, h(c) ) ▶₁ #i )
+        case Issue_case_1
+        solve( !Version( ~n.3, ~n.4, c ) ▶₃ #i )
+          case Resource
+          solve( !Key( ~n, sk ) ▶₀ #j )
+            case Key
+            solve( Pending( ~n, ~n.2, a, ~n.3, ~n.4, h(c) ) ▶₁ #j )
+              case Issue
+              by contradiction
+            qed
+          qed
+        qed
+      next
+        case Issue_case_2
+        solve( !Version( r, ~n.3, c ) ▶₃ #i )
+          case Mutate
+          solve( !Key( ~n, sk ) ▶₀ #j )
+            case Key
+            solve( Pending( ~n, ~n.2, a, r, ~n.3, h(c) ) ▶₁ #j )
+              case Issue
+              by contradiction
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma resource_origin [heuristic=o "oracle", reuse, use_induction]:
+  all-traces
+  "∀ r v #t.
+    (ReadVersion( r, v ) @ #t) ⇒
+    (∃ #s. (ResourceCreated( r ) @ #s) ∧ (#s < #t))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ r v #t.
+  (ReadVersion( r, v ) @ #t)
+ ∧
+  ∀ #s. (ResourceCreated( r ) @ #s) ⇒ ¬(#s < #t)"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( ReadVersion( r, v ) @ #t )
+    case Execute
+    solve( (last(#t))  ∥
+           (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+      case case_1
+      solve( Current( r, v ) ▶₂ #t )
+        case Execute_case_1
+        by contradiction
+      next
+        case Execute_case_2
+        by contradiction
+      next
+        case Issue_case_1
+        by contradiction
+      next
+        case Issue_case_2
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      next
+        case Resource
+        by contradiction
+      qed
+    next
+      case case_2
+      by contradiction
+    qed
+  next
+    case Issue
+    solve( (last(#t))  ∥
+           (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+      case case_1
+      solve( Current( r, v ) ▶₁ #t )
+        case Execute_case_1
+        by contradiction
+      next
+        case Execute_case_2
+        by contradiction
+      next
+        case Issue_case_1
+        by contradiction
+      next
+        case Issue_case_2
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      next
+        case Resource
+        by contradiction
+      qed
+    next
+      case case_2
+      by contradiction
+    qed
+  next
+    case Mutate
+    solve( (last(#t))  ∥
+           (∃ #s. (ResourceCreated( r ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+      case case_1
+      solve( Current( r, v ) ▶₀ #t )
+        case Execute_case_1
+        by contradiction
+      next
+        case Execute_case_2
+        by contradiction
+      next
+        case Issue_case_1
+        by contradiction
+      next
+        case Issue_case_2
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      next
+        case Resource
+        by contradiction
+      qed
+    next
+      case case_2
+      by contradiction
+    qed
+  qed
+qed
+
+lemma version_origin [heuristic=o "oracle", reuse, use_induction]:
+  all-traces
+  "∀ r v #t.
+    (ReadVersion( r, v ) @ #t) ⇒
+    (∃ #s. (NewVersion( r, v ) @ #s) ∧ (#s < #t))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ r v #t.
+  (ReadVersion( r, v ) @ #t)
+ ∧
+  ∀ #s. (NewVersion( r, v ) @ #s) ⇒ ¬(#s < #t)"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( ReadVersion( ~n, v.1 ) @ #t )
+    case Execute
+    solve( (last(#t))  ∥
+           (∃ #s. (NewVersion( ~n, v ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+      case case_1
+      solve( Current( ~n, v ) ▶₂ #t )
+        case Execute_case_1
+        by contradiction
+      next
+        case Execute_case_2
+        by contradiction
+      next
+        case Issue_case_1
+        by contradiction
+      next
+        case Issue_case_2
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      next
+        case Resource
+        by contradiction
+      qed
+    next
+      case case_2
+      by contradiction
+    qed
+  next
+    case Issue
+    solve( (last(#t))  ∥
+           (∃ #s. (NewVersion( ~n, v ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+      case case_1
+      solve( Current( ~n, v ) ▶₁ #t )
+        case Execute_case_1
+        by contradiction
+      next
+        case Execute_case_2
+        by contradiction
+      next
+        case Issue_case_1
+        by contradiction
+      next
+        case Issue_case_2
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      next
+        case Resource
+        by contradiction
+      qed
+    next
+      case case_2
+      by contradiction
+    qed
+  next
+    case Mutate
+    solve( (last(#t))  ∥
+           (∃ #s. (NewVersion( ~n, v ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+      case case_1
+      solve( Current( ~n, v ) ▶₀ #t )
+        case Execute_case_1
+        by contradiction
+      next
+        case Execute_case_2
+        by contradiction
+      next
+        case Issue_case_1
+        by contradiction
+      next
+        case Issue_case_2
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      next
+        case Resource
+        by contradiction
+      qed
+    next
+      case case_2
+      by contradiction
+    qed
+  qed
+qed
+
+lemma key_secrecy [heuristic=o "oracle", reuse, use_induction]:
+  all-traces
+  "∀ u sk #i #j. ((KeyCreated( u, sk ) @ #i) ∧ (K( sk ) @ #j)) ⇒ (⊥)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u sk #i #j. (KeyCreated( u, sk ) @ #i) ∧ (K( sk ) @ #j)"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( !KU( ~n.1 ) @ #vk )
+    case Issue
+    by solve( (#vr.4, 0) ~~> (#vk, 0) )
+  next
+    case Mutate
+    by solve( (#vr.1, 0) ~~> (#vk, 0) )
+  qed
+qed
+
+lemma approval_origin [heuristic=o "oracle", reuse]:
+  all-traces
+  "∀ u n a r v d #s.
+    (Approved( u, n, a, r, v, d ) @ #s) ⇒
+    (∃ #i. (Issued( u, n, a, r, v, d ) @ #i) ∧ (#i < #s))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u n a r v d #s.
+  (Approved( u, n, a, r, v, d ) @ #s)
+ ∧
+  ∀ #i. (Issued( u, n, a, r, v, d ) @ #i) ⇒ ¬(#i < #s)"
+*/
+simplify
+solve( !Key( u, sk ) ▶₀ #s )
+  case Key
+  solve( !IssuedRecord( ~n, n.2, a, r, v, d ) ▶₁ #s )
+    case Issue_case_1
+    by contradiction
+  next
+    case Issue_case_2
+    by contradiction
+  qed
+qed
+
+lemma signature_origin [heuristic=o "oracle", reuse, use_induction]:
+  all-traces
+  "∀ u sk n a r v d #k #t.
+    ((KeyCreated( u, sk ) @ #k) ∧ (K( sign(<u, n, a, r, v, d>, sk) ) @ #t)) ⇒
+    (∃ #s. (Approved( u, n, a, r, v, d ) @ #s) ∧ (#s < #t))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u sk n a r v d #k #t.
+  (KeyCreated( u, sk ) @ #k) ∧ (K( sign(<u, n, a, r, v, d>, sk) ) @ #t)
+ ∧
+  ∀ #s. (Approved( u, n, a, r, v, d ) @ #s) ⇒ ¬(#s < #t)"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( (last(#t))  ∥
+         (∃ #s.
+           (Approved( ~n, n.2, a, r, v, d ) @ #s) ∧ (¬(last(#s))) ∧ (#s < #t)) )
+    case case_1
+    solve( !KU( sign(<~n, n.2, a, r, v, d>, ~n.1) ) @ #vk )
+      case Approve_case_1
+      by contradiction
+    next
+      case Approve_case_2
+      by contradiction
+    next
+      case Issue
+      by contradiction
+    next
+      case Mutate
+      by contradiction
+    next
+      case c_sign
+      solve( !KU( ~n.1 ) @ #vk.2 )
+        case Issue
+        by solve( (#vr.4, 0) ~~> (#vk.1, 0) )
+      next
+        case Mutate
+        by solve( (#vr.1, 0) ~~> (#vk.1, 0) )
+      qed
+    qed
+  next
+    case case_2
+    by contradiction
+  qed
+qed
+
+lemma causal_authorization [heuristic=o "oracle", use_induction]:
+  all-traces
+  "∀ u n a r v d #e.
+    (Executed( u, n, a, r, v, d ) @ #e) ⇒
+    (∃ #i #s.
+      (((Issued( u, n, a, r, v, d ) @ #i) ∧
+        (Approved( u, n, a, r, v, d ) @ #s)) ∧
+       (#i < #s)) ∧
+      (#s < #e))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u n a r v d #e.
+  (Executed( u, n, a, r, v, d ) @ #e)
+ ∧
+  ∀ #i #s.
+   (Issued( u, n, a, r, v, d ) @ #i) ∧ (Approved( u, n, a, r, v, d ) @ #s)
+  ⇒
+   ((¬(#i < #s)) ∨ (¬(#s < #e)))"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( (last(#e))  ∥
+         (∃ #i #s.
+           (Issued( u, n, a, ~n.1, v, h(c) ) @ #i) ∧
+           (Approved( u, n, a, ~n.1, v, h(c) ) @ #s)
+          ∧
+           (¬(last(#s))) ∧ (¬(last(#i))) ∧ (#i < #s) ∧ (#s < #e)) )
+    case case_1
+    solve( !Key( u, sk ) ▶₀ #e )
+      case Key
+      by contradiction
+    qed
+  next
+    case case_2
+    by contradiction
+  qed
+qed
+
+lemma retired_version_not_read [hide_lemma=version_origin,
+                                hide_lemma=resource_origin, heuristic=o "oracle", reuse, use_induction]:
+  all-traces
+  "∀ r v w #m #t.
+    (((Mutated( r, v, w ) @ #m) ∧ (ReadVersion( r, v ) @ #t)) ∧ (#m < #t)) ⇒
+    (⊥)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ r v w #m #t.
+  (Mutated( r, v, w ) @ #m) ∧ (ReadVersion( r, v ) @ #t) ∧ #m < #t"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  solve( ReadVersion( r, v ) @ #t )
+    case Execute
+    solve( Current( r, v ) ▶₂ #t )
+      case Execute_case_1
+      by contradiction
+    next
+      case Execute_case_2
+      by contradiction
+    next
+      case Issue_case_1
+      by contradiction
+    next
+      case Issue_case_2
+      by contradiction
+    next
+      case Mutate
+      solve( Current( r, ~n ) ▶₀ #m )
+        case Execute
+        by contradiction
+      next
+        case Issue
+        by contradiction
+      qed
+    next
+      case Resource
+      by contradiction
+    qed
+  next
+    case Issue
+    solve( Current( r, v ) ▶₁ #t )
+      case Execute_case_1
+      by contradiction
+    next
+      case Execute_case_2
+      by contradiction
+    next
+      case Issue_case_1
+      by contradiction
+    next
+      case Issue_case_2
+      by contradiction
+    next
+      case Mutate
+      solve( Current( r, ~n ) ▶₀ #m )
+        case Execute
+        by contradiction
+      next
+        case Issue
+        by contradiction
+      qed
+    next
+      case Resource
+      by contradiction
+    qed
+  next
+    case Mutate
+    solve( Current( r, v ) ▶₀ #t )
+      case Execute_case_1
+      by contradiction
+    next
+      case Execute_case_2
+      by contradiction
+    next
+      case Issue_case_1
+      by contradiction
+    next
+      case Issue_case_2
+      by contradiction
+    next
+      case Mutate
+      solve( Current( r, ~n ) ▶₀ #m )
+        case Execute
+        by contradiction
+      next
+        case Issue
+        by contradiction
+      next
+        case Mutate
+        by contradiction
+      qed
+    next
+      case Resource
+      by contradiction
+    qed
+  qed
+qed
+
+lemma no_execution_after_version_change [heuristic=o "oracle",
+                                         use_induction]:
+  all-traces
+  "∀ u n a r v d w #i #m #e.
+    (((((Issued( u, n, a, r, v, d ) @ #i) ∧ (Mutated( r, v, w ) @ #m)) ∧
+       (Executed( u, n, a, r, v, d ) @ #e)) ∧
+      (#i < #m)) ∧
+     (#m < #e)) ⇒
+    (⊥)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u n a r v d w #i #m #e.
+  (Issued( u, n, a, r, v, d ) @ #i) ∧
+  (Mutated( r, v, w ) @ #m) ∧
+  (Executed( u, n, a, r, v, d ) @ #e)
+ ∧
+  (#i < #m) ∧ (#m < #e)"
+*/
+induction
+  case empty_trace
+  by contradiction
+next
+  case non_empty_trace
+  by contradiction
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: UNKNOWN, branch: UNKNOWN
+Compiled at: 2026-03-08 09:49:47.765662 UTC
+*/
+
+end

@@ -1,0 +1,89 @@
+/*
+ * Combined-adversary extension of full_lifecycle_non_reconstitution.spthy
+ * (the published theory is unchanged). Differences from it:
+ *   - the committed, displayed and signed intent is the pair <v, h(content)>,
+ *     and the execution gate requires the referent's current version to equal
+ *     the signed v AND its content to hash to the signed digest, so version
+ *     identity as well as the digest is re-checked (Referent-State Integrity
+ *     as defined in the paper). Versions are fresh names, so each version
+ *     identifies exactly one referent (the rid of the paper), and they are
+ *     published to the adversary;
+ *   - the adversary may perform up to N adversarial actions per trace
+ *     (root compromise and/or referent mutation), not one;
+ *   - a referent mutation installs ADVERSARY-CHOSEN content (In) rather than a
+ *     fresh, adversary-unknown value. This is a strictly stronger adversary.
+ * Honest capture, commitment, signing and execution are unbounded: any number
+ * of referents, signers and signing instances may occur in one trace.
+ * Variant: Budget 3, adversary-chosen mutation, both gates (expected to fail: exceeds k-1).
+ * Tamarin 1.12.0, Maude 3.5.1.
+ */
+
+theory PoIA_Composition_ThreeAction begin
+
+builtins: signing, hashing
+
+restriction Equality:
+  "All x y #i. Eq(x, y) @ #i ==> x = y"
+restriction AtMostThreeAdversarialActions:
+  "All a b c d #i #j #k #l.
+     AdversarialAction(a) @ #i & AdversarialAction(b) @ #j & AdversarialAction(c) @ #k & AdversarialAction(d) @ #l
+     ==> (#i = #j) | (#i = #k) | (#i = #l) | (#j = #k) | (#j = #l) | (#k = #l)"
+
+rule Init_Signer:
+  [ Fr(sk) ] --[ InitSigner() ]-> [ !SignKey(sk), !SignPub(pk(sk)) ]
+
+rule Init_Capture:
+  [ Fr(content), Fr(v0) ]
+  --[ Captured(content), InitReferent(v0, content) ]->
+  [ !Referent(v0, content), Current(v0), Out(v0) ]
+
+// Referent mutation with ADVERSARY-CHOSEN content under a new version.
+rule Mutate_Referent:
+  [ Current(v), In(content2), Fr(v2) ]
+  --[ MutateReferent(v, v2, content2), AdversarialAction('mutate') ]->
+  [ !Referent(v2, content2), Current(v2), Out(v2) ]
+
+rule Commit_Intent:
+  [ Current(v), !Referent(v, content) ]
+  --[ Committed(v, content, h(content)) ]->
+  [ !CommittedIntent(<v, h(content)>), Current(v) ]
+
+rule RootA_Honest:
+  [ !CommittedIntent(i) ] --[ RootAReport(i) ]-> [ ReportA(i) ]
+
+rule RootB_Honest:
+  [ !CommittedIntent(i) ] --[ RootBReport(i) ]-> [ ReportB(i) ]
+
+rule Compromise_RootA:
+  [ In(evil) ] --[ RootACompromisedWith(evil), AdversarialAction('rootA') ]-> [ ReportA(evil) ]
+
+rule Compromise_RootB:
+  [ In(evil) ] --[ RootBCompromisedWith(evil), AdversarialAction('rootB') ]-> [ ReportB(evil) ]
+
+// k=2 commitment gate: sign only if both roots report the same intent.
+rule Sign_K2:
+  [ !SignKey(sk), ReportA(iA), ReportB(iB) ]
+  --[ Eq(iA, iB), Signed(iA) ]->
+  [ Out(<iA, sign(iA, sk)>) ]
+
+// RSI execution gate: the signed version must be the referent's current
+// version (pattern Current(v)) and the current content must hash to the
+// signed digest.
+rule Execute_RSI:
+  [ !SignPub(pk), In(<<v, d>, sig>), Current(v), !Referent(v, content) ]
+  --[ Eq(verify(sig, <v, d>, pk), true), Eq(h(content), d), Executed(v, d, content) ]->
+  [ Current(v) ]
+
+lemma pipeline_executable:
+  exists-trace
+  "Ex v d content #i. Executed(v, d, content) @ #i"
+
+// Executed content equals content committed for the SAME referent AT THE SAME
+// version, under the digest that was displayed and signed.
+lemma full_lifecycle_non_reconstitution:
+  all-traces
+  "All v d c #e.
+     (Executed(v, d, c) @ #e)
+     ==> (Ex #k. (Committed(v, c, d) @ #k) & (#k < #e))"
+
+end

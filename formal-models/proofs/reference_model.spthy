@@ -1,0 +1,48 @@
+// Trusted issuer and atomic executor; untrusted transport and mutable referents.
+// Content is public and attacker-selected. Mutations are not bounded.
+// Version identifiers are unique and never reused. No display assurance is modeled.
+theory Atomic_Referent_Binding begin
+builtins: signing, hashing
+
+rule Key:
+  [ Fr(u), Fr(sk) ] --> [ !Key(u,sk), Out(pk(sk)) ]
+
+rule Resource:
+  [ Fr(r), Fr(v), In(c) ] --> [ Current(r,v), !Version(r,v,c), Out(<r,v,c>) ]
+
+rule Mutate:
+  [ Current(r,v), Fr(w), In(c) ]
+  --[ Mutated(r,v,w) ]-> [ Current(r,w), !Version(r,w,c), Out(<r,w,c>) ]
+
+rule Issue:
+  [ !Key(u,sk), Current(r,v), !Version(r,v,c), Fr(n), In(a) ]
+  --[ Issued(u,n,a,r,v,h(c)) ]->
+  [ Current(r,v), Pending(u,n,a,r,v,h(c)),
+    !IssuedRecord(u,n,a,r,v,h(c)), Out(<u,n,a,r,v,h(c)>) ]
+
+rule Approve:
+  [ !Key(u,sk), !IssuedRecord(u,n,a,r,v,d) ]
+  --[ Approved(u,n,a,r,v,d) ]->
+  [ Out(sign(<u,n,a,r,v,d>,sk)) ]
+
+rule Execute:
+  [ !Key(u,sk), Pending(u,n,a,r,v,h(c)), Current(r,v), !Version(r,v,c),
+    In(sign(<u,n,a,r,v,h(c)>,sk)) ]
+  --[ Executed(u,n,a,r,v,h(c)) ]-> [ Current(r,v) ]
+
+lemma executable:
+  exists-trace "Ex u n a r v d #i. Executed(u,n,a,r,v,d) @ i"
+
+lemma causal_authorization [use_induction]:
+  "All u n a r v d #e. Executed(u,n,a,r,v,d) @ e ==>
+   Ex #i #s. Issued(u,n,a,r,v,d) @ i & Approved(u,n,a,r,v,d) @ s & i < s & s < e"
+
+lemma single_execution [use_induction]:
+  "All u n a r v d #i #j.
+   Executed(u,n,a,r,v,d) @ i & Executed(u,n,a,r,v,d) @ j ==> #i = #j"
+
+lemma no_execution_after_version_change [use_induction]:
+  "All u n a r v d w #i #m #e.
+   Issued(u,n,a,r,v,d) @ i & Mutated(r,v,w) @ m & Executed(u,n,a,r,v,d) @ e
+   & i < m & m < e ==> F"
+end

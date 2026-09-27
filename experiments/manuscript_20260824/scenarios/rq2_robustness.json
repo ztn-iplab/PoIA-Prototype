@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": "RQ2_robustness",
+  "description": "Paired baseline and PoIA robustness attacks for replay, substitution, concurrency, and workflow manipulation.",
+  "attack_outcomes": [
+    {"id": "replay_attempt", "label": "Replay attempt", "mutation": "replay", "dominant_reason": "proof_consumed"},
+    {"id": "relay_semantic_change", "label": "Relay with semantic change", "mutation": "relay_scope_change", "dominant_reason": "scope_mismatch"},
+    {"id": "session_hijacking_misuse", "label": "Session hijacking / misuse", "mutation": "missing_proof", "dominant_reason": "proof_missing"},
+    {"id": "request_tampering", "label": "Request tampering", "mutation": "tamper_scope", "dominant_reason": "scope_mismatch"},
+    {"id": "token_or_proof_reuse", "label": "Token or proof reuse", "mutation": "cross_action_reuse", "dominant_reason": "action_mismatch"},
+    {"id": "confused_deputy_workflow", "label": "Confused-deputy workflow", "mutation": "delegation_change", "dominant_reason": "delegation_mismatch"},
+    {"id": "multi_step_operation_abuse", "label": "Multi-step operation abuse", "mutation": "post_proof_mutation", "dominant_reason": "scope_mismatch"}
+  ],
+  "robustness_classes": [
+    {"id": "replay", "label": "Immediate and delayed replay", "mutations": ["immediate_replay", "delayed_replay", "expired_replay"], "dominant_reason": "Nonce consumed or challenge expired"},
+    {"id": "cross_session_endpoint_reuse", "label": "Cross-session / endpoint reuse", "mutations": ["other_session", "other_endpoint"], "dominant_reason": "Session, endpoint, or context mismatch"},
+    {"id": "context_substitution", "label": "Context substitution", "mutations": ["other_rp", "other_tenant", "other_device", "other_workflow"], "dominant_reason": "RP, tenant, device, or workflow mismatch"},
+    {"id": "concurrent_proof_permutation", "label": "Concurrent proof permutation", "mutations": ["swap_intents"], "dominant_reason": "Intent--nonce association mismatch"},
+    {"id": "concurrent_nonce_race", "label": "Concurrent nonce race", "mutations": ["consume_twice"], "dominant_reason": "Atomic nonce consumption"},
+    {"id": "post_proof_workflow_mutation", "label": "Post-proof workflow mutation", "mutations": ["post_proof_mutation"], "dominant_reason": "Final semantic mismatch"}
+  ]
+}

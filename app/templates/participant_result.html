@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="participant-shell participant-result">
+  <header class="participant-heading">
+    <p class="kicker">Operation complete</p>
+    <h1>
+      {% if result_action == 'statement_export' %}Statement ready
+      {% elif result_action == 'cloud_file_download' %}File ready
+      {% else %}{{ result_scope.resource_name }}{% endif %}
+    </h1>
+  </header>
+  <div class="participant-result-body">
+    {% if result_action == 'cloud_file_view' %}
+      <dl class="participant-file-details">
+        <div><dt>File</dt><dd>{{ result_scope.resource_name }}</dd></div>
+        <div><dt>Classification</dt><dd>{{ result_scope.classification|title }}</dd></div>
+      </dl>
+      <div class="participant-file-preview">
+        <strong>Protected workspace document</strong>
+        <p>This synthetic document is available to the signed-in account through the protected cloud workspace.</p>
+      </div>
+    {% else %}
+      <p>Your requested file has been prepared.</p>
+      <a class="button" href="{{ download_url }}">Download file</a>
+    {% endif %}
+    <a class="ghost participant-continue" href="{{ continue_url }}">Continue to next task</a>
+  </div>
+</section>
+{% endblock %}

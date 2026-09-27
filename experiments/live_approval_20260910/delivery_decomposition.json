@@ -1,0 +1,40 @@
+{
+  "zt_delivery_creation_to_served": {
+    "n": 112,
+    "median_s": 1.0,
+    "mean_s": 1.12,
+    "p95_s": 4.0,
+    "p99_s": 4.0,
+    "min_s": 0.0,
+    "max_s": 21.0
+  },
+  "zt_interaction_served_to_approval": {
+    "n": 112,
+    "median_s": 7.0,
+    "mean_s": 8.79,
+    "p95_s": 34.25,
+    "p99_s": 43.45,
+    "min_s": 1.0,
+    "max_s": 44.0
+  },
+  "zt_total_creation_to_approval": {
+    "n": 112,
+    "median_s": 7.5,
+    "mean_s": 9.9,
+    "p95_s": 36.25,
+    "p99_s": 44.45,
+    "min_s": 1.0,
+    "max_s": 45.0
+  },
+  "webauthn_creation_to_approval": {
+    "n": 113,
+    "median_s": 6.0,
+    "mean_s": 6.89,
+    "p95_s": 10.4,
+    "p99_s": 15.88,
+    "min_s": 4.0,
+    "max_s": 18.0
+  },
+  "zt_approvals_without_matching_serve_event": 0,
+  "note": "WebAuthn has no polled-delivery stage: its browser modal renders on creation. Compare webauthn_creation_to_approval against zt_interaction_served_to_approval for a like-for-like human-interaction comparison; zt_total includes delivery lag."
+}

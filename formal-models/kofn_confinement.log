@@ -1,0 +1,304 @@
+theory PoIA_KofN
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+restriction Equality:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  */
+
+restriction AtMostOneCompromise:
+  "∀ a b #i #j.
+    ((RootCompromised( a ) @ #i) ∧ (RootCompromised( b ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ a b #i #j.
+    ((RootCompromised( a ) @ #i) ∧ (RootCompromised( b ) @ #j)) ⇒ (#i = #j)"
+  */
+
+rule (modulo E) Init_Signer:
+   [ Fr( sk ) ] --[ InitSigner( ) ]-> [ !SignKey( sk ), !SignPub( pk(sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Init_Content:
+   [ Fr( content ) ]
+  --[ InitContent( content ) ]->
+   [ !TrueContent( content ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RootA_Honest:
+   [ !TrueContent( content ) ]
+  --[ RootADigest( content, h(content) ) ]->
+   [ DigestA( h(content) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) RootB_Honest:
+   [ !TrueContent( content ) ]
+  --[ RootBDigest( content, h(content) ) ]->
+   [ DigestB( h(content) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Compromise_RootA:
+   [ In( evil ) ]
+  --[ RootCompromised( 'A' ), RootACompromisedWith( evil ) ]->
+   [ DigestA( evil ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Compromise_RootB:
+   [ In( evil ) ]
+  --[ RootCompromised( 'B' ), RootBCompromisedWith( evil ) ]->
+   [ DigestB( evil ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Sign_K1:
+   [ !SignKey( sk ), DigestA( dA ) ]
+  --[ SignK1( dA ) ]->
+   [ Out( <dA, sign(dA, sk)> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Accept_K1:
+   [ !SignPub( pk ), In( <d, sig> ) ]
+  --[ Eq( verify(sig, d, pk), true ), AcceptK1( d ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Accept_K1:
+     [ !SignPub( pk ), In( <d, sig> ) ]
+    --[ Eq( z, true ), AcceptK1( d ) ]->
+     [ ]
+    variants (modulo AC)
+    1. d     = d.5
+       pk    = pk.5
+       sig   = sig.5
+       z     = verify(sig.5, d.5, pk.5)
+    
+    2. d     = x.5
+       pk    = pk(x.6)
+       sig   = sign(x.5, x.6)
+       z     = true
+  */
+
+rule (modulo E) Sign_K2:
+   [ !SignKey( sk ), DigestA( dA ), DigestB( dB ) ]
+  --[ Eq( dA, dB ), SignK2( dA ) ]->
+   [ Out( <dA, sign(dA, sk)> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Accept_K2:
+   [ !SignPub( pk ), In( <d, sig> ) ]
+  --[ Eq( verify(sig, d, pk), true ), AcceptK2( d ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Accept_K2:
+     [ !SignPub( pk ), In( <d, sig> ) ]
+    --[ Eq( z, true ), AcceptK2( d ) ]->
+     [ ]
+    variants (modulo AC)
+    1. d     = d.5
+       pk    = pk.5
+       sig   = sig.5
+       z     = verify(sig.5, d.5, pk.5)
+    
+    2. d     = x.5
+       pk    = pk(x.6)
+       sig   = sign(x.5, x.6)
+       z     = true
+  */
+
+lemma k1_executable:
+  exists-trace "∃ d #i. SignK1( d ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ d #i. (SignK1( d ) @ #i)"
+*/
+simplify
+solve( !SignKey( sk ) ▶₀ #i )
+  case Init_Signer
+  solve( DigestA( d ) ▶₁ #i )
+    case Compromise_RootA
+    SOLVED // trace found
+  qed
+qed
+
+lemma k2_executable:
+  exists-trace "∃ d #i. SignK2( d ) @ #i"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ d #i. (SignK2( d ) @ #i)"
+*/
+simplify
+solve( !SignKey( sk ) ▶₀ #i )
+  case Init_Signer
+  solve( DigestA( d ) ▶₁ #i )
+    case Compromise_RootA
+    solve( DigestB( d ) ▶₂ #i )
+      case RootB_Honest
+      solve( !KU( h(~n.1) ) @ #vk )
+        case Sign_K1
+        SOLVED // trace found
+      qed
+    qed
+  qed
+qed
+
+lemma k1_vulnerable_to_single_root_compromise:
+  exists-trace
+  "∃ content evil #c #r #s #a.
+    (((((((InitContent( content ) @ #c) ∧
+          (RootACompromisedWith( evil ) @ #r)) ∧
+         (SignK1( evil ) @ #s)) ∧
+        (AcceptK1( evil ) @ #a)) ∧
+       (#c < #r)) ∧
+      (#r < #s)) ∧
+     (#s < #a)) ∧
+    (¬(evil = h(content)))"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ content evil #c #r #s #a.
+  (InitContent( content ) @ #c) ∧
+  (RootACompromisedWith( evil ) @ #r) ∧
+  (SignK1( evil ) @ #s) ∧
+  (AcceptK1( evil ) @ #a)
+ ∧
+  (#c < #r) ∧ (#r < #s) ∧ (#s < #a) ∧ (¬(evil = h(content)))"
+*/
+simplify
+solve( !SignKey( sk ) ▶₀ #s )
+  case Init_Signer
+  solve( DigestA( evil ) ▶₁ #s )
+    case Compromise_RootA
+    solve( !SignPub( pk(x) ) ▶₀ #a )
+      case Init_Signer
+      solve( !KU( sign(evil, ~n) ) @ #vk.2 )
+        case Sign_K1_case_1
+        solve( !KU( h(~n.1) ) @ #vk.1 )
+          case Sign_K1
+          SOLVED // trace found
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma k2_resists_single_root_compromise:
+  all-traces
+  "∀ d #s.
+    (SignK2( d ) @ #s) ⇒ (∃ content #h. RootADigest( content, d ) @ #h)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ d #s.
+  (SignK2( d ) @ #s) ∧ ∀ content #h. (RootADigest( content, d ) @ #h) ⇒ ⊥"
+*/
+simplify
+solve( !SignKey( sk ) ▶₀ #s )
+  case Init_Signer
+  solve( DigestA( d ) ▶₁ #s )
+    case Compromise_RootA
+    solve( DigestB( d ) ▶₂ #s )
+      case RootB_Honest
+      solve( !KU( h(~n.1) ) @ #vk )
+        case Sign_K1
+        by contradiction /* from formulas */
+      next
+        case Sign_K2
+        by contradiction /* from formulas */
+      next
+        case c_h
+        by solve( !KU( ~n.1 ) @ #vk.1 )
+      qed
+    qed
+  next
+    case RootA_Honest
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma k2_never_signs_substituted_value:
+  all-traces
+  "∀ evil #r #s.
+    ((RootACompromisedWith( evil ) @ #r) ∧ (SignK2( evil ) @ #s)) ⇒
+    (∃ content #h. RootBDigest( content, evil ) @ #h)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ evil #r #s.
+  (RootACompromisedWith( evil ) @ #r) ∧ (SignK2( evil ) @ #s)
+ ∧
+  ∀ content #h. (RootBDigest( content, evil ) @ #h) ⇒ ⊥"
+*/
+simplify
+solve( !SignKey( sk ) ▶₀ #s )
+  case Init_Signer
+  solve( DigestA( evil ) ▶₁ #s )
+    case Compromise_RootA
+    solve( DigestB( evil ) ▶₂ #s )
+      case RootB_Honest
+      by contradiction /* from formulas */
+    qed
+  next
+    case RootA_Honest
+    solve( DigestB( h(~n) ) ▶₂ #s )
+      case RootB_Honest
+      by contradiction /* from formulas */
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: UNKNOWN, branch: UNKNOWN
+Compiled at: 2026-03-08 09:49:47.765662 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal-models/kofn_confinement.spthy
+
+  processing time: 0.36s
+  
+  k1_executable (exists-trace): verified (4 steps)
+  k2_executable (exists-trace): verified (6 steps)
+  k1_vulnerable_to_single_root_compromise (exists-trace): verified (7 steps)
+  k2_resists_single_root_compromise (all-traces): verified (9 steps)
+  k2_never_signs_substituted_value (all-traces): verified (7 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory PoIA_KofN] Theory loaded
+[Theory PoIA_KofN] Theory translated
+[Theory PoIA_KofN] Derivation checks started
+[Theory PoIA_KofN] Derivation checks ended
+[Theory PoIA_KofN] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done

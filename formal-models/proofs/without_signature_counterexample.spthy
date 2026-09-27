@@ -1,0 +1,326 @@
+theory without_signature
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+/* looping facts with injective instances: Current/2 */
+
+rule (modulo E) Key:
+   [ Fr( u ), Fr( sk ) ]
+  --[ KeyCreated( u, sk ) ]->
+   [ !Key( u, sk ), Out( pk(sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Resource:
+   [ Fr( r ), Fr( v ), In( c ) ]
+  --[ ResourceCreated( r ), NewVersion( r, v ) ]->
+   [ Current( r, v ), !Version( r, v, c ), Out( <r, v, c> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Mutate:
+   [ Current( r, v ), Fr( w ), In( c ) ]
+  --[ Mutated( r, v, w ), ReadVersion( r, v ), NewVersion( r, w ) ]->
+   [ Current( r, w ), !Version( r, w, c ), Out( <r, w, c> ) ]
+
+  // loop breaker: [0]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Issue:
+   [ !Key( u, sk ), Current( r, v ), !Version( r, v, c ), Fr( n ), In( a ) ]
+  --[ Issued( u, n, a, r, v, h(c) ), ReadVersion( r, v ) ]->
+   [
+   Current( r, v ), Pending( u, n, a, r, v, h(c) ),
+   !IssuedRecord( u, n, a, r, v, h(c) ), Out( <u, n, a, r, v, h(c)> )
+   ]
+
+  // loop breaker: [1]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Approve:
+   [ !Key( u, sk ), !IssuedRecord( u, n, a, r, v, d ) ]
+  --[ Approved( u, n, a, r, v, d ) ]->
+   [ Out( sign(<u, n, a, r, v, d>, sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Execute:
+   [
+   !Key( u, sk ), Pending( u, n, a, r, v, h(c) ), Current( r, v ),
+   !Version( r, v, c )
+   ]
+  --[ Executed( u, n, a, r, v, h(c) ), ReadVersion( r, v ) ]->
+   [ Current( r, v ) ]
+
+  // loop breaker: [2]
+  /* has exactly the trivial AC variant */
+
+lemma causal_authorization:
+  all-traces
+  "∀ u n a r v d #e.
+    (Executed( u, n, a, r, v, d ) @ #e) ⇒
+    (∃ #i #s.
+      (((Issued( u, n, a, r, v, d ) @ #i) ∧
+        (Approved( u, n, a, r, v, d ) @ #s)) ∧
+       (#i < #s)) ∧
+      (#s < #e))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ u n a r v d #e.
+  (Executed( u, n, a, r, v, d ) @ #e)
+ ∧
+  ∀ #i #s.
+   (Issued( u, n, a, r, v, d ) @ #i) ∧ (Approved( u, n, a, r, v, d ) @ #s)
+  ⇒
+   ((¬(#i < #s)) ∨ (¬(#s < #e)))"
+*/
+simplify
+solve( !Key( u, sk ) ▶₀ #e )
+  case Key
+  solve( Pending( ~n, n.2, a, r, v, h(c) ) ▶₁ #e )
+    case Issue_case_1
+    solve( !Version( ~n.3, ~n.4, c ) ▶₃ #e )
+      case Resource
+      solve( Current( ~n.3, ~n.4 ) ▶₂ #e )
+        case Execute
+        solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.1 )
+          case Execute
+          solve( Current( ~n.3, ~n.4 ) ▶₂ #vr.3 )
+            case Execute
+            by sorry /* bound reached */
+          next
+            case Issue
+            by sorry /* bound reached */
+          next
+            case Resource
+            by contradiction /* cyclic */
+          qed
+        next
+          case Issue
+          solve( Current( ~n.3, ~n.4 ) ▶₂ #vr.3 )
+            case Execute
+            by sorry /* bound reached */
+          next
+            case Issue
+            by sorry /* bound reached */
+          next
+            case Resource
+            by contradiction /* cyclic */
+          qed
+        next
+          case Resource
+          solve( Current( ~n.3, ~n.4 ) ▶₂ #vr.3 )
+            case Execute
+            by sorry /* bound reached */
+          next
+            case Issue
+            by sorry /* bound reached */
+          qed
+        qed
+      next
+        case Issue
+        solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.1 )
+          case Execute
+          solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.3 )
+            case Execute
+            by sorry /* bound reached */
+          next
+            case Issue
+            by sorry /* bound reached */
+          next
+            case Resource
+            by contradiction /* cyclic */
+          qed
+        next
+          case Issue
+          solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.3 )
+            case Execute
+            by sorry /* bound reached */
+          next
+            case Issue
+            by sorry /* bound reached */
+          next
+            case Resource
+            by sorry /* bound reached */
+          qed
+        next
+          case Resource
+          solve( Current( ~n.3, ~n.4 ) ▶₁ #vr.3 )
+            case Execute
+            by sorry /* bound reached */
+          next
+            case Issue
+            by sorry /* bound reached */
+          next
+            case Resource
+            SOLVED // trace found
+          qed
+        qed
+      next
+        case Resource
+        by contradiction /* cyclic */
+      qed
+    qed
+  next
+    case Issue_case_2
+    solve( !Version( r, ~n.3, c ) ▶₃ #e )
+      case Mutate
+      solve( Current( r, ~n.3 ) ▶₂ #e )
+        case Execute
+        solve( Current( r, ~n.3 ) ▶₁ #vr.1 )
+          case Execute
+          solve( Current( r, v ) ▶₀ #vr.2 )
+            case Execute_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Execute_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Mutate
+            by sorry /* ignored (attack exists) */
+          next
+            case Resource
+            by sorry /* ignored (attack exists) */
+          qed
+        next
+          case Issue
+          solve( Current( r, v ) ▶₀ #vr.2 )
+            case Execute_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Execute_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Mutate
+            by sorry /* ignored (attack exists) */
+          next
+            case Resource
+            by sorry /* ignored (attack exists) */
+          qed
+        next
+          case Mutate
+          solve( Current( r, v ) ▶₀ #vr.2 )
+            case Execute_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Execute_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Mutate
+            by sorry /* ignored (attack exists) */
+          next
+            case Resource
+            by sorry /* ignored (attack exists) */
+          qed
+        qed
+      next
+        case Issue
+        solve( Current( r, ~n.3 ) ▶₁ #vr.1 )
+          case Execute
+          solve( Current( r, v ) ▶₀ #vr.2 )
+            case Execute_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Execute_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Mutate
+            by sorry /* ignored (attack exists) */
+          next
+            case Resource
+            by sorry /* ignored (attack exists) */
+          qed
+        next
+          case Issue
+          solve( Current( r, v ) ▶₀ #vr.2 )
+            case Execute_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Execute_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Mutate
+            by sorry /* ignored (attack exists) */
+          next
+            case Resource
+            by sorry /* ignored (attack exists) */
+          qed
+        next
+          case Mutate
+          solve( Current( r, v ) ▶₀ #vr.2 )
+            case Execute_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Execute_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_1
+            by sorry /* ignored (attack exists) */
+          next
+            case Issue_case_2
+            by sorry /* ignored (attack exists) */
+          next
+            case Mutate
+            by sorry /* ignored (attack exists) */
+          next
+            case Resource
+            by sorry /* ignored (attack exists) */
+          qed
+        qed
+      next
+        case Mutate
+        by contradiction /* cyclic */
+      qed
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: UNKNOWN, branch: UNKNOWN
+Compiled at: 2026-03-08 09:49:47.765662 UTC
+*/
+
+end

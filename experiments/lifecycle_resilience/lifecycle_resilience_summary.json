@@ -1,0 +1,19 @@
+{
+  "commitment_root_compromise": {
+    "attempts": 300,
+    "fraction_trials_compromised_value_coincided_with_honest_report": 0.5,
+    "k1_legacy_gate_acceptance_rate_of_adversarial_value": 1.0,
+    "k2_strengthened_gate_rejection_rate": 0.5,
+    "median_decision_latency_ms": 0.32870799986994825
+  },
+  "evidence_kind": "unit_checks_not_live_signed_executions",
+  "referent_substitution": {
+    "attempts": 300,
+    "dominant_rejection_reason": "referent_version_mismatch",
+    "legacy_gate_acceptance_rate_on_mutated_referent": 1.0,
+    "median_check_latency_ms": 0.39154200203483924,
+    "strengthened_gate_rejection_rate": 1.0
+  },
+  "seed": 20260906,
+  "trials_per_family": 300
+}

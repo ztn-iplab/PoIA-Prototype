@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Transfer funds</h1>
+  {% if error %}<p class="warn">{{ error }}</p>{% endif %}
+  <p class="warn" id="transfer-error" style="display:none;"></p>
+  <form class="form" method="post" action="/transfer" id="transfer-form">
+    <label>
+      From account
+      <select name="from_account">
+        {% for account in accounts %}
+          <option value="{{ account.id }}">{{ account.account_type | title }} ({{ "%.2f"|format(account.balance) }})</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>
+      Destination type
+      <select name="to_type" id="to_type">
+        <option value="beneficiary">Beneficiary</option>
+        <option value="external">External account</option>
+      </select>
+    </label>
+    <label id="beneficiary-field">
+      Beneficiary
+      <select name="beneficiary_id">
+        {% if beneficiaries %}
+          {% for beneficiary in beneficiaries %}
+            <option value="{{ beneficiary.id }}">{{ beneficiary.name }} ({{ beneficiary.bank }})</option>
+          {% endfor %}
+        {% else %}
+          <option value="">No beneficiaries yet</option>
+        {% endif %}
+      </select>
+    </label>
+    <label id="external-account-field" style="display:none;">
+      External account
+      <input type="text" name="external_account" inputmode="numeric" pattern="[0-9]*" placeholder="9841" />
+    </label>
+    <label>
+      Amount
+      <input type="number" name="amount" step="0.01" min="1" required />
+    </label>
+    <label>
+      Currency
+      <select name="currency">
+        <option>USD</option>
+        <option>EUR</option>
+        <option>JPY</option>
+      </select>
+    </label>
+    <button class="primary" type="submit">Continue</button>
+  </form>
+  <p class="note">PoIA can be enabled for high-value transfers (threshold {{ POIA_TRANSFER_THRESHOLD }}).</p>
+</section>
+<script>
+  const transferForm = document.getElementById('transfer-form');
+  const transferError = document.getElementById('transfer-error');
+  const toType = document.getElementById('to_type');
+  const beneficiarySelect = document.querySelector('select[name="beneficiary_id"]');
+  const externalInput = document.querySelector('input[name="external_account"]');
+  const beneficiaryField = document.getElementById('beneficiary-field');
+  const externalField = document.getElementById('external-account-field');
+
+  // Only show the field for whichever destination type is selected, so the
+  // form never displays an "External account" box the user hasn't chosen
+  // (and can't accidentally submit unrelated stale input in a hidden field).
+  function syncDestinationFields() {
+    if (!toType || !beneficiaryField || !externalField) {
+      return;
+    }
+    const isExternal = toType.value === 'external';
+    beneficiaryField.style.display = isExternal ? 'none' : '';
+    externalField.style.display = isExternal ? '' : 'none';
+  }
+
+  if (toType) {
+    toType.addEventListener('change', syncDestinationFields);
+    syncDestinationFields();
+  }
+
+  if (transferForm && toType && beneficiarySelect && externalInput) {
+    transferForm.addEventListener('submit', (event) => {
+      const mode = toType.value;
+      const beneficiaryValue = (beneficiarySelect.value || '').trim();
+      const externalValue = (externalInput.value || '').trim();
+      const amount = Number(transferForm.elements.amount.value);
+      let message = '';
+      if (!Number.isFinite(amount) || amount <= 0) {
+        message = 'Amount must be greater than 0.';
+      } else if (mode === 'beneficiary' && !beneficiaryValue) {
+        message = 'Add a beneficiary before continuing.';
+      } else if (mode === 'external' && !externalValue) {
+        message = 'Enter an external account to continue.';
+      } else if (mode === 'external' && !/^[0-9]+$/.test(externalValue)) {
+        message = 'External account must contain numbers only.';
+      }
+      if (message) {
+        event.preventDefault();
+        transferError.textContent = message;
+        transferError.style.display = 'block';
+      } else {
+        transferError.style.display = 'none';
+      }
+    });
+  }
+</script>
+{% endblock %}

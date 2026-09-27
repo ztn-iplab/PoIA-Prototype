@@ -1,0 +1,69 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": "RQ4_comparative_semantics",
+  "profiles": [
+    {
+      "mechanism": "Proof-carrying authorization",
+      "configuration": "Policy proof over subject, action, resource, and context; no built-in nonce consumption",
+      "semantic_substitution": "Blocked by native property when operation semantics are proof goals",
+      "replay_reuse": "Blocked only with additional one-time challenge or verifier state",
+      "classification": "Additional binding required for single execution",
+      "native_complete_one_time": false,
+      "requires_additional_binding": true
+    },
+    {
+      "mechanism": "Capability / macaroon",
+      "configuration": "Bearer capability with method, path, resource, expiry, and caveats",
+      "semantic_substitution": "Blocked by caveats only for encoded fields",
+      "replay_reuse": "Permitted until expiry or revocation unless a one-time caveat is added",
+      "classification": "Additional nonce or caveat required",
+      "native_complete_one_time": false,
+      "requires_additional_binding": true
+    },
+    {
+      "mechanism": "OAuth",
+      "configuration": "Authorization-code grant with scope and audience-bound access token",
+      "semantic_substitution": "Permitted when modified operation remains within granted scope",
+      "replay_reuse": "Permitted until token expiry unless proof-of-possession or transaction binding is added",
+      "classification": "Delegation artifact; additional execution binding required",
+      "native_complete_one_time": false,
+      "requires_additional_binding": true
+    },
+    {
+      "mechanism": "XACML / SAML",
+      "configuration": "Policy decision or assertion over subject, action, resource, and environment attributes",
+      "semantic_substitution": "Blocked when every changed semantic field is included in evaluated attributes",
+      "replay_reuse": "Blocked only with assertion freshness, recipient, and one-time-use controls",
+      "classification": "Additional binding required for single execution",
+      "native_complete_one_time": false,
+      "requires_additional_binding": true
+    },
+    {
+      "mechanism": "Verifiable credential",
+      "configuration": "Holder presentation of role or entitlement credential with verifier challenge",
+      "semantic_substitution": "Permitted if the credential proves attributes rather than the exact operation",
+      "replay_reuse": "Presentation replay blocked by challenge; operation reuse requires additional binding",
+      "classification": "Claims artifact; additional operation binding required",
+      "native_complete_one_time": false,
+      "requires_additional_binding": true
+    },
+    {
+      "mechanism": "Transaction confirmation",
+      "configuration": "One-time confirmation of displayed amount, recipient, and transaction fields",
+      "semantic_substitution": "Blocked for confirmed fields; not applicable to unrepresented fields",
+      "replay_reuse": "Blocked by transaction-specific freshness in representative configuration",
+      "classification": "Native for represented transaction fields only",
+      "native_complete_one_time": false,
+      "requires_additional_binding": true
+    },
+    {
+      "mechanism": "PoIA",
+      "configuration": "Canonical full-operation intent with one-time nonce",
+      "semantic_substitution": "Blocked by native property",
+      "replay_reuse": "Blocked by native property",
+      "classification": "Native",
+      "native_complete_one_time": true,
+      "requires_additional_binding": false
+    }
+  ]
+}

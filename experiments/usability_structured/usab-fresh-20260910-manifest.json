@@ -1,0 +1,15 @@
+{
+  "amendment_sha256": "860b6964abef4dc00e51f32362b10bd410a5d3847916e2f82d0554998bd9dca3",
+  "comparative_backend_performance_measured": false,
+  "human_participants": 0,
+  "preregistration_sha256": "74bee3a4ab5948a68b0196d26f36c1eed27a1a19b86ed0854d1724748c6bd89e",
+  "python_version": "3.10.12",
+  "repository_commit": "4d823a783a57c80725adba0be2cf0f1fcb634ccf",
+  "repository_dirty": true,
+  "run_id": "usab-fresh-20260910",
+  "runner_sha256": "4661c14e0f42628f7e5a13ae9064903ed2d5dc094e30963cdcd07fd86b7b114f",
+  "tree_clean": false,
+  "web_display_sha256": "c5ba0da4a3e09f28f259240f32f08146a1c3d4b313eae46c7b24b6b8d20a043c",
+  "zt_display_sha256": "0f6d9fa61e926b4d137799799cd3ed96adb5946689c3e5ad0f3785ec17381461",
+  "zt_repository_commit": "6c9bd95681a0780273d91dc1ff33ea82faf741d3"
+}

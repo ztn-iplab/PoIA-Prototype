@@ -1,0 +1,92 @@
+/**
+ * DIAGNOSTIC VARIANT -- NOT A CANDIDATE SECURITY MODEL.
+ *
+ * Purpose: isolate one variable in why atomic_referent_binding.spthy's
+ * causal_authorization and no_execution_after_version_change do not
+ * terminate. atomic_referent_binding_v2.spthy changed one thing (moved
+ * principal identity off the wire) and, per the recorded run in this
+ * directory's README, that alone did not complete either proof at
+ * --bound=10 -- same outcomes, same step counts as v1. That result shows
+ * identity-off-wire did not resolve it under that configuration; it does
+ * NOT show unbounded Mutate is the cause. This file exists to actually
+ * test that, instead of inferring it.
+ *
+ * The one change from atomic_referent_binding_v2.spthy: Mutate is bounded
+ * to at most one exercise per trace, via the same restriction pattern
+ * referent_state_integrity.spthy uses (AtMostOneMutation), adapted to this
+ * theory's Mutated(r,v,w) action fact. Everything else -- identity off the
+ * wire, all four rules' structure, all four lemmas -- is unchanged from v2.
+ *
+ * Reading the result:
+ *   - If causal_authorization and no_execution_after_version_change verify
+ *     here, that is evidence (not proof, since only one search bound and
+ *     one heuristic were tried) that unbounded Mutate is a contributing
+ *     cause, isolated from identity. It would NOT show identity-off-wire
+ *     was unnecessary -- only v1-with-bounded-mutation (not tried here)
+ *     could speak to that.
+ *   - If analysis remains incomplete, neither suspected cause is ruled
+ *     out. The modifications were insufficient under that search
+ *     configuration; causal attribution remains open. Further diagnostic
+ *     candidates include the attacker-controlled `a` in
+ *     Issue (In(a), unbounded distinct values per trial) and `c` in
+ *     Resource/Mutate interacting with h(c) differently than fix (1)
+ *     anticipated, or the four-rule signature-check shape itself.
+ *
+ * This restriction makes the model unable to express the unbounded-
+ * mutation adversary that atomic_referent_binding.spthy and v2 exist to
+ * model. A result obtained here says nothing about that adversary and
+ * must not be cited as, or folded into, a security claim -- it is
+ * diagnostic evidence about the prover's behavior only.
+ */
+
+theory Atomic_Referent_Binding_Diag_Bounded_Mutation begin
+builtins: signing, hashing
+
+restriction AtMostOneMutation:
+  "All r v w r2 v2 w2 #m1 #m2.
+     Mutated(r,v,w) @ m1 & Mutated(r2,v2,w2) @ m2
+     ==> #m1 = #m2"
+
+rule Key:
+  [ Fr(u), Fr(sk) ] --> [ !Key(u,sk), Out(pk(sk)) ]
+
+rule Resource:
+  [ Fr(r), Fr(v), In(c) ] --> [ Current(r,v), !Version(r,v,c), Out(<r,v,c>) ]
+
+rule Mutate:
+  [ Current(r,v), Fr(w), In(c) ]
+  --[ Mutated(r,v,w) ]-> [ Current(r,w), !Version(r,w,c), Out(<r,w,c>) ]
+
+rule Issue:
+  [ !Key(u,sk), Current(r,v), !Version(r,v,c), Fr(n), In(a) ]
+  --[ Issued(u,n,a,r,v,h(c)) ]->
+  [ Current(r,v), Pending(u,n,a,r,v,h(c)),
+    !IssuedRecord(u,n,a,r,v,h(c)),
+    Out(<n,a,r,v,h(c)>) ]
+
+rule Approve:
+  [ !Key(u,sk), !IssuedRecord(u,n,a,r,v,d) ]
+  --[ Approved(u,n,a,r,v,d) ]->
+  [ Out(sign(<n,a,r,v,d>,sk)) ]
+
+rule Execute:
+  [ !Key(u,sk), Pending(u,n,a,r,v,h(c)), Current(r,v), !Version(r,v,c),
+    In(sign(<n,a,r,v,h(c)>,sk)) ]
+  --[ Executed(u,n,a,r,v,h(c)) ]-> [ Current(r,v) ]
+
+lemma executable:
+  exists-trace "Ex u n a r v d #i. Executed(u,n,a,r,v,d) @ i"
+
+lemma causal_authorization [use_induction]:
+  "All u n a r v d #e. Executed(u,n,a,r,v,d) @ e ==>
+   Ex #i #s. Issued(u,n,a,r,v,d) @ i & Approved(u,n,a,r,v,d) @ s & i < s & s < e"
+
+lemma single_execution [use_induction]:
+  "All u n a r v d #i #j.
+   Executed(u,n,a,r,v,d) @ i & Executed(u,n,a,r,v,d) @ j ==> #i = #j"
+
+lemma no_execution_after_version_change [use_induction]:
+  "All u n a r v d w #i #m #e.
+   Issued(u,n,a,r,v,d) @ i & Mutated(r,v,w) @ m & Executed(u,n,a,r,v,d) @ e
+   & i < m & m < e ==> F"
+end

@@ -1,0 +1,420 @@
+theory PoIA_RSI_v4
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, h/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+/* looping facts with injective instances: Current/2 */
+
+restriction Equality:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  */
+
+restriction AtMostOneMutation:
+  "∀ rid v v2 content2 rid2 v2b v2b2 content2b #m #m2.
+    ((MutateReferent( rid, v, v2, content2 ) @ #m) ∧
+     (MutateReferent( rid2, v2b, v2b2, content2b ) @ #m2)) ⇒
+    (#m = #m2)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ rid v v2 content2 rid2 v2b v2b2 content2b #m #m2.
+    ((MutateReferent( rid, v, v2, content2 ) @ #m) ∧
+     (MutateReferent( rid2, v2b, v2b2, content2b ) @ #m2)) ⇒
+    (#m = #m2)"
+  */
+
+rule (modulo E) Init_User:
+   [ Fr( uid ), Fr( sk ) ]
+  --[ InitUser( uid ) ]->
+   [ !UserKey( uid, sk ), !UserPub( uid, pk(sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Init_Referent:
+   [ Fr( rid ), Fr( content ), Fr( v0 ) ]
+  --[ InitReferent( rid, v0, content ) ]->
+   [ !Referent( rid, v0, content ), Current( rid, v0 ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Mutate_Referent:
+   [ Current( rid, v ), Fr( content2 ), Fr( v2 ) ]
+  --[ MutateReferent( rid, v, v2, content2 ) ]->
+   [ !Referent( rid, v2, content2 ), Current( rid, v2 ) ]
+
+  // loop breaker: [0]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Issue_Intent:
+   [
+   Current( rid, v ), !Referent( rid, v, content ), Fr( nonce ),
+   !UserPub( uid, pk )
+   ]
+  --[ IssueIntent( uid, rid, v, content, nonce, h(content) ) ]->
+   [
+   Intent( uid, rid, nonce, h(content) ),
+   !IntentIssued( uid, rid, nonce, h(content) ), Current( rid, v ),
+   Out( <rid, nonce, h(content)> )
+   ]
+
+  // loop breaker: [0]
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) User_Approve:
+   [
+   !UserKey( uid, sk ), !IntentIssued( uid, rid, nonce, refhash ),
+   In( <rid, nonce, refhash> )
+   ]
+  --[ ApproveIntent( uid, rid, nonce, refhash ) ]->
+   [ Out( <rid, nonce, refhash, sign(<rid, nonce, refhash>, sk)> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Server_Accept_Legacy:
+   [
+   Intent( uid, rid, nonce, refhash ), In( <rid, nonce, refhash, sig> ),
+   !UserPub( uid, pk )
+   ]
+  --[
+  Eq( verify(sig, <rid, nonce, refhash>, pk), true ),
+  ServerAcceptLegacy( uid, rid, nonce, refhash )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Server_Accept_Legacy:
+     [
+     Intent( uid, rid, nonce, refhash ), In( <rid, nonce, refhash, sig> ),
+     !UserPub( uid, pk )
+     ]
+    --[ Eq( z, true ), ServerAcceptLegacy( uid, rid, nonce, refhash ) ]->
+     [ ]
+    variants (modulo AC)
+    1. nonce = nonce.8
+       pk    = pk.8
+       refhash
+             = refhash.8
+       rid   = rid.8
+       sig   = sig.8
+       z     = verify(sig.8, <rid.8, nonce.8, refhash.8>, pk.8)
+    
+    2. nonce = x.8
+       pk    = pk(x.9)
+       refhash
+             = x.10
+       rid   = x.11
+       sig   = sign(<x.11, x.8, x.10>, x.9)
+       z     = true
+  */
+
+rule (modulo E) Server_Accept_RSI:
+   [
+   Intent( uid, rid, nonce, refhash ), In( <rid, nonce, refhash, sig> ),
+   !UserPub( uid, pk ), Current( rid, v ), !Referent( rid, v, content )
+   ]
+  --[
+  Eq( verify(sig, <rid, nonce, refhash>, pk), true ),
+  Eq( h(content), refhash ), ServerAcceptRSI( uid, rid, nonce, refhash, v )
+  ]->
+   [ Current( rid, v ) ]
+
+  // loop breaker: [3]
+  /*
+  rule (modulo AC) Server_Accept_RSI:
+     [
+     Intent( uid, rid, nonce, refhash ), In( <rid, nonce, refhash, sig> ),
+     !UserPub( uid, pk ), Current( rid, v ), !Referent( rid, v, content )
+     ]
+    --[
+    Eq( z, true ), Eq( h(content), refhash ),
+    ServerAcceptRSI( uid, rid, nonce, refhash, v )
+    ]->
+     [ Current( rid, v ) ]
+    variants (modulo AC)
+    1. nonce = nonce.10
+       pk    = pk.10
+       refhash
+             = refhash.10
+       rid   = rid.10
+       sig   = sig.10
+       z     = verify(sig.10, <rid.10, nonce.10, refhash.10>, pk.10)
+    
+    2. nonce = x.10
+       pk    = pk(x.11)
+       refhash
+             = x.12
+       rid   = x.13
+       sig   = sign(<x.13, x.10, x.12>, x.11)
+       z     = true
+    // loop breaker: [3]
+  */
+
+rule (modulo E) Reveal_Key:
+   [ !UserKey( uid, sk ) ] --[ KeyReveal( uid ) ]-> [ Out( sk ) ]
+
+  /* has exactly the trivial AC variant */
+
+lemma legacy_executable:
+  exists-trace
+  "∃ uid rid nonce refhash #i #j.
+    ((ApproveIntent( uid, rid, nonce, refhash ) @ #i) ∧
+     (ServerAcceptLegacy( uid, rid, nonce, refhash ) @ #j)) ∧
+    (#i < #j)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ uid rid nonce refhash #i #j.
+  (ApproveIntent( uid, rid, nonce, refhash ) @ #i) ∧
+  (ServerAcceptLegacy( uid, rid, nonce, refhash ) @ #j)
+ ∧
+  #i < #j"
+*/
+simplify
+solve( !UserKey( uid, sk ) ▶₀ #i )
+  case Init_User
+  solve( !IntentIssued( ~n, rid, nonce, refhash ) ▶₁ #i )
+    case Issue_Intent_case_1
+    solve( Intent( ~n, ~n.2, ~n.3, h(~n.4) ) ▶₀ #j )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₂ #j )
+        case Init_User
+        solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.1 )
+          case Init_Referent
+          solve( !KU( ~n.2 ) @ #vk.1 )
+            case Issue_Intent_case_1
+            solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.3 )
+              case Init_Referent
+              solve( !KU( ~n.3 ) @ #vk.4 )
+                case Issue_Intent_case_2
+                solve( !KU( sign(<~n.2, ~n.3, h(~n.4)>, ~n.1) ) @ #vk.8 )
+                  case User_Approve
+                  solve( !KU( h(~n.4) ) @ #vk.7 )
+                    case Issue_Intent_case_2
+                    solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.10 )
+                      case Init_Referent
+                      SOLVED // trace found
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma rsi_executable:
+  exists-trace
+  "∃ uid rid nonce refhash v #i #j.
+    ((ApproveIntent( uid, rid, nonce, refhash ) @ #i) ∧
+     (ServerAcceptRSI( uid, rid, nonce, refhash, v ) @ #j)) ∧
+    (#i < #j)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ uid rid nonce refhash v #i #j.
+  (ApproveIntent( uid, rid, nonce, refhash ) @ #i) ∧
+  (ServerAcceptRSI( uid, rid, nonce, refhash, v ) @ #j)
+ ∧
+  #i < #j"
+*/
+simplify
+solve( !UserKey( uid, sk ) ▶₀ #i )
+  case Init_User
+  solve( !IntentIssued( ~n, rid, nonce, h(content) ) ▶₁ #i )
+    case Issue_Intent_case_1
+    solve( Intent( ~n, ~n.2, ~n.3, h(~n.4) ) ▶₀ #j )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₂ #j )
+        case Init_User
+        solve( !Referent( ~n.2, v, ~n.4 ) ▶₄ #j )
+          case Init_Referent
+          solve( Current( ~n.2, ~n.5 ) ▶₃ #j )
+            case Issue_Intent
+            solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.1 )
+              case Init_Referent
+              solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.3 )
+                case Init_Referent
+                solve( !KU( ~n.2 ) @ #vk.1 )
+                  case Issue_Intent_case_1
+                  solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.3 )
+                    case Init_Referent
+                    solve( !KU( ~n.3 ) @ #vk.4 )
+                      case Issue_Intent_case_2
+                      solve( !KU( sign(<~n.2, ~n.3, h(~n.4)>, ~n.1) ) @ #vk.8 )
+                        case User_Approve
+                        solve( !KU( h(~n.4) ) @ #vk.7 )
+                          case Issue_Intent_case_2
+                          solve( Current( ~n.2, ~n.5 ) ▶₀ #vr.10 )
+                            case Init_Referent
+                            SOLVED // trace found
+                          qed
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma legacy_vulnerable_to_referent_substitution:
+  exists-trace
+  "∃ uid rid v content v2 content2 nonce refhash #c #m #a.
+    (((((IssueIntent( uid, rid, v, content, nonce, refhash ) @ #c) ∧
+        (MutateReferent( rid, v, v2, content2 ) @ #m)) ∧
+       (ServerAcceptLegacy( uid, rid, nonce, refhash ) @ #a)) ∧
+      (#c < #m)) ∧
+     (#m < #a)) ∧
+    (¬(content = content2))"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ uid rid v content v2 content2 nonce refhash #c #m #a.
+  (IssueIntent( uid, rid, v, content, nonce, refhash ) @ #c) ∧
+  (MutateReferent( rid, v, v2, content2 ) @ #m) ∧
+  (ServerAcceptLegacy( uid, rid, nonce, refhash ) @ #a)
+ ∧
+  (#c < #m) ∧ (#m < #a) ∧ (¬(content = content2))"
+*/
+simplify
+solve( !Referent( rid, v, content ) ▶₁ #c )
+  case Init_Referent
+  solve( !UserPub( uid, pk ) ▶₃ #c )
+    case Init_User
+    solve( Intent( ~n, ~n.1, ~n.2, h(~n.3) ) ▶₀ #a )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₂ #a )
+        case Init_User
+        solve( !KU( sign(<~n.1, ~n.2, h(~n.3)>, ~n.4) ) @ #vk.6 )
+          case User_Approve
+          solve( Current( ~n.1, ~n.5 ) ▶₀ #c )
+            case Init_Referent
+            solve( Current( ~n.1, ~n.5 ) ▶₀ #m )
+              case Issue_Intent
+              solve( Current( ~n.1, ~n.5 ) ▶₀ #vr.6 )
+                case Init_Referent
+                solve( !KU( ~n.2 ) @ #vk.6 )
+                  case Issue_Intent_case_2
+                  solve( !KU( ~n.1 ) @ #vk.5 )
+                    case Issue_Intent_case_1
+                    solve( Current( ~n.1, ~n.5 ) ▶₀ #vr.8 )
+                      case Init_Referent
+                      solve( !KU( h(~n.3) ) @ #vk.8 )
+                        case Issue_Intent
+                        solve( Current( ~n.1, ~n.5 ) ▶₀ #vr.9 )
+                          case Init_Referent
+                          SOLVED // trace found
+                        qed
+                      qed
+                    qed
+                  qed
+                qed
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma rsi_accept_uses_committed_version [reuse]:
+  all-traces
+  "∀ uid rid nonce refhash v vAccept content #c #a.
+    ((IssueIntent( uid, rid, v, content, nonce, refhash ) @ #c) ∧
+     (ServerAcceptRSI( uid, rid, nonce, refhash, vAccept ) @ #a)) ⇒
+    (v = vAccept)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid rid nonce refhash v vAccept content #c #a.
+  (IssueIntent( uid, rid, v, content, nonce, refhash ) @ #c) ∧
+  (ServerAcceptRSI( uid, rid, nonce, refhash, vAccept ) @ #a)
+ ∧
+  ¬(v = vAccept)"
+*/
+simplify
+solve( !Referent( rid, v, content ) ▶₁ #c )
+  case Init_Referent
+  solve( !UserPub( uid, pk ) ▶₃ #c )
+    case Init_User
+    solve( Intent( ~n, ~n.1, ~n.2, h(~n.3) ) ▶₀ #a )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₂ #a )
+        case Init_User
+        solve( !Referent( ~n.1, vAccept, ~n.3 ) ▶₄ #a )
+          case Init_Referent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case Mutate_Referent
+  solve( !UserPub( uid, pk ) ▶₃ #c )
+    case Init_User
+    solve( Intent( ~n, rid, ~n.1, h(~n.2) ) ▶₀ #a )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₂ #a )
+        case Init_User
+        solve( !Referent( rid, vAccept, ~n.2 ) ▶₄ #a )
+          case Mutate_Referent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: UNKNOWN, branch: UNKNOWN
+Compiled at: 2026-03-08 09:49:47.765662 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal-models/referent_state_integrity.spthy
+
+  processing time: 2.95s
+  
+  legacy_executable (exists-trace): verified (13 steps)
+  rsi_executable (exists-trace): verified (16 steps)
+  legacy_vulnerable_to_referent_substitution (exists-trace): verified (15 steps)
+  rsi_accept_uses_committed_version (all-traces): verified (12 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory PoIA_RSI_v4] Theory loaded
+[Theory PoIA_RSI_v4] Theory translated
+[Theory PoIA_RSI_v4] Derivation checks started
+[Theory PoIA_RSI_v4] Derivation checks ended
+[Theory PoIA_RSI_v4] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done

@@ -1,0 +1,316 @@
+{
+  "compute": [
+    {
+      "canonicalization_us": {
+        "mean": 18.50853,
+        "median": 17.1045,
+        "n": 200,
+        "p95": 21.125
+      },
+      "complexity": "flat",
+      "intent_bytes": 328,
+      "operation_us": {
+        "mean": 174.471255,
+        "median": 150.458,
+        "n": 200,
+        "p95": 169.792
+      },
+      "parameter_count": 5,
+      "samples": 200,
+      "signature_us": {
+        "mean": 58.985839999999996,
+        "median": 37.208,
+        "n": 200,
+        "p95": 44.542
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 96.04271,
+        "median": 94.0,
+        "n": 200,
+        "p95": 104.166
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 32.93727,
+        "median": 32.041,
+        "n": 200,
+        "p95": 40.667
+      },
+      "complexity": "nested",
+      "intent_bytes": 404,
+      "operation_us": {
+        "mean": 168.255815,
+        "median": 164.583,
+        "n": 200,
+        "p95": 179.333
+      },
+      "parameter_count": 5,
+      "samples": 200,
+      "signature_us": {
+        "mean": 39.16668,
+        "median": 37.333,
+        "n": 200,
+        "p95": 46.0
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 95.23102,
+        "median": 93.9795,
+        "n": 200,
+        "p95": 102.959
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 26.10475,
+        "median": 24.7705,
+        "n": 200,
+        "p95": 33.5
+      },
+      "complexity": "flat",
+      "intent_bytes": 688,
+      "operation_us": {
+        "mean": 162.234845,
+        "median": 157.791,
+        "n": 200,
+        "p95": 175.75
+      },
+      "parameter_count": 20,
+      "samples": 200,
+      "signature_us": {
+        "mean": 38.732275,
+        "median": 37.542,
+        "n": 200,
+        "p95": 46.25
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 96.457275,
+        "median": 94.292,
+        "n": 200,
+        "p95": 104.375
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 41.33418,
+        "median": 40.041,
+        "n": 200,
+        "p95": 49.375
+      },
+      "complexity": "nested",
+      "intent_bytes": 764,
+      "operation_us": {
+        "mean": 176.736885,
+        "median": 173.2295,
+        "n": 200,
+        "p95": 189.416
+      },
+      "parameter_count": 20,
+      "samples": 200,
+      "signature_us": {
+        "mean": 38.526475,
+        "median": 37.8125,
+        "n": 200,
+        "p95": 45.0
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 95.91709,
+        "median": 94.292,
+        "n": 200,
+        "p95": 106.834
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 42.011445,
+        "median": 40.875,
+        "n": 200,
+        "p95": 49.833
+      },
+      "complexity": "flat",
+      "intent_bytes": 1408,
+      "operation_us": {
+        "mean": 177.98108,
+        "median": 174.792,
+        "n": 200,
+        "p95": 189.458
+      },
+      "parameter_count": 50,
+      "samples": 200,
+      "signature_us": {
+        "mean": 39.052885,
+        "median": 38.167,
+        "n": 200,
+        "p95": 44.0
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 95.9862,
+        "median": 94.708,
+        "n": 200,
+        "p95": 104.792
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 56.785585,
+        "median": 55.4375,
+        "n": 200,
+        "p95": 64.917
+      },
+      "complexity": "nested",
+      "intent_bytes": 1484,
+      "operation_us": {
+        "mean": 193.19328,
+        "median": 189.667,
+        "n": 200,
+        "p95": 204.667
+      },
+      "parameter_count": 50,
+      "samples": 200,
+      "signature_us": {
+        "mean": 38.936045,
+        "median": 38.208,
+        "n": 200,
+        "p95": 43.75
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 96.514155,
+        "median": 94.708,
+        "n": 200,
+        "p95": 105.5
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 66.977265,
+        "median": 65.25,
+        "n": 200,
+        "p95": 77.042
+      },
+      "complexity": "flat",
+      "intent_bytes": 2608,
+      "operation_us": {
+        "mean": 204.78792,
+        "median": 201.0,
+        "n": 200,
+        "p95": 217.834
+      },
+      "parameter_count": 100,
+      "samples": 200,
+      "signature_us": {
+        "mean": 40.062644999999996,
+        "median": 39.083,
+        "n": 200,
+        "p95": 48.0
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 96.85958,
+        "median": 95.667,
+        "n": 200,
+        "p95": 104.5
+      }
+    },
+    {
+      "canonicalization_us": {
+        "mean": 81.96729,
+        "median": 80.4585,
+        "n": 200,
+        "p95": 90.083
+      },
+      "complexity": "nested",
+      "intent_bytes": 2684,
+      "operation_us": {
+        "mean": 220.719385,
+        "median": 217.0,
+        "n": 200,
+        "p95": 231.75
+      },
+      "parameter_count": 100,
+      "samples": 200,
+      "signature_us": {
+        "mean": 40.159175,
+        "median": 39.125,
+        "n": 200,
+        "p95": 48.125
+      },
+      "verification_failures": 0,
+      "verification_us": {
+        "mean": 97.67726,
+        "median": 95.792,
+        "n": 200,
+        "p95": 107.583
+      }
+    }
+  ],
+  "concurrency": [
+    {
+      "operation_us": {
+        "mean": 210.485746,
+        "median": 186.8125,
+        "n": 500,
+        "p95": 227.25
+      },
+      "operations": 500,
+      "throughput_ops_per_second": 4471.958596885386,
+      "verification_failures": 0,
+      "wall_seconds": 0.11180783300369512,
+      "workers": 1
+    },
+    {
+      "operation_us": {
+        "mean": 1473.279854,
+        "median": 1541.0,
+        "n": 500,
+        "p95": 2225.291
+      },
+      "operations": 500,
+      "throughput_ops_per_second": 6037.611323962936,
+      "verification_failures": 0,
+      "wall_seconds": 0.08281420799903572,
+      "workers": 10
+    },
+    {
+      "operation_us": {
+        "mean": 2710.998324,
+        "median": 2221.625,
+        "n": 500,
+        "p95": 6165.625
+      },
+      "operations": 500,
+      "throughput_ops_per_second": 5593.104426780216,
+      "verification_failures": 0,
+      "wall_seconds": 0.0893957920052344,
+      "workers": 50
+    },
+    {
+      "operation_us": {
+        "mean": 2669.476232,
+        "median": 2073.2495,
+        "n": 500,
+        "p95": 7050.208
+      },
+      "operations": 500,
+      "throughput_ops_per_second": 5505.766602179075,
+      "verification_failures": 0,
+      "wall_seconds": 0.0908138750019134,
+      "workers": 100
+    }
+  ],
+  "evidence_class": "valid_signature_microbenchmark_and_modeled_expiry_policy",
+  "expiry": {
+    "cells": 33,
+    "exact_boundary_acceptances": 3,
+    "false_rejections": 0,
+    "policy_rejections": 15
+  },
+  "run_id": "sens-v2-20260910",
+  "security_rates": "FAR and ASR not measured; no adversarial proofs submitted",
+  "timing_endpoint": "local canonicalization, signing, and verification; no human or network delay"
+}

@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PoIA Banking Demo</title>
+    <link rel="stylesheet" href="/static/style.css?v={{ static_version }}" />
+  </head>
+  <body>
+    {% if poia_intent_id %}
+      <div class="poia-backdrop{% if user and user['poia_zt_enabled'] %} poia-hidden{% endif %}" data-intent="{{ poia_intent_id }}" data-user="{{ user_id or '' }}" data-user-email="{{ user['email'] if user else '' }}" data-zt-enabled="{{ 1 if user and user['poia_zt_enabled'] else 0 }}" data-admin="{{ 1 if user and user['is_admin'] else 0 }}" data-participant="{{ 1 if participant_mode else 0 }}" data-return="{{ participant_return_url if participant_mode else '' }}" data-display-variant="{{ display_variant }}">
+        <div class="poia-modal" id="poia-modal" role="dialog" aria-modal="true" aria-labelledby="poia-heading">
+          <h2 id="poia-heading">{{ "Authorize operation" if participant_mode else "Sign intent" }}</h2>
+          {% if participant_mode %}
+            <p class="note">Review the operation and choose whether to continue.</p>
+          {% else %}
+            <p class="note">Confirm that every field below matches the operation you intend to sign.</p>
+          {% endif %}
+          <p class="warn" id="poia-alert" role="alert" hidden></p>
+          <div class="intent">
+            <div id="poia-summary">Loading intent...</div>
+          </div>
+          <div class="meta">
+            <div><strong>Expires in:</strong> <span id="poia-expiry">-</span></div>
+          </div>
+          <div class="actions">
+            <button type="button" id="poia-sign" disabled>Sign operation</button>
+            <button type="button" class="ghost" id="poia-cancel">Decline operation</button>
+          </div>
+          <p id="poia-status" class="note">Passkey signing is ready.</p>
+        </div>
+      </div>
+    {% endif %}
+    <header class="site-header">
+      {% if participant_mode %}
+        <span class="brand">PoIA Bank</span>
+      {% elif user %}
+        {% if user["is_admin"] %}
+          <a class="brand" href="/admin/dashboard">PoIA Bank</a>
+        {% else %}
+          <a class="brand" href="/dashboard">PoIA Bank</a>
+        {% endif %}
+      {% else %}
+        <a class="brand" href="/">PoIA Bank</a>
+      {% endif %}
+      <nav class="nav">
+        {% if participant_mode %}
+          <a href="/logout">Leave session</a>
+        {% elif user %}
+          {% if user["is_admin"] %}
+            <a href="/admin/dashboard">Admin</a>
+            <a href="/admin/audit">Audit</a>
+            <a href="/admin/mfa">MFA Metrics</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+          {% else %}
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/settings">Settings</a>
+            <a href="/transfer">Transfer</a>
+            <a href="/beneficiaries">Beneficiaries</a>
+            <a href="/cash">Cash</a>
+            <a href="/statements">Statements</a>
+          {% endif %}
+          <a href="/logout">Logout</a>
+        {% else %}
+          <a href="/login">Login</a>
+          <a href="/signup">Sign up</a>
+        {% endif %}
+      </nav>
+    </header>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+    <script>
+      function showToast(message, ok = true) {
+        const toast = document.createElement('div');
+        toast.className = 'toast' + (ok ? '' : ' toast--error');
+        toast.setAttribute('role', 'status');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.add('toast--visible'));
+        setTimeout(() => {
+          toast.classList.remove('toast--visible');
+          setTimeout(() => toast.remove(), 250);
+        }, 4000);
+      }
+    </script>
+    {% if flash_message %}
+      <script>
+        showToast({{ flash_message | tojson }}, true);
+      </script>
+    {% endif %}
+    {% if poia_intent_id %}
+      <script>
+        const poiaBackdrop = document.querySelector('.poia-backdrop');
+        const poiaStatus = document.getElementById('poia-status');
+        const poiaAlert = document.getElementById('poia-alert');
+        const poiaSummary = document.getElementById('poia-summary');
+        const poiaExpiry = document.getElementById('poia-expiry');
+        const poiaModal = document.getElementById('poia-modal');
+        const poiaCancel = document.getElementById('poia-cancel');
+        const poiaSign = document.getElementById('poia-sign');
+        let approvalInFlight = false;
+        let approvalComplete = false;
+        let poiaPublicKey = null;
+        let passkeyUnavailable = false;
+        let countdownTimer = null;
+
+        function showPoiaAlert(message) {
+          if (poiaAlert) {
+            poiaAlert.textContent = message;
+            poiaAlert.hidden = false;
+          }
+          poiaStatus.textContent = message;
+          poiaStatus.style.color = '#c24b41';
+        }
+        let poiaIntentData = null;
+        const intentId = poiaBackdrop ? poiaBackdrop.dataset.intent : '';
+        const userId = poiaBackdrop ? poiaBackdrop.dataset.user : '';
+        let useZtAuthenticator = poiaBackdrop ? poiaBackdrop.dataset.ztEnabled === '1' : false;
+        const isAdmin = poiaBackdrop ? poiaBackdrop.dataset.admin === '1' : false;
+        const isParticipantMode = poiaBackdrop ? poiaBackdrop.dataset.participant === '1' : false;
+        const participantReturnUrl = poiaBackdrop ? poiaBackdrop.dataset.return : '';
+        const poiaScenario = new URLSearchParams(window.location.search).get('scenario') || '';
+        const userEmail = poiaBackdrop ? poiaBackdrop.dataset.userEmail : '';
+        const displayVariant = poiaBackdrop ? (poiaBackdrop.dataset.displayVariant || 'redesigned') : 'redesigned';
+
+        function sendPoiaTelemetry(event, extra = {}) {
+          if (!intentId) {
+            return;
+          }
+          const payload = {
+            event,
+            intent_id: intentId,
+            user_id: userId || null,
+            rp_id: poiaIntentData?.context?.rp_id || null,
+            method: useZtAuthenticator ? 'zt_authenticator' : 'webauthn',
+            scenario: poiaScenario,
+            client_ts: Date.now() / 1000,
+            ...extra,
+          };
+          fetch('/api/poia/telemetry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+          }).catch(() => {});
+        }
+
+        function base64urlToBuffer(value) {
+          const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+          const pad = base64.length % 4 ? '='.repeat(4 - (base64.length % 4)) : '';
+          const binary = atob(base64 + pad);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          return bytes.buffer;
+        }
+
+        function bufferToBase64url(buffer) {
+          const bytes = new Uint8Array(buffer);
+          let str = '';
+          for (const byte of bytes) {
+            str += String.fromCharCode(byte);
+          }
+          return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
+
+        function formatCurrency(amount, currency) {
+          const safeAmount = Number(amount || 0);
+          try {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(safeAmount);
+          } catch (err) {
+            return `${safeAmount.toFixed(2)} ${currency || 'USD'}`;
+          }
+        }
+
+        function formatIntentLabel(key) {
+          const labels = {
+            account_id: 'Account',
+            account_number: 'Account number',
+            beneficiary_id: 'Beneficiary',
+            date_from: 'Date from',
+            date_to: 'Date to',
+            expires_in_seconds: 'Validity window',
+            external_account: 'External account',
+            from_account: 'Source account',
+            on_behalf_of: 'Acting on behalf of',
+            rp_id: 'Requesting service',
+            txn_type: 'Transaction type',
+            user_id: 'Authorizing user',
+            workflow_id: 'Workflow',
+          };
+          if (labels[key]) {
+            return labels[key];
+          }
+          const words = String(key).replace(/_/g, ' ');
+          return words.charAt(0).toUpperCase() + words.slice(1);
+        }
+
+        function formatIntentValue(key, value, scope, overrides = {}) {
+          if (overrides && Object.prototype.hasOwnProperty.call(overrides, key)) {
+            // A referent by ID (e.g. beneficiary_id) is meaningless for a human to
+            // verify at a glance -- the server resolves it to what it actually
+            // refers to (same lookup Referent-State Integrity re-checks at
+            // execution time) so this modal shows the same thing a person could
+            // detect tampering in, not an opaque database id.
+            return overrides[key];
+          }
+          if (key === 'amount') {
+            return formatCurrency(value, scope.currency);
+          }
+          if (key === 'expires_in_seconds') {
+            return `${value} seconds`;
+          }
+          if (typeof value === 'boolean') {
+            return value ? 'Yes' : 'No';
+          }
+          if (value === null || value === undefined || value === '') {
+            return 'Not specified';
+          }
+          if (typeof value === 'object') {
+            return JSON.stringify(value);
+          }
+          return String(value);
+        }
+
+        // Small inline "person" glyph used for the sender/recipient avatars
+        // below -- matches the outline style of ZT-Authenticator's Icons.person.
+        const PERSON_ICON_SVG = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 12c2.71 0 4.9-2.19 4.9-4.9S14.71 2.2 12 2.2 7.1 4.39 7.1 7.1 9.29 12 12 12zm0 2.45c-3.27 0-9.8 1.64-9.8 4.9v2.45h19.6v-2.45c0-3.26-6.53-4.9-9.8-4.9z"/></svg>';
+
+        // Compact caption for an avatar: the local part of an email (before
+        // "@"), or the first word of a plain name/id, e.g.
+        // "dolly@bank.test" -> "dolly", "Kanani Doe" -> "Kanani". Mirrors
+        // shortDisplayName() in ZT-Authenticator/mobile/lib/poia_intent_view.dart
+        // so the same signed value reads the same way on both surfaces.
+        function shortDisplayName(value) {
+          const trimmed = String(value || '').trim();
+          if (!trimmed) {
+            return trimmed;
+          }
+          const base = trimmed.includes('@') ? trimmed.split('@')[0] : trimmed;
+          const words = base.split(/[\s._-]+/).filter(Boolean);
+          return words.length ? words[0] : base;
+        }
+
+        // Sender -> recipient visual for transfer-like intents: two person
+        // avatars joined by an arrow that drifts continuously from sender to
+        // recipient (CSS animation, see .poia-arrow-icon) -- a steady,
+        // non-flashing directional cue, matching the equivalent
+        // _TransferDirectionRow widget in the ZT-Authenticator mobile app.
+        function appendAvatarRow(container, youLabel, recipientLabel) {
+          const row = document.createElement('div');
+          row.className = 'poia-avatar-row';
+
+          function column(label, variant) {
+            const col = document.createElement('div');
+            col.className = 'poia-avatar-col';
+            const circle = document.createElement('div');
+            circle.className = `poia-avatar poia-avatar--${variant}`;
+            circle.innerHTML = PERSON_ICON_SVG;
+            const name = document.createElement('div');
+            name.className = 'poia-avatar-name';
+            name.textContent = label;
+            col.append(circle, name);
+            return col;
+          }
+
+          const track = document.createElement('div');
+          track.className = 'poia-arrow-track';
+          const arrow = document.createElement('span');
+          arrow.className = 'poia-arrow-icon';
+          arrow.textContent = '\u2192';
+          track.appendChild(arrow);
+
+          row.append(column(youLabel, 'sender'), track, column(recipientLabel, 'recipient'));
+          container.appendChild(row);
+        }
+
+        // Faithful JavaScript port of exactAmountWords() in the ZT-Authenticator
+        // app (mobile/lib/amount_words.dart), so the browser modal and the
+        // authenticator read out an identical amount for an identical signed
+        // intent. Presentation-only: it never rounds, never re-derives, and
+        // returns null for any syntax it cannot render exactly -- in which case
+        // the numeral is shown alone rather than an approximate wording.
+        const AMOUNT_WORD_ONES = ['zero','one','two','three','four','five','six','seven','eight','nine',
+          'ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+        const AMOUNT_WORD_TENS = ['','','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+        const AMOUNT_WORD_SCALES = ['',' thousand',' million',' billion',' trillion'];
+        const AMOUNT_CURRENCIES = {
+          USD: ['US dollar', 'US dollars'], EUR: ['euro', 'euros'],
+          GBP: ['British pound', 'British pounds'], JPY: ['Japanese yen', 'Japanese yen'],
+          CNY: ['Chinese yuan', 'Chinese yuan'], CHF: ['Swiss franc', 'Swiss francs'],
+          CAD: ['Canadian dollar', 'Canadian dollars'], AUD: ['Australian dollar', 'Australian dollars'],
+          INR: ['Indian rupee', 'Indian rupees'], KRW: ['South Korean won', 'South Korean won'],
+        };
+
+        function threeDigitsToWords(value) {
+          let n = value;
+          const parts = [];
+          if (n >= 100) {
+            parts.push(`${AMOUNT_WORD_ONES[Math.floor(n / 100)]} hundred`);
+            n %= 100;
+            if (n > 0) parts.push('and');
+          }
+          if (n >= 20) {
+            const tens = AMOUNT_WORD_TENS[Math.floor(n / 10)];
+            const rem = n % 10;
+            parts.push(rem > 0 ? `${tens}-${AMOUNT_WORD_ONES[rem]}` : tens);
+          } else if (n > 0) {
+            parts.push(AMOUNT_WORD_ONES[n]);
+          }
+          return parts.join(' ');
+        }
+
+        function integerToWords(value) {
+          if (value === 0) return 'zero';
+          if (value < 0) return `negative ${integerToWords(-value)}`;
+          const groups = [];
+          let remaining = value;
+          while (remaining > 0) {
+            groups.push(remaining % 1000);
+            remaining = Math.floor(remaining / 1000);
+          }
+          const parts = [];
+          for (let i = groups.length - 1; i >= 0; i--) {
+            if (groups[i] === 0) continue;
+            const scale = i < AMOUNT_WORD_SCALES.length ? AMOUNT_WORD_SCALES[i] : ` (10^${i * 3})`;
+            parts.push(`${threeDigitsToWords(groups[i])}${scale}`);
+          }
+          return parts.join(' ');
+        }
+
+        function exactAmountWords(raw, currency) {
+          if (raw === null || raw === undefined || !currency) return null;
+          const match = /^(-?)(\d{1,15})(?:\.(\d{1,12}))?$/.exec(String(raw).trim());
+          const info = AMOUNT_CURRENCIES[String(currency).trim().toUpperCase()];
+          if (!match || !info) return null;
+          const whole = Number(match[2]);
+          if (!Number.isSafeInteger(whole)) return null;
+          const fraction = match[3] || '';
+          const fractional = fraction.length > 0 && /[1-9]/.test(fraction);
+          const sign = match[1] === '-' ? 'negative ' : '';
+          const decimal = fractional
+            ? ` point ${fraction.split('').map((d) => AMOUNT_WORD_ONES[Number(d)]).join(' ')}`
+            : '';
+          const unit = whole === 1 && !fractional ? info[0] : info[1];
+          const text = `${sign}${integerToWords(whole)}${decimal} ${unit}`;
+          return text.charAt(0).toUpperCase() + text.slice(1);
+        }
+
+        // Prominent numeral display for the amount, mirroring _AmountCard in
+        // the mobile app. Only ever formats [amountValue]/[currencyValue] as
+        // already rendered by render_intent_fields() (app/presentation.py)
+        // from the signed scope -- nothing here re-derives or guesses a value.
+        function appendAmountCard(container, amountValue, currencyValue, wordsText) {
+          const card = document.createElement('div');
+          card.className = 'poia-amount-card';
+          const label = document.createElement('div');
+          label.className = 'label';
+          label.textContent = 'Amount';
+          const numeral = document.createElement('div');
+          numeral.className = 'numeral';
+          numeral.textContent = currencyValue ? `${amountValue} ${currencyValue}` : `${amountValue}`;
+          card.append(label, numeral);
+          if (wordsText) {
+            const words = document.createElement('div');
+            words.className = 'words';
+            words.textContent = wordsText;
+            card.appendChild(words);
+          }
+          container.appendChild(card);
+        }
+
+        // Renders a list of already-formatted [label, value] pairs as
+        // compact single-line "Label: Value" entries that wrap to fill the
+        // available width, instead of one full-width row per field -- this
+        // is what keeps the intent summary compact enough to fit on screen
+        // without scrolling. Mirrors _FieldSection's Wrap-based layout in
+        // the ZT-Authenticator mobile app.
+        function appendFieldSection(container, heading, fields, variant = 'redesigned') {
+          if (!fields || !fields.length) {
+            return;
+          }
+          const section = document.createElement('section');
+          section.className = 'intent-section';
+          const title = document.createElement('h3');
+          title.textContent = heading;
+          section.appendChild(title);
+          const wrap = document.createElement('div');
+          // Dataset 2 (display-variant comparison): 'legacy' stacks one
+          // field per row (label above value), matching the plain layout
+          // that preceded the grouped/avatar redesign; 'redesigned' packs
+          // compact "Label: Value" entries to fill the row. Same field
+          // content either way -- only this layout choice is manipulated.
+          wrap.className = variant === 'legacy' ? 'poia-field-wrap poia-field-wrap--legacy' : 'poia-field-wrap';
+          fields.forEach(([label, value]) => {
+            const line = document.createElement('span');
+            line.className = 'poia-field-line';
+            const k = document.createElement('span');
+            k.className = 'k';
+            k.textContent = `${label}: `;
+            const v = document.createElement('span');
+            v.className = 'v';
+            v.textContent = value;
+            line.append(k, v);
+            wrap.appendChild(line);
+          });
+          section.appendChild(wrap);
+          container.appendChild(section);
+        }
+
+        function appendIntentSection(container, heading, values, scope, hiddenKeys = [], overrides = {}, variant = 'redesigned') {
+          const entries = Object.entries(values || {}).filter(([key]) => !hiddenKeys.includes(key));
+          if (!entries.length) {
+            return;
+          }
+          const fields = entries.map(([key, value]) => [formatIntentLabel(key), formatIntentValue(key, value, scope, overrides)]);
+          appendFieldSection(container, heading, fields, variant);
+        }
+
+        function renderIntent(intent, scopeDisplayOverrides = {}, displayFields = null) {
+          if (!intent) {
+            poiaSummary.textContent = 'Unable to load intent.';
+            return;
+          }
+          const action = intent.action;
+          const scope = intent.scope || {};
+          const context = intent.context || {};
+          const constraints = intent.constraints || {};
+          const actionNames = {
+            admin_audit_view: 'View audit log',
+            admin_mfa_view: 'View MFA metrics',
+            beneficiary_add: 'Add beneficiary',
+            beneficiary_edit: 'Edit beneficiary bank details',
+            limit_change: 'Change daily transfer limit',
+            account_recovery: 'Recover account access',
+            deposit: 'Deposit funds',
+            statement_export: 'Export statements',
+            cloud_file_view: 'View protected cloud file',
+            cloud_file_download: 'Download protected cloud file',
+            cloud_file_delete: 'Delete protected cloud file',
+            cloud_file_share_public: 'Share protected cloud file publicly',
+            cloud_file_overwrite: 'Overwrite protected cloud file',
+            transfer: 'Transfer funds',
+            withdrawal: 'Withdraw funds',
+          };
+          const container = document.createDocumentFragment();
+          const actionBlock = document.createElement('div');
+          actionBlock.className = 'intent-action';
+          const eyebrow = document.createElement('span');
+          eyebrow.textContent = 'Action';
+          const title = document.createElement('strong');
+          title.textContent = actionNames[action] || formatIntentLabel(action || 'unknown action');
+          actionBlock.append(eyebrow, title);
+          container.appendChild(actionBlock);
+          if (displayFields && displayFields.length) {
+            // Plain-language path: skip the leading ("Action", ...) pair since the
+            // action block above already shows it, and skip the raw scope/context
+            // dump entirely -- render_intent_fields() already covers everything a
+            // person needs to check (what, how much, to/from whom).
+            const rest = displayFields[0] && displayFields[0][0] === 'Action'
+              ? displayFields.slice(1)
+              : displayFields;
+
+            if (displayVariant === 'legacy') {
+              // Dataset 2's control arm: the same verified field set as the
+              // redesigned arm, with none of the grouping/avatar/amount-card
+              // treatment -- every field appears once, in original order, as
+              // a plain stacked list. This isolates the layout manipulation:
+              // both arms show identical information, only the presentation
+              // differs.
+              appendFieldSection(container, "What you're approving", rest, 'legacy');
+            } else {
+              // Pull out a recipient-ish field (same priority order as
+              // ZT-Authenticator's classifyPoiaFields) so a transfer-like intent
+              // can show a sender -> recipient avatar row instead of a plain
+              // label. The recipient appears only in the avatar caption.
+              const actionLower = String(action || '').toLowerCase();
+              const isTransferLike = actionLower.includes('transfer');
+              const recipientPrimaryKeys = ['recipient', 'beneficiary name', 'external account', 'target user', 'patient id'];
+              let recipientIdx = -1;
+              for (const key of recipientPrimaryKeys) {
+                recipientIdx = rest.findIndex(([label]) => label.toLowerCase() === key);
+                if (recipientIdx !== -1) break;
+              }
+              if (recipientIdx === -1) {
+                recipientIdx = rest.findIndex(([label]) => label.toLowerCase() === 'beneficiary id');
+              }
+              const amountIdx = rest.findIndex(([label]) => label.toLowerCase() === 'amount');
+              const currencyIdx = rest.findIndex(([label]) => label.toLowerCase() === 'currency');
+              const showAvatarRow = isTransferLike && recipientIdx !== -1 && amountIdx !== -1;
+
+              if (showAvatarRow) {
+                const you = shortDisplayName(userEmail) || 'You';
+                const recipientRaw = rest[recipientIdx][1];
+                const recipientLabel = shortDisplayName(recipientRaw) || recipientRaw;
+                appendAvatarRow(container, you, recipientLabel);
+              }
+
+              if (amountIdx !== -1) {
+                const currencyValue = currencyIdx !== -1 ? rest[currencyIdx][1] : null;
+                // Words are computed from the signed scope values themselves,
+                // never from the formatted display string, so the wording can
+                // only ever correspond to the exact signed intent.
+                const signedScope = (intent && intent.scope) || {};
+                const wordsText = exactAmountWords(signedScope.amount, signedScope.currency);
+                appendAmountCard(container, rest[amountIdx][1], currencyValue, wordsText);
+              }
+
+              const skipIdx = new Set();
+              if (showAvatarRow) skipIdx.add(recipientIdx);
+              if (amountIdx !== -1) skipIdx.add(amountIdx);
+              if (amountIdx !== -1 && currencyIdx !== -1) skipIdx.add(currencyIdx);
+              const remaining = rest.filter((_, i) => !skipIdx.has(i));
+              appendFieldSection(container, "What you're approving", remaining);
+            }
+          } else {
+            appendIntentSection(container, 'Scope', scope, scope, ['currency'], scopeDisplayOverrides, displayVariant);
+            if (scope.currency && scope.amount === undefined) {
+              appendIntentSection(container, 'Currency', { currency: scope.currency }, scope, [], {}, displayVariant);
+            }
+            // referent_commitments is a Referent-State Integrity execution-time
+            // verification artifact (raw content hashes), not something a person
+            // can check by reading it -- hide it here too, even though the
+            // display_fields path above already covers every real action and
+            // never reaches this fallback in practice.
+            appendIntentSection(container, 'Authorization context', context, scope, ['referent_commitments'], {}, displayVariant);
+          }
+          appendIntentSection(container, 'Constraints', constraints, scope, [], {}, displayVariant);
+          poiaSummary.replaceChildren(container);
+        }
+
+        function handleApprovedRedirect(redirectUrl = '') {
+          approvalComplete = true;
+          approvalInFlight = false;
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+          }
+          poiaBackdrop?.classList.add('poia-hidden');
+          const action = poiaIntentData?.action;
+          if (action === 'statement_export' && !isParticipantMode) {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = `/poia/execute/${intentId}`;
+            document.body.appendChild(iframe);
+            setTimeout(() => {
+              window.location.href = '/statements';
+            }, 900);
+            return;
+          }
+          const destination = redirectUrl || participantReturnUrl || `/poia/execute/${intentId}`;
+          window.location.href = destination;
+        }
+
+        if (poiaCancel) {
+          poiaCancel.addEventListener('click', async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (approvalInFlight || approvalComplete) return;
+            if (intentId) {
+              approvalInFlight = true;
+              poiaSign.disabled = true;
+              try {
+              const declined = await fetch('/api/poia/deny', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ intent_id: intentId, reason: 'user_cancelled' }),
+              });
+              if (!declined.ok) throw new Error('Decline not recorded');
+              } catch (_) {
+                approvalInFlight = false;
+                poiaSign.disabled = !poiaPublicKey;
+                poiaStatus.textContent = 'Your choice could not be recorded. Please try again.';
+                return;
+              }
+            }
+            const target = participantReturnUrl || (isAdmin ? '/admin/dashboard' : '/dashboard');
+            window.location.href = target;
+          });
+        }
+
+        async function loadIntent() {
+          const res = await fetch(`/poia/intent/${intentId}`, { credentials: 'include' });
+          const data = await res.json();
+          if (!res.ok) {
+            poiaStatus.textContent = data.error || 'Unable to load intent.';
+            poiaStatus.style.color = '#c24b41';
+            return;
+          }
+          poiaIntentData = data.intent;
+          if (data.signing_backend) {
+            useZtAuthenticator = data.signing_backend === 'zt_authenticator';
+            poiaBackdrop?.classList.toggle('poia-hidden', useZtAuthenticator);
+          }
+          renderIntent(poiaIntentData, data.scope_display_overrides || {}, data.display_fields || null);
+          sendPoiaTelemetry('intent_loaded');
+          const expiresAt = data.expires_at;
+          const updateCountdown = () => {
+            const remaining = Math.max(0, expiresAt - Math.floor(Date.now() / 1000));
+            poiaExpiry.textContent = `${remaining}s`;
+            if (remaining === 0) {
+              handleExpiry();
+            }
+          };
+          updateCountdown();
+          countdownTimer = setInterval(updateCountdown, 1000);
+          if (useZtAuthenticator) {
+            poiaStatus.textContent = 'Waiting for ZT-Authenticator signature...';
+            poiaStatus.style.color = '#2c2c2c';
+            showToast('Signing request sent to your ZT-Authenticator device.', true);
+            sendPoiaTelemetry('zt_auto_start');
+            startDeviceApproval();
+          } else {
+            poiaPublicKey = await preparePasskey();
+            if (poiaPublicKey) {
+              poiaSign.disabled = false;
+              poiaStatus.textContent = 'Passkey ready.';
+              poiaStatus.style.color = '#2c2c2c';
+            }
+          }
+        }
+
+        async function preparePasskey() {
+          const beginRes = await fetch('/poia/assertion-begin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ intent_id: intentId }),
+          });
+          const beginData = await beginRes.json();
+          if (!beginRes.ok) {
+            if (beginData.error === 'no_passkey') {
+              passkeyUnavailable = true;
+              showPoiaAlert('No passkey is registered for this account. Register a passkey in Settings, then try signing again or use ZT-Authenticator if available.');
+            } else {
+              poiaStatus.textContent = beginData.detail || beginData.error || 'Unable to start passkey signing.';
+              poiaStatus.style.color = '#c24b41';
+            }
+            return null;
+          }
+          const publicKey = beginData.public_key;
+          publicKey.challenge = base64urlToBuffer(publicKey.challenge);
+          if (publicKey.allowCredentials) {
+            publicKey.allowCredentials = publicKey.allowCredentials.map(cred => ({
+              ...cred,
+              id: base64urlToBuffer(cred.id),
+            }));
+          }
+          return publicKey;
+        }
+
+        async function startPasskey() {
+          if (approvalInFlight || approvalComplete) {
+            return;
+          }
+          if (passkeyUnavailable) {
+            showPoiaAlert('No passkey is registered for this account. Register a passkey in Settings, then try signing again.');
+            return;
+          }
+          if (!poiaPublicKey) {
+            poiaStatus.textContent = 'The passkey window is still preparing. Please try again in a moment.';
+            poiaStatus.style.color = '#2c2c2c';
+            return;
+          }
+          approvalInFlight = true;
+          poiaSign.disabled = true;
+          poiaCancel.disabled = true;
+          poiaStatus.textContent = 'Waiting for passkey...';
+          let assertion;
+          try {
+            assertion = await navigator.credentials.get({ publicKey: poiaPublicKey });
+          } catch (err) {
+            poiaStatus.textContent = 'The passkey window closed without a signature. You can sign again or decline the operation.';
+            poiaStatus.style.color = '#c24b41';
+            sendPoiaTelemetry('passkey_blocked');
+            approvalInFlight = false;
+            poiaSign.disabled = false;
+            poiaCancel.disabled = false;
+            return;
+          }
+          poiaStatus.textContent = 'Verifying intent signature...';
+          poiaStatus.style.color = '#2c2c2c';
+          sendPoiaTelemetry('passkey_assertion');
+          const payload = {
+            credentialId: bufferToBase64url(assertion.rawId),
+            clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
+            authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+            signature: bufferToBase64url(assertion.response.signature),
+            userHandle: assertion.response.userHandle ? bufferToBase64url(assertion.response.userHandle) : null,
+          };
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000);
+            const completePromise = fetch('/poia/assertion-complete', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify(payload),
+              signal: controller.signal,
+            });
+            // Poll for approval in parallel in case the response is delayed.
+            pollDevice();
+            const completeRes = await completePromise;
+            clearTimeout(timeoutId);
+            if (!completeRes.ok) {
+              const text = await completeRes.text();
+              poiaStatus.textContent = text ? `Intent signing failed: ${text.slice(0, 200)}` : 'Intent signing failed.';
+              poiaStatus.style.color = '#c24b41';
+              showToast('Intent signing failed. Please try again.', false);
+              sendPoiaTelemetry('approval_failed', { status: 'denied' });
+              approvalInFlight = false;
+              poiaSign.disabled = false;
+              poiaCancel.disabled = false;
+              return;
+            }
+            const contentType = completeRes.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+              const data = await completeRes.json();
+              if (data.redirect_url) {
+                poiaStatus.textContent = 'Intent signature recorded. Completing action...';
+                poiaStatus.style.color = '#2c2c2c';
+                showToast('Intent signed. Completing action...', true);
+                sendPoiaTelemetry('approval_success', { status: 'approved' });
+                handleApprovedRedirect(data.redirect_url);
+                return;
+              }
+            }
+            poiaStatus.textContent = 'Intent signature recorded. Completing action...';
+            poiaStatus.style.color = '#2c2c2c';
+            showToast('Intent signed. Completing action...', true);
+            sendPoiaTelemetry('approval_success', { status: 'approved' });
+            handleApprovedRedirect();
+          } catch (err) {
+            poiaStatus.textContent = 'Signing timed out. Choose Sign operation to retry.';
+            poiaStatus.style.color = '#c24b41';
+            showToast('Signing timed out. Choose Sign operation to retry.', false);
+            sendPoiaTelemetry('approval_timeout', { status: 'timeout' });
+            approvalInFlight = false;
+            poiaSign.disabled = false;
+            poiaCancel.disabled = false;
+          }
+        }
+
+        async function pollDevice() {
+          const res = await fetch(`/poia/status?intent_id=${encodeURIComponent(intentId)}`, { credentials: 'include' });
+          const data = await res.json();
+          if (data.status === 'approved') {
+            if (useZtAuthenticator) {
+              showToast('Intent signed via ZT-Authenticator.', true);
+            }
+            sendPoiaTelemetry('zt_status_approved', { status: 'approved' });
+            handleApprovedRedirect();
+            return;
+          }
+          if (data.status === 'denied') {
+            poiaStatus.textContent = 'Intent signing denied.';
+            poiaStatus.style.color = '#c24b41';
+            showToast('Intent signing denied.', false);
+            approvalComplete = true;
+            poiaBackdrop?.classList.add('poia-hidden');
+            if (countdownTimer) {
+              clearInterval(countdownTimer);
+            }
+            sendPoiaTelemetry('zt_status_denied', { status: 'denied' });
+            setTimeout(() => {
+              const target = participantReturnUrl || (isAdmin ? '/admin/dashboard' : '/dashboard');
+              window.location.href = target;
+            }, 700);
+            return;
+          }
+          if (data.status === 'expired') {
+            poiaStatus.textContent = 'Intent expired.';
+            poiaStatus.style.color = '#c24b41';
+            showToast('Intent expired before it was signed.', false);
+            approvalComplete = true;
+            if (countdownTimer) {
+              clearInterval(countdownTimer);
+            }
+            sendPoiaTelemetry('zt_status_expired', { status: 'expired' });
+            setTimeout(() => {
+              const target = participantReturnUrl || (isAdmin ? '/admin/dashboard' : '/dashboard');
+              window.location.href = target;
+            }, 700);
+            return;
+          }
+          setTimeout(pollDevice, 1500);
+        }
+
+        async function startDeviceApproval() {
+          if (approvalInFlight || approvalComplete) {
+            return;
+          }
+          approvalInFlight = true;
+          poiaStatus.textContent = 'Waiting for ZT-Authenticator signature...';
+          poiaStatus.style.color = '#2c2c2c';
+          if (userId) {
+            const pendingRes = await fetch(`/api/poia/pending?user_id=${encodeURIComponent(userId)}&force=1`, { credentials: 'include' });
+            if (pendingRes.ok) {
+              const pendingData = await pendingRes.json();
+              if (pendingData.status === 'disabled') {
+                approvalInFlight = false;
+                poiaBackdrop?.classList.remove('poia-hidden');
+                showPoiaAlert('This trial requires ZT-Authenticator, but it is not available for this account.');
+                return;
+              }
+            }
+          }
+          pollDevice();
+        }
+
+        loadIntent();
+        poiaStatus.style.color = '#2c2c2c';
+        poiaSign?.addEventListener('click', () => {
+          if (!useZtAuthenticator) startPasskey();
+        });
+        async function handleExpiry() {
+          if (countdownTimer) {
+            clearInterval(countdownTimer);
+          }
+          if (approvalComplete) {
+            return;
+          }
+          poiaStatus.textContent = 'Intent expired. Returning to the previous page.';
+          poiaSign.disabled = true;
+          poiaCancel.disabled = true;
+          poiaStatus.style.color = '#c24b41';
+          sendPoiaTelemetry('intent_expired', { status: 'expired' });
+          await fetch('/api/poia/deny', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ intent_id: intentId, reason: 'expired' }),
+          });
+          setTimeout(() => {
+            const target = participantReturnUrl || (isAdmin ? '/admin/dashboard' : '/dashboard');
+            window.location.href = target;
+          }, 1200);
+        }
+      </script>
+    {% endif %}
+  </body>
+</html>

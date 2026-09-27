@@ -1,0 +1,76 @@
+{
+  "assembled_from_chunks": [
+    {
+      "chunk_dir": "experiments/human_pilot/protocol_enforcement/original-binding-confirmatory-timing-20260910",
+      "chunk_run_id": "original-binding-confirmatory-timing-20260910",
+      "decisions_csv_sha256": "366cfdd5272a78b7b5c57af193adce4ef379b6fb45abf985b3efaa3953183f89",
+      "repetitions_per_mutation": 25,
+      "total_attempts": 750,
+      "total_incorrect": 0
+    },
+    {
+      "chunk_dir": "experiments/human_pilot/protocol_enforcement/original-binding-confirmatory-fresh-chunk2-20260910",
+      "chunk_run_id": "original-binding-confirmatory-fresh-chunk2-20260910",
+      "decisions_csv_sha256": "1cfff1ebf3e27815297c5988d9e169bcf16a46c5f40b409d785ab136cd674bee",
+      "repetitions_per_mutation": 90,
+      "total_attempts": 2700,
+      "total_incorrect": 0
+    },
+    {
+      "chunk_dir": "experiments/human_pilot/protocol_enforcement/original-binding-confirmatory-fresh-chunk3-20260910",
+      "chunk_run_id": "original-binding-confirmatory-fresh-chunk3-20260910",
+      "decisions_csv_sha256": "8b95028e439ab0a1cfb446cefb295c67a6985bcc4e6494e97251a2fd0ca91328",
+      "repetitions_per_mutation": 85,
+      "total_attempts": 2550,
+      "total_incorrect": 0
+    }
+  ],
+  "checks": {
+    "exact_control": {
+      "attempts": 1200,
+      "correct": 1200,
+      "incorrect": 0
+    },
+    "mutated_exact_control": {
+      "attempts": 1200,
+      "correct": 1200,
+      "incorrect": 0
+    },
+    "post_order_pre_approval": {
+      "attempts": 1200,
+      "correct": 1200,
+      "incorrect": 0
+    },
+    "post_signature_execution": {
+      "attempts": 1200,
+      "correct": 1200,
+      "incorrect": 0
+    },
+    "replay_control": {
+      "attempts": 1200,
+      "correct": 1200,
+      "incorrect": 0
+    }
+  },
+  "experiment": "original_request_and_execution_binding",
+  "mutation_types": [
+    "action",
+    "context",
+    "multiple_field",
+    "scope",
+    "subtle_parameter",
+    "target"
+  ],
+  "notes": [
+    "This run validates production canonical binding and state-machine logic.",
+    "Each attack value is also submitted as a fresh exact operation and must be accepted.",
+    "It does not replace live WebAuthn, ZT-Authenticator, or participant trials.",
+    "No conference CSV or prior approval dataset was read.",
+    "Assembled by concatenating independent complete sub-runs of the unmodified experiment script (see assembled_from_chunks); no decision logic was re-derived."
+  ],
+  "repetitions_per_mutation": 200,
+  "run_id": "original-binding-confirmatory-merged-v2-20260910",
+  "signing_backend": "protocol_fixture_no_human_or_authenticator_claim",
+  "total_attempts": 6000,
+  "total_incorrect": 0
+}

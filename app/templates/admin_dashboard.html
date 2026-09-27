@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-dashboard admin-dashboard--panels">
+  <header class="admin-heading">
+    <div>
+      <p class="kicker">Research administration</p>
+      <h1>Experiment control dashboard</h1>
+      <p>Monitor study collection, inspect security evidence, and export the retained experimental record.</p>
+    </div>
+    <span class="admin-role">Administrator</span>
+  </header>
+
+  <div class="admin-layout">
+    <nav class="admin-nav" aria-label="Admin sections">
+      <span class="admin-nav-hint">Sections</span>
+      <a href="#overview">Overview</a>
+      <a href="#accounts">Bank accounts</a>
+      <a href="#users">User accounts</a>
+      <a href="#research">Research &amp; study</a>
+      <a href="#audit">Audit log</a>
+    </nav>
+
+    <div class="admin-panels">
+      <section class="admin-panel" id="overview" aria-labelledby="overview-heading">
+        <section class="admin-status" aria-labelledby="system-heading">
+          <div class="admin-section-heading"><div><h2 id="system-heading">System overview</h2><p>Operational context for interpreting the study record.</p></div></div>
+          <div class="admin-metrics admin-metrics--six">
+            <div><span>Total users</span><strong>{{ totals["user_count"] }}</strong></div>
+            <div><span>Participant accounts</span><strong>{{ totals["customer_count"] }}</strong></div>
+            <div><span>Bank accounts</span><strong>{{ totals["account_count"] }}</strong></div>
+            <div><span>Synthetic balance</span><strong>${{ '%.2f' | format(totals["total_balance"]) }}</strong></div>
+            <div><span>Transactions</span><strong>{{ totals["transaction_count"] }}</strong></div>
+            <div><span>MFA events</span><strong>{{ totals["mfa_events"] }}</strong></div>
+          </div>
+        </section>
+
+        <section class="admin-controls" aria-labelledby="admin-actions-heading">
+          <div class="admin-section-heading"><div><h2 id="admin-actions-heading">Research controls</h2><p>Administrative actions are isolated from participant accounts.</p></div></div>
+          <div class="admin-control-grid">
+            <form class="admin-control" action="/admin/experiments/export" method="get">
+              <div><h3>Experimental dataset</h3><p>Download all retained study records, telemetry, checksums, and the export manifest.</p></div>
+              <button type="submit">Export data</button>
+            </form>
+            <div class="admin-control">
+              <div><h3>Authorization audit</h3><p>Inspect recorded operations, decisions, and server-side outcomes.</p></div>
+              <a class="button-link ghost" href="/admin/audit">Open audit log</a>
+            </div>
+            <div class="admin-control">
+              <div><h3>Authentication evidence</h3><p>Review WebAuthn and authenticator events without entering the participant workflow.</p></div>
+              <a class="button-link ghost" href="/admin/mfa">Open MFA metrics</a>
+            </div>
+          </div>
+          <p class="admin-data-note">The export contains restricted research records. De-identify free text and account-linked fields before public sharing.</p>
+        </section>
+      </section>
+
+      <section class="admin-panel" id="accounts" aria-labelledby="accounts-heading">
+        <section class="admin-status">
+          <div class="admin-section-heading"><div><h2 id="accounts-heading">Bank accounts</h2><p>Ops/fraud-desk control used to simulate a frozen or dormant account for testing and study setup. This does not require PoIA -- it models what happens before a customer sees anything; the customer's own recovery request (which does require PoIA) is what reverses it.</p></div></div>
+          <div class="admin-table-wrap">
+            <table class="table admin-table">
+              <thead><tr><th>Account</th><th>Owner</th><th>Type</th><th>Status</th><th>Daily limit</th><th>Set status</th></tr></thead>
+              <tbody>
+                {% for account in accounts %}
+                <tr>
+                  <td>#{{ account["id"] }}</td>
+                  <td>{{ account["email"] }}</td>
+                  <td>{{ account["account_type"] | title }}</td>
+                  <td><span class="account-status account-status--{{ account['status'] }}">{{ account["status"] | title }}</span></td>
+                  <td>{{ "%.2f"|format(account["daily_transfer_limit"]) }}</td>
+                  <td>
+                    <form method="post" action="/admin/accounts/{{ account['id'] }}/status" class="admin-inline-form">
+                      <select name="status" aria-label="New status for account #{{ account['id'] }}">
+                        <option value="active" {% if account["status"] == "active" %}selected{% endif %}>Active</option>
+                        <option value="frozen" {% if account["status"] == "frozen" %}selected{% endif %}>Frozen</option>
+                        <option value="dormant" {% if account["status"] == "dormant" %}selected{% endif %}>Dormant</option>
+                      </select>
+                      <button type="submit" class="ghost">Apply</button>
+                    </form>
+                  </td>
+                </tr>
+                {% else %}<tr><td colspan="6">No accounts yet.</td></tr>{% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="admin-panel" id="users" aria-labelledby="users-heading">
+        <section class="admin-status">
+          <div class="admin-section-heading"><div><h2 id="users-heading">User accounts</h2><p>Reset an account's MFA enrollment (it must set up TOTP again at next login) or delete it (disables sign-in and revokes every credential; audit history is retained).</p></div></div>
+          <div class="admin-table-wrap">
+            <table class="table admin-table">
+              <thead><tr><th>User</th><th>Email</th><th>Role</th><th>MFA</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                {% for u in users %}
+                <tr>
+                  <td>#{{ u["id"] }}</td>
+                  <td>
+                    {% if u["signup_pending"] %}
+                      <span class="note">Pending signup</span><br />
+                      <span class="hint">Started {{ u["started_display"] }} &middot; no confirmed email until MFA setup finishes</span>
+                    {% else %}
+                      {{ u["email"] }}
+                    {% endif %}
+                  </td>
+                  <td>{{ "Admin" if u["is_admin"] else "Customer" }}</td>
+                  <td>{{ "Enrolled" if u["mfa_enrolled"] else "Not enrolled" }}</td>
+                  <td>
+                    {% if u["disabled"] %}
+                      <span class="account-status account-status--frozen">Disabled</span>
+                    {% elif u["signup_pending"] %}
+                      <span class="account-status account-status--dormant">Pending</span>
+                    {% else %}
+                      <span class="account-status account-status--active">Active</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if u["disabled"] %}
+                    <span class="note">Disabled</span>
+                    {% elif u["signup_pending"] %}
+                    <form method="post" action="/admin/users/{{ u['id'] }}/delete" class="admin-inline-form" onsubmit="return confirm('Remove this pending signup (#{{ u.id }})? It never finished MFA setup and has no confirmed email or bank account yet.');">
+                      <button type="submit" class="ghost danger">Remove</button>
+                    </form>
+                    {% else %}
+                    <form method="post" action="/admin/users/{{ u['id'] }}/reset" class="admin-inline-form" onsubmit="return confirm('Reset MFA for {{ u['email'] }}? They will need to set up TOTP again at next login.');">
+                      <button type="submit" class="ghost">Reset MFA</button>
+                    </form>
+                    <form method="post" action="/admin/users/{{ u['id'] }}/delete" class="admin-inline-form" onsubmit="return confirm('Delete account {{ u['email'] }}? This disables sign-in and revokes every credential. Audit history is retained. This cannot be undone.');">
+                      <button type="submit" class="ghost danger">Delete</button>
+                    </form>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% else %}<tr><td colspan="6">No users yet.</td></tr>{% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="admin-panel" id="research" aria-labelledby="research-heading">
+        <section class="admin-status">
+          <div class="admin-section-heading"><div><h2 id="research-heading">Study collection</h2><p>Live counts from the persistent experiment database.</p></div></div>
+          <div class="admin-metrics">
+            <div><span>Sessions</span><strong>{{ study_totals.sessions or 0 }}</strong></div>
+            <div><span>Completed</span><strong>{{ study_totals.completed or 0 }}</strong></div>
+            <div><span>Active</span><strong>{{ study_totals.active or 0 }}</strong></div>
+            <div><span>Recorded trials</span><strong>{{ study_totals.trials or 0 }}</strong></div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="table admin-table">
+              <thead><tr><th>Participant</th><th>Cohort</th><th>Progress</th><th>Status</th><th>Started</th></tr></thead>
+              <tbody>
+                {% for row in recent_sessions %}
+                <tr>
+                  <td>{{ row["participant_id"] }}</td><td>{{ row["cohort"] or "-" }}</td><td>{{ row["progress_display"] }}</td>
+                  <td><span class="status-label status-label--{{ row['status'] }}">{{ row["status"] }}</span></td><td>{{ row["created_display"] }}</td>
+                </tr>
+                {% else %}<tr><td colspan="5">No study sessions have been recorded.</td></tr>{% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="admin-status" aria-labelledby="questionnaire-heading">
+          <div class="admin-section-heading">
+            <div><h2 id="questionnaire-heading">Post-session responses</h2><p>Administrator-only review of completed participant questionnaires.</p></div>
+            <strong>{{ questionnaire_responses | length }} responses</strong>
+          </div>
+          <div class="questionnaire-list">
+            {% for response in questionnaire_responses %}
+            <details class="questionnaire-response">
+              <summary>
+                <span><strong>{{ response.participant_id }}</strong><small>{{ response.completed_display }} · {{ response.cohort }}</small></span>
+                <span>{{ (response.answers.real_world_use_likelihood or "not recorded") | replace('_', ' ') | title }}</span>
+              </summary>
+              <dl class="questionnaire-grid">
+                <div><dt>Study purpose</dt><dd>{{ response.answers.purpose_guess or "-" }}</dd></div>
+                <div><dt>Anything unusual</dt><dd>{{ (response.answers.noticed_unusual or "-") | replace('_', ' ') | title }}{% if response.answers.unusual_detail %}: {{ response.answers.unusual_detail }}{% endif %}</dd></div>
+                <div><dt>Details compared</dt><dd>{{ (response.answers.semantic_fields or []) | join(', ') | replace('_', ' ') or "-" }}</dd></div>
+                <div><dt>Matching ease</dt><dd>{{ (response.answers.matching_ease or "-") | replace('_', ' ') | title }}</dd></div>
+                <div><dt>Confusion</dt><dd>{{ (response.answers.confusion or "-") | replace('_', ' ') | title }}</dd></div>
+                <div><dt>Frustration</dt><dd>{{ (response.answers.frustration or "-") | replace('_', ' ') | title }}</dd></div>
+                <div><dt>Technical difficulty</dt><dd>{{ (response.answers.technical_difficulty or "-") | replace('_', ' ') | title }}</dd></div>
+                <div><dt>Real-world use likelihood</dt><dd>{{ (response.answers.real_world_use_likelihood or "Not recorded") | replace('_', ' ') | title }}</dd></div>
+                <div><dt>Preferred method</dt><dd>{{ (response.answers.backend_preference or "-") | replace('_', ' ') | title }}{% if response.answers.preference_reason %}: {{ response.answers.preference_reason }}{% endif %}</dd></div>
+                <div><dt>Suggested improvement</dt><dd>{{ response.answers.improvement_suggestion or "Not recorded" }}</dd></div>
+                <div><dt>Decision explanation</dt><dd>{{ response.answers.decision_explanation or "-" }}</dd></div>
+                <div><dt>Additional comment</dt><dd>{{ response.answers.final_comment or "-" }}</dd></div>
+                <div><dt>Questionnaire version</dt><dd>{{ response.answers.questionnaire_version or response.design_version }}</dd></div>
+              </dl>
+            </details>
+            {% else %}
+            <p class="note">No post-session questionnaires have been submitted.</p>
+            {% endfor %}
+          </div>
+        </section>
+      </section>
+
+      <section class="admin-panel" id="audit" aria-labelledby="recent-audit-heading">
+        <section class="admin-status">
+          <div class="admin-section-heading"><div><h2 id="recent-audit-heading">Recent audit activity</h2><p>The ten most recent application audit events.</p></div><a href="/admin/audit">View all</a></div>
+          <div class="admin-table-wrap">
+            <table class="table admin-table">
+              <thead><tr><th>Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead>
+              <tbody>
+                {% for row in recent_audit %}
+                <tr><td>{{ row["created_display"] }}</td><td>{{ row["user_id"] or "system" }}</td><td>{{ row["action"] }}</td><td>{{ row["details"] }}</td></tr>
+                {% else %}<tr><td colspan="4">No recent audit events.</td></tr>{% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

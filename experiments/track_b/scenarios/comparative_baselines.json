@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "scenario_set": "track_b_comparative_baselines",
+  "scenarios": [
+    {"id": "replay", "mutation": "replay_consumed", "security_dimension": "replay_acceptance"},
+    {"id": "relay_phishing", "mutation": "replace_rp", "security_dimension": "context_binding"},
+    {"id": "session_misuse", "mutation": "reuse_recent_confirmation", "security_dimension": "semantic_binding"},
+    {"id": "request_tampering", "mutation": "replace_amount", "security_dimension": "displayed_field_binding"},
+    {"id": "token_reuse", "mutation": "replace_action", "security_dimension": "cross_action_reuse"},
+    {"id": "confused_deputy", "mutation": "replace_on_behalf_of", "security_dimension": "delegation_binding"},
+    {"id": "multi_step_abuse", "mutation": "replace_workflow", "security_dimension": "workflow_binding"}
+  ]
+}

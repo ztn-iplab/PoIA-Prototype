@@ -1,0 +1,15 @@
+{
+  "contains_bearer_tokens_or_reusable_proofs": false,
+  "integration": "FastAPI TestClient plus SQLite protected state",
+  "oauth_protocol_conformance_test": false,
+  "preregistration_sha256": "90586dce5fad5a2c4466704853ae6865de3b662a163e4997a0a9df196c695f38",
+  "proof_source": "in-process approved-proof test fixture",
+  "python_version": "3.10.12",
+  "repository_commit": "4d823a783a57c80725adba0be2cf0f1fcb634ccf",
+  "repository_dirty": true,
+  "requests": 1600,
+  "run_id": "oauth-v2-20260910",
+  "runner_sha256": "544189f92c92af36905647a0154e7ca2b360bc7423700233100d41f31cc2bfc6",
+  "tree_clean": false,
+  "trials_per_cell": 200
+}

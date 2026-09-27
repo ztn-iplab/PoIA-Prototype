@@ -1,0 +1,84 @@
+{
+  "attacks": {
+    "baseline": {
+      "replay": {
+        "attempts": 30,
+        "approved": 30,
+        "success_rate": 100.0
+      },
+      "relay_phishing": {
+        "attempts": 30,
+        "approved": 30,
+        "success_rate": 100.0
+      },
+      "session_misuse": {
+        "attempts": 30,
+        "approved": 30,
+        "success_rate": 100.0
+      },
+      "intent_substitution": {
+        "attempts": 30,
+        "approved": 30,
+        "success_rate": 100.0
+      }
+    },
+    "poia": {
+      "replay": {
+        "attempts": 30,
+        "approved": 0,
+        "success_rate": 0.0
+      },
+      "relay_phishing": {
+        "attempts": 30,
+        "approved": 0,
+        "success_rate": 0.0
+      },
+      "session_misuse": {
+        "attempts": 30,
+        "approved": 0,
+        "success_rate": 0.0
+      },
+      "intent_substitution": {
+        "attempts": 30,
+        "approved": 0,
+        "success_rate": 0.0
+      }
+    }
+  },
+  "latency": {
+    "baseline": {
+      "transfer": {
+        "median": 3.5091255012957845,
+        "mean": 3.4941944999445695,
+        "p95": 4.140854051183851,
+        "max": 4.663666997657856,
+        "stdev": 0.4675255499397221,
+        "count": 30
+      },
+      "statements": {
+        "median": 3.0803540012129815,
+        "mean": 3.458988867108322,
+        "p95": 5.020606250400306,
+        "max": 5.750625001383014,
+        "stdev": 0.8843021202694492,
+        "count": 30
+      }
+    },
+    "poia_webauthn": {
+      "median": null,
+      "mean": null,
+      "p95": null,
+      "max": null,
+      "stdev": null,
+      "n": 0
+    },
+    "poia_zt_authenticator": {
+      "median": 35.0,
+      "mean": 37.65833333333333,
+      "p95": 48.0,
+      "max": 50.0,
+      "stdev": 6.753389066897367,
+      "n": 120
+    }
+  }
+}

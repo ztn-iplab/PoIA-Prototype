@@ -1,0 +1,613 @@
+theory PoIA_Protocol
+
+begin
+
+// Function signature and definition of the equational theory E
+
+functions: fst/1, pair/2, pk/1, sign/2, snd/1, true/0, verify/3
+equations:
+    fst(<x.1, x.2>) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x.1, x.2), x.1, pk(x.2)) = true
+
+restriction Equality:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  // safety formula
+
+  /*
+  expanded formula:
+  "∀ x y #i. (Eq( x, y ) @ #i) ⇒ (x = y)"
+  */
+
+rule (modulo E) Init_User:
+   [ Fr( uid ), Fr( sk ) ]
+  --[ InitUser( uid ) ]->
+   [ !UserKey( uid, sk ), !UserPub( uid, pk(sk) ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Issue_Intent:
+   [
+   In( <orig_action, orig_scope, orig_ctx, intent_action, intent_scope, 
+        intent_ctx>
+   ),
+   Fr( nonce ), !UserPub( uid, pk )
+   ]
+  --[
+  RecordOriginal( uid, orig_action, orig_scope, orig_ctx, nonce ),
+  IssueIntent( uid, intent_action, intent_scope, intent_ctx, nonce )
+  ]->
+   [
+   OriginalRequest( uid, orig_action, orig_scope, orig_ctx, nonce ),
+   Intent( uid, intent_action, intent_scope, intent_ctx, nonce ),
+   !IntentIssued( uid, intent_action, intent_scope, intent_ctx, nonce ),
+   Out( <uid, intent_action, intent_scope, intent_ctx, nonce> )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) User_Approve:
+   [
+   !UserKey( uid, sk ), !IntentIssued( uid, action, scope, ctx, nonce ),
+   In( <uid, action, scope, ctx, nonce> )
+   ]
+  --[ ApproveIntent( uid, action, scope, ctx, nonce ) ]->
+   [
+   Out( <uid, action, scope, ctx, nonce, 
+         sign(<uid, action, scope, ctx, nonce>, sk)>
+   ),
+   Approval( uid, action, scope, ctx, nonce )
+   ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Server_Accept:
+   [
+   OriginalRequest( uid, orig_action, orig_scope, orig_ctx, nonce ),
+   Intent( uid, intent_action, intent_scope, intent_ctx, nonce ),
+   In( <uid, intent_action, intent_scope, intent_ctx, nonce, sig> ),
+   In( <exec_action, exec_scope, exec_ctx> ), !UserPub( uid, pk )
+   ]
+  --[
+  Eq( verify(sig, <uid, intent_action, intent_scope, intent_ctx, nonce>,
+             pk),
+      true
+  ),
+  Eq( orig_action, intent_action ), Eq( orig_scope, intent_scope ),
+  Eq( orig_ctx, intent_ctx ), Eq( intent_action, exec_action ),
+  Eq( intent_scope, exec_scope ), Eq( intent_ctx, exec_ctx ),
+  ServerAccept( uid, exec_action, exec_scope, exec_ctx, nonce )
+  ]->
+   [ ]
+
+  /*
+  rule (modulo AC) Server_Accept:
+     [
+     OriginalRequest( uid, orig_action, orig_scope, orig_ctx, nonce ),
+     Intent( uid, intent_action, intent_scope, intent_ctx, nonce ),
+     In( <uid, intent_action, intent_scope, intent_ctx, nonce, sig> ),
+     In( <exec_action, exec_scope, exec_ctx> ), !UserPub( uid, pk )
+     ]
+    --[
+    Eq( z, true ), Eq( orig_action, intent_action ),
+    Eq( orig_scope, intent_scope ), Eq( orig_ctx, intent_ctx ),
+    Eq( intent_action, exec_action ), Eq( intent_scope, exec_scope ),
+    Eq( intent_ctx, exec_ctx ),
+    ServerAccept( uid, exec_action, exec_scope, exec_ctx, nonce )
+    ]->
+     [ ]
+    variants (modulo AC)
+    1. intent_action
+             = intent_action.15
+       intent_ctx
+             = intent_ctx.15
+       intent_scope
+             = intent_scope.15
+       nonce = nonce.15
+       pk    = pk.15
+       sig   = sig.15
+       uid   = uid.15
+       z     = verify(sig.15,
+                      <uid.15, intent_action.15, intent_scope.15, intent_ctx.15, nonce.15>,
+                      pk.15)
+    
+    2. intent_action
+             = x.15
+       intent_ctx
+             = x.16
+       intent_scope
+             = x.17
+       nonce = x.18
+       pk    = pk(x.22)
+       sig   = sign(<x.23, x.15, x.17, x.16, x.18>, x.22)
+       uid   = x.23
+       z     = true
+  */
+
+rule (modulo E) Compromise_Session:
+   [ !UserPub( uid, pk ) ]
+  --[ CompromiseSession( uid ) ]->
+   [ Out( <uid, 'session-token'> ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) Reveal_Key:
+   [ !UserKey( uid, sk ) ] --[ KeyReveal( uid ) ]-> [ Out( sk ) ]
+
+  /* has exactly the trivial AC variant */
+
+lemma protocol_executable:
+  exists-trace
+  "∃ uid action scope ctx nonce #i #j.
+    ((ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+     (ServerAccept( uid, action, scope, ctx, nonce ) @ #j)) ∧
+    (#i < #j)"
+/*
+guarded formula characterizing all satisfying traces:
+"∃ uid action scope ctx nonce #i #j.
+  (ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+  (ServerAccept( uid, action, scope, ctx, nonce ) @ #j)
+ ∧
+  #i < #j"
+*/
+simplify
+solve( !UserKey( uid, sk ) ▶₀ #i )
+  case Init_User
+  solve( !IntentIssued( ~n, action, scope, ctx, nonce ) ▶₁ #i )
+    case Issue_Intent
+    solve( OriginalRequest( ~n, action, scope, ctx, ~n.2 ) ▶₀ #j )
+      case Issue_Intent
+      solve( Intent( ~n, action, orig_scope, ctx, ~n.2 ) ▶₁ #j )
+        case Issue_Intent
+        solve( !UserPub( ~n, pk(x) ) ▶₄ #j )
+          case Init_User
+          solve( !KU( ~n ) @ #vk.1 )
+            case Compromise_Session
+            solve( !KU( ~n.2 ) @ #vk.17 )
+              case Issue_Intent
+              solve( !KU( sign(<~n, action, orig_scope, ctx, ~n.2>, ~n.1) ) @ #vk.19 )
+                case User_Approve
+                SOLVED // trace found
+              qed
+            qed
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma no_execution_without_matching_intent:
+  all-traces
+  "∀ uid action scope ctx nonce #i.
+    (ServerAccept( uid, action, scope, ctx, nonce ) @ #i) ⇒
+    ((∃ #j.
+       (ApproveIntent( uid, action, scope, ctx, nonce ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #k. (KeyReveal( uid ) @ #k) ∧ (#k < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce #i.
+  (ServerAccept( uid, action, scope, ctx, nonce ) @ #i)
+ ∧
+  (∀ #j.
+    (ApproveIntent( uid, action, scope, ctx, nonce ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #k. (KeyReveal( uid ) @ #k) ⇒ ¬(#k < #i))"
+*/
+simplify
+solve( OriginalRequest( uid, action, scope, ctx, nonce ) ▶₀ #i )
+  case Issue_Intent
+  solve( Intent( ~n, action, scope, ctx, ~n.1 ) ▶₁ #i )
+    case Issue_Intent
+    solve( !UserPub( ~n, pk(x) ) ▶₄ #i )
+      case Init_User
+      solve( !KU( sign(<~n, action, intent_scope, ctx, ~n.1>, ~n.2)
+             ) @ #vk.15 )
+        case User_Approve
+        by contradiction /* from formulas */
+      next
+        case c_sign
+        solve( !KU( ~n.2 ) @ #vk.20 )
+          case Reveal_Key
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma end_to_end_semantic_correspondence:
+  all-traces
+  "∀ uid orig_action orig_scope orig_ctx intent_action intent_scope
+     intent_ctx exec_action exec_scope exec_ctx nonce #o #p #e.
+    (((((RecordOriginal( uid, orig_action, orig_scope, orig_ctx, nonce
+         ) @ #o) ∧
+        (IssueIntent( uid, intent_action, intent_scope, intent_ctx, nonce
+         ) @ #p)) ∧
+       (ServerAccept( uid, exec_action, exec_scope, exec_ctx, nonce ) @ #e)) ∧
+      (#o < #e)) ∧
+     (#p < #e)) ⇒
+    ((((((orig_action = intent_action) ∧ (orig_scope = intent_scope)) ∧
+        (orig_ctx = intent_ctx)) ∧
+       (intent_action = exec_action)) ∧
+      (intent_scope = exec_scope)) ∧
+     (intent_ctx = exec_ctx))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid orig_action orig_scope orig_ctx intent_action intent_scope
+   intent_ctx exec_action exec_scope exec_ctx nonce #o #p #e.
+  (RecordOriginal( uid, orig_action, orig_scope, orig_ctx, nonce ) @ #o) ∧
+  (IssueIntent( uid, intent_action, intent_scope, intent_ctx, nonce
+   ) @ #p) ∧
+  (ServerAccept( uid, exec_action, exec_scope, exec_ctx, nonce ) @ #e)
+ ∧
+  (#o < #e) ∧
+  (#p < #e) ∧
+  (((¬(orig_action = intent_action)) ∨
+    (¬(orig_scope = intent_scope)) ∨
+    (¬(orig_ctx = intent_ctx)) ∨
+    (¬(intent_action = exec_action)) ∨
+    (¬(intent_scope = exec_scope)) ∨
+    (¬(intent_ctx = exec_ctx))))"
+*/
+simplify
+solve( (¬(orig_action = intent_action))  ∥
+       (¬(orig_scope = intent_scope))  ∥ (¬(orig_ctx = intent_ctx))  ∥
+       (¬(intent_action = exec_action))  ∥ (¬(intent_scope = exec_scope))  ∥
+       (¬(intent_ctx = exec_ctx)) )
+  case case_1
+  solve( !UserPub( uid, pk ) ▶₂ #o )
+    case Init_User
+    solve( OriginalRequest( ~n, exec_action, exec_scope, exec_ctx, ~n.1
+           ) ▶₀ #e )
+      case Issue_Intent
+      solve( Intent( ~n, exec_action, exec_scope, exec_ctx, ~n.1 ) ▶₁ #e )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( !UserPub( uid, pk ) ▶₂ #o )
+    case Init_User
+    solve( OriginalRequest( ~n, exec_action, exec_scope, exec_ctx, ~n.1
+           ) ▶₀ #e )
+      case Issue_Intent
+      solve( Intent( ~n, exec_action, exec_scope, exec_ctx, ~n.1 ) ▶₁ #e )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_3
+  solve( !UserPub( uid, pk ) ▶₂ #o )
+    case Init_User
+    solve( OriginalRequest( ~n, exec_action, exec_scope, exec_ctx, ~n.1
+           ) ▶₀ #e )
+      case Issue_Intent
+      solve( Intent( ~n, exec_action, exec_scope, exec_ctx, ~n.1 ) ▶₁ #e )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_4
+  solve( !UserPub( uid, pk ) ▶₂ #o )
+    case Init_User
+    solve( OriginalRequest( ~n, exec_action, exec_scope, exec_ctx, ~n.1
+           ) ▶₀ #e )
+      case Issue_Intent
+      solve( Intent( ~n, exec_action, exec_scope, exec_ctx, ~n.1 ) ▶₁ #e )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_5
+  solve( !UserPub( uid, pk ) ▶₂ #o )
+    case Init_User
+    solve( OriginalRequest( ~n, exec_action, exec_scope, exec_ctx, ~n.1
+           ) ▶₀ #e )
+      case Issue_Intent
+      solve( Intent( ~n, exec_action, exec_scope, exec_ctx, ~n.1 ) ▶₁ #e )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+next
+  case case_6
+  solve( !UserPub( uid, pk ) ▶₂ #o )
+    case Init_User
+    solve( OriginalRequest( ~n, exec_action, exec_scope, exec_ctx, ~n.1
+           ) ▶₀ #e )
+      case Issue_Intent
+      solve( Intent( ~n, exec_action, exec_scope, exec_ctx, ~n.1 ) ▶₁ #e )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+qed
+
+lemma nonce_freshness:
+  all-traces
+  "∀ uid action scope ctx nonce #i.
+    (ServerAccept( uid, action, scope, ctx, nonce ) @ #i) ⇒
+    (∃ #j. (IssueIntent( uid, action, scope, ctx, nonce ) @ #j) ∧ (#j < #i))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce #i.
+  (ServerAccept( uid, action, scope, ctx, nonce ) @ #i)
+ ∧
+  ∀ #j. (IssueIntent( uid, action, scope, ctx, nonce ) @ #j) ⇒ ¬(#j < #i)"
+*/
+simplify
+solve( OriginalRequest( uid, action, scope, ctx, nonce ) ▶₀ #i )
+  case Issue_Intent
+  solve( Intent( ~n, action, scope, ctx, ~n.1 ) ▶₁ #i )
+    case Issue_Intent
+    by contradiction /* from formulas */
+  qed
+qed
+
+lemma replay_resistance:
+  all-traces
+  "∀ uid action scope ctx nonce #i #j.
+    ((ServerAccept( uid, action, scope, ctx, nonce ) @ #i) ∧
+     (ServerAccept( uid, action, scope, ctx, nonce ) @ #j)) ⇒
+    (#i = #j)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce #i #j.
+  (ServerAccept( uid, action, scope, ctx, nonce ) @ #i) ∧
+  (ServerAccept( uid, action, scope, ctx, nonce ) @ #j)
+ ∧
+  ¬(#i = #j)"
+*/
+simplify
+solve( (#i < #j)  ∥ (#j < #i) )
+  case case_1
+  solve( OriginalRequest( uid, action, scope, ctx, nonce ) ▶₀ #i )
+    case Issue_Intent
+    solve( Intent( ~n, action, scope, ctx, ~n.1 ) ▶₁ #i )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₄ #i )
+        case Init_User
+        solve( OriginalRequest( ~n, action, intent_scope, ctx, ~n.1 ) ▶₀ #j )
+          case Issue_Intent
+          by contradiction /* cyclic */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( OriginalRequest( uid, action, scope, ctx, nonce ) ▶₀ #i )
+    case Issue_Intent
+    solve( Intent( ~n, action, scope, ctx, ~n.1 ) ▶₁ #i )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₄ #i )
+        case Init_User
+        solve( OriginalRequest( ~n, action, intent_scope, ctx, ~n.1 ) ▶₀ #j )
+          case Issue_Intent
+          by contradiction /* cyclic */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma intent_non_transferability:
+  all-traces
+  "∀ uid action scope ctx nonce action2 scope2 ctx2 #i #j.
+    (((ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+      (ServerAccept( uid, action2, scope2, ctx2, nonce ) @ #j)) ∧
+     (#i < #j)) ⇒
+    (((action = action2) ∧ (scope = scope2)) ∧ (ctx = ctx2))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce action2 scope2 ctx2 #i #j.
+  (ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+  (ServerAccept( uid, action2, scope2, ctx2, nonce ) @ #j)
+ ∧
+  (#i < #j) ∧
+  (((¬(action = action2)) ∨ (¬(scope = scope2)) ∨ (¬(ctx = ctx2))))"
+*/
+simplify
+solve( (¬(action = action2))  ∥ (¬(scope = scope2))  ∥ (¬(ctx = ctx2)) )
+  case case_1
+  solve( !UserKey( uid, sk ) ▶₀ #i )
+    case Init_User
+    solve( !IntentIssued( ~n, action, scope, ctx, nonce ) ▶₁ #i )
+      case Issue_Intent
+      solve( OriginalRequest( ~n, action2, scope2, ctx2, ~n.2 ) ▶₀ #j )
+        case Issue_Intent
+        solve( Intent( ~n, action2, orig_scope, ctx2, ~n.2 ) ▶₁ #j )
+          case Issue_Intent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_2
+  solve( !UserKey( uid, sk ) ▶₀ #i )
+    case Init_User
+    solve( !IntentIssued( ~n, action, scope, ctx, nonce ) ▶₁ #i )
+      case Issue_Intent
+      solve( OriginalRequest( ~n, action2, scope2, ctx2, ~n.2 ) ▶₀ #j )
+        case Issue_Intent
+        solve( Intent( ~n, action2, orig_scope, ctx2, ~n.2 ) ▶₁ #j )
+          case Issue_Intent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+next
+  case case_3
+  solve( !UserKey( uid, sk ) ▶₀ #i )
+    case Init_User
+    solve( !IntentIssued( ~n, action, scope, ctx, nonce ) ▶₁ #i )
+      case Issue_Intent
+      solve( OriginalRequest( ~n, action2, scope2, ctx2, ~n.2 ) ▶₀ #j )
+        case Issue_Intent
+        solve( Intent( ~n, action2, orig_scope, ctx2, ~n.2 ) ▶₁ #j )
+          case Issue_Intent
+          by contradiction /* from formulas */
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma context_confinement:
+  all-traces
+  "∀ uid action scope ctx nonce ctx2 #i #j.
+    (((ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+      (ServerAccept( uid, action, scope, ctx2, nonce ) @ #j)) ∧
+     (#i < #j)) ⇒
+    (ctx = ctx2)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce ctx2 #i #j.
+  (ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+  (ServerAccept( uid, action, scope, ctx2, nonce ) @ #j)
+ ∧
+  (#i < #j) ∧ (¬(ctx = ctx2))"
+*/
+simplify
+solve( !UserKey( uid, sk ) ▶₀ #i )
+  case Init_User
+  solve( !IntentIssued( ~n, action, scope, ctx, nonce ) ▶₁ #i )
+    case Issue_Intent
+    solve( OriginalRequest( ~n, action, scope, ctx2, ~n.2 ) ▶₀ #j )
+      case Issue_Intent
+      solve( Intent( ~n, action, orig_scope, ctx2, ~n.2 ) ▶₁ #j )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+qed
+
+lemma session_compromise_does_not_imply_execution:
+  all-traces
+  "∀ uid action scope ctx nonce #s #i.
+    (((CompromiseSession( uid ) @ #s) ∧
+      (ServerAccept( uid, action, scope, ctx, nonce ) @ #i)) ∧
+     (#s < #i)) ⇒
+    ((∃ #j.
+       (ApproveIntent( uid, action, scope, ctx, nonce ) @ #j) ∧ (#j < #i)) ∨
+     (∃ #k. (KeyReveal( uid ) @ #k) ∧ (#k < #i)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce #s #i.
+  (CompromiseSession( uid ) @ #s) ∧
+  (ServerAccept( uid, action, scope, ctx, nonce ) @ #i)
+ ∧
+  (#s < #i) ∧
+  (∀ #j.
+    (ApproveIntent( uid, action, scope, ctx, nonce ) @ #j) ⇒ ¬(#j < #i)) ∧
+  (∀ #k. (KeyReveal( uid ) @ #k) ⇒ ¬(#k < #i))"
+*/
+simplify
+solve( !UserPub( uid, pk ) ▶₀ #s )
+  case Init_User
+  solve( OriginalRequest( ~n, action, scope, ctx, nonce ) ▶₀ #i )
+    case Issue_Intent
+    solve( Intent( ~n, action, scope, ctx, ~n.1 ) ▶₁ #i )
+      case Issue_Intent
+      solve( !UserPub( ~n, pk(x) ) ▶₄ #i )
+        case Init_User
+        solve( !KU( sign(<~n, action, intent_scope, ctx, ~n.1>, ~n.2)
+               ) @ #vk.15 )
+          case User_Approve
+          by contradiction /* from formulas */
+        next
+          case c_sign
+          solve( !KU( ~n.2 ) @ #vk.20 )
+            case Reveal_Key
+            by contradiction /* from formulas */
+          qed
+        qed
+      qed
+    qed
+  qed
+qed
+
+lemma action_substitution_impossibility:
+  all-traces
+  "∀ uid action scope ctx nonce action2 #i #j.
+    (((ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+      (ServerAccept( uid, action2, scope, ctx, nonce ) @ #j)) ∧
+     (#i < #j)) ⇒
+    (action = action2)"
+/*
+guarded formula characterizing all counter-examples:
+"∃ uid action scope ctx nonce action2 #i #j.
+  (ApproveIntent( uid, action, scope, ctx, nonce ) @ #i) ∧
+  (ServerAccept( uid, action2, scope, ctx, nonce ) @ #j)
+ ∧
+  (#i < #j) ∧ (¬(action = action2))"
+*/
+simplify
+solve( !UserKey( uid, sk ) ▶₀ #i )
+  case Init_User
+  solve( !IntentIssued( ~n, action, scope, ctx, nonce ) ▶₁ #i )
+    case Issue_Intent
+    solve( OriginalRequest( ~n, action2, scope, ctx, ~n.2 ) ▶₀ #j )
+      case Issue_Intent
+      solve( Intent( ~n, action2, orig_scope, ctx, ~n.2 ) ▶₁ #j )
+        case Issue_Intent
+        by contradiction /* from formulas */
+      qed
+    qed
+  qed
+qed
+
+/* All wellformedness checks were successful. */
+
+/*
+Generated from:
+Tamarin version 1.12.0
+Maude version 3.5.1
+Git revision: UNKNOWN, branch: UNKNOWN
+Compiled at: 2026-03-08 09:49:47.765662 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: tamarin/poia_protocol.spthy
+
+  processing time: 2.27s
+  
+  protocol_executable (exists-trace): verified (10 steps)
+  no_execution_without_matching_intent (all-traces): verified (8 steps)
+  end_to_end_semantic_correspondence (all-traces): verified (26 steps)
+  nonce_freshness (all-traces): verified (4 steps)
+  replay_resistance (all-traces): verified (12 steps)
+  intent_non_transferability (all-traces): verified (17 steps)
+  context_confinement (all-traces): verified (6 steps)
+  session_compromise_does_not_imply_execution (all-traces): verified (9 steps)
+  action_substitution_impossibility (all-traces): verified (6 steps)
+
+==============================================================================
+
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory PoIA_Protocol] Theory loaded
+[Theory PoIA_Protocol] Theory translated
+[Theory PoIA_Protocol] Derivation checks started
+[Theory PoIA_Protocol] Derivation checks ended
+[Theory PoIA_Protocol] Theory closed
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done

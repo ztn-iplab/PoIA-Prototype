@@ -1,0 +1,5 @@
+scenario,baseline_success_pct,poia_success_pct
+replay,100.0,0.0
+relay_phishing,100.0,0.0
+session_misuse,100.0,0.0
+intent_substitution,100.0,0.0

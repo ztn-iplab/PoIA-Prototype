@@ -1,0 +1,49 @@
+server_ts,event,intent_id,user_id,rp_id,action,status,reason,method,latency_ms,created_at,expires_at,client_ts,scenario,payload_json
+1789035925,intent_created,SZeZEPtZjR6KV6uD,14,poia-demo-bank,deposit,pending,,,,1789035925,1789035985,,,"{""scope"": {""account_id"": 25, ""amount"": 100.0, ""currency"": ""USD""}}"
+1789035925,zt_auto_start,SZeZEPtZjR6KV6uD,14,poia-demo-bank,,,,zt_authenticator,,,,1789035925.151,,"{""scenario"": """", ""client_ts"": 1789035925.151}"
+1789035925,intent_loaded,SZeZEPtZjR6KV6uD,14,poia-demo-bank,,,,zt_authenticator,,,,1789035925.151,,"{""scenario"": """", ""client_ts"": 1789035925.151}"
+1789035925,pending_served,SZeZEPtZjR6KV6uD,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789035925,1789035985,,,
+1789035929,pending_served,SZeZEPtZjR6KV6uD,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789035925,1789035985,,,
+1789035933,intent_approve,SZeZEPtZjR6KV6uD,14,poia-demo-bank,deposit,approved,,zt_authenticator,8284,1789035925,1789035985,,,
+1789035934,zt_status_approved,SZeZEPtZjR6KV6uD,14,poia-demo-bank,,approved,,zt_authenticator,,,,1789035934.393,,"{""scenario"": """", ""client_ts"": 1789035934.393, ""status"": ""approved""}"
+1789035934,intent_execute,SZeZEPtZjR6KV6uD,14,poia-demo-bank,deposit,approved,,,,1789035925,1789035985,,,
+1789035940,intent_created,rg4n57xYGwJ7vtHm,14,poia-demo-bank,deposit,pending,,,,1789035940,1789036000,,,"{""scope"": {""account_id"": 25, ""amount"": 896.0, ""currency"": ""USD""}}"
+1789035941,zt_auto_start,rg4n57xYGwJ7vtHm,14,poia-demo-bank,,,,zt_authenticator,,,,1789035941.103,,"{""scenario"": """", ""client_ts"": 1789035941.103}"
+1789035941,intent_loaded,rg4n57xYGwJ7vtHm,14,poia-demo-bank,,,,zt_authenticator,,,,1789035941.103,,"{""scenario"": """", ""client_ts"": 1789035941.103}"
+1789035941,pending_served,rg4n57xYGwJ7vtHm,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789035940,1789036000,,,
+1789035945,pending_served,rg4n57xYGwJ7vtHm,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789035940,1789036000,,,
+1789035948,intent_approve,rg4n57xYGwJ7vtHm,14,poia-demo-bank,deposit,approved,,zt_authenticator,7596,1789035940,1789036000,,,
+1789035948,zt_status_approved,rg4n57xYGwJ7vtHm,14,poia-demo-bank,,approved,,zt_authenticator,,,,1789035948.81,,"{""scenario"": """", ""client_ts"": 1789035948.81, ""status"": ""approved""}"
+1789035948,intent_execute,rg4n57xYGwJ7vtHm,14,poia-demo-bank,deposit,approved,,,,1789035940,1789036000,,,
+1789035957,intent_created,QYxcmFslxeuLsTyZ,14,poia-demo-bank,withdrawal,pending,,,,1789035957,1789036017,,,"{""scope"": {""account_id"": 25, ""amount"": 58.0, ""currency"": ""USD""}}"
+1789035958,zt_auto_start,QYxcmFslxeuLsTyZ,14,poia-demo-bank,,,,zt_authenticator,,,,1789035958.017,,"{""scenario"": """", ""client_ts"": 1789035958.017}"
+1789035958,intent_loaded,QYxcmFslxeuLsTyZ,14,poia-demo-bank,,,,zt_authenticator,,,,1789035958.017,,"{""scenario"": """", ""client_ts"": 1789035958.017}"
+1789035958,pending_served,QYxcmFslxeuLsTyZ,14,poia-demo-bank,withdrawal,pending,,zt_authenticator,,1789035957,1789036017,,,
+1789035960,pending_served,QYxcmFslxeuLsTyZ,14,poia-demo-bank,withdrawal,pending,,zt_authenticator,,1789035957,1789036017,,,
+1789035968,intent_approve,QYxcmFslxeuLsTyZ,14,poia-demo-bank,withdrawal,approved,,zt_authenticator,10114,1789035957,1789036017,,,
+1789035968,zt_status_approved,QYxcmFslxeuLsTyZ,14,poia-demo-bank,,approved,,zt_authenticator,,,,1789035968.688,,"{""scenario"": """", ""client_ts"": 1789035968.688, ""status"": ""approved""}"
+1789035968,intent_execute,QYxcmFslxeuLsTyZ,14,poia-demo-bank,withdrawal,approved,,,,1789035957,1789036017,,,
+1789035986,intent_created,S1jsJvffeFT5GEtb,14,poia-demo-bank,withdrawal,pending,,,,1789035986,1789036046,,,"{""scope"": {""account_id"": 25, ""amount"": 8767.0, ""currency"": ""USD""}}"
+1789035986,zt_auto_start,S1jsJvffeFT5GEtb,14,poia-demo-bank,,,,zt_authenticator,,,,1789035986.287,,"{""scenario"": """", ""client_ts"": 1789035986.287}"
+1789035986,intent_loaded,S1jsJvffeFT5GEtb,14,poia-demo-bank,,,,zt_authenticator,,,,1789035986.287,,"{""scenario"": """", ""client_ts"": 1789035986.287}"
+1789035987,pending_served,S1jsJvffeFT5GEtb,14,poia-demo-bank,withdrawal,pending,,zt_authenticator,,1789035986,1789036046,,,
+1789035990,pending_served,S1jsJvffeFT5GEtb,14,poia-demo-bank,withdrawal,pending,,zt_authenticator,,1789035986,1789036046,,,
+1789035993,intent_approve,S1jsJvffeFT5GEtb,14,poia-demo-bank,withdrawal,approved,,zt_authenticator,7757,1789035986,1789036046,,,
+1789035994,zt_status_approved,S1jsJvffeFT5GEtb,14,poia-demo-bank,,approved,,zt_authenticator,,,,1789035994.965,,"{""scenario"": """", ""client_ts"": 1789035994.965, ""status"": ""approved""}"
+1789035994,intent_execute,S1jsJvffeFT5GEtb,14,poia-demo-bank,withdrawal,approved,,,,1789035986,1789036046,,,
+1789036001,intent_created,cfVZa62Z8ugSKSal,14,poia-demo-bank,deposit,pending,,,,1789036001,1789036061,,,"{""scope"": {""account_id"": 25, ""amount"": 98.0, ""currency"": ""USD""}}"
+1789036001,zt_auto_start,cfVZa62Z8ugSKSal,14,poia-demo-bank,,,,zt_authenticator,,,,1789036001.42,,"{""scenario"": """", ""client_ts"": 1789036001.42}"
+1789036001,intent_loaded,cfVZa62Z8ugSKSal,14,poia-demo-bank,,,,zt_authenticator,,,,1789036001.42,,"{""scenario"": """", ""client_ts"": 1789036001.42}"
+1789036001,pending_served,cfVZa62Z8ugSKSal,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789036001,1789036061,,,
+1789036005,pending_served,cfVZa62Z8ugSKSal,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789036001,1789036061,,,
+1789036009,intent_approve,cfVZa62Z8ugSKSal,14,poia-demo-bank,deposit,approved,,zt_authenticator,7824,1789036001,1789036061,,,
+1789036010,zt_status_approved,cfVZa62Z8ugSKSal,14,poia-demo-bank,,approved,,zt_authenticator,,,,1789036010.597,,"{""scenario"": """", ""client_ts"": 1789036010.597, ""status"": ""approved""}"
+1789036010,intent_execute,cfVZa62Z8ugSKSal,14,poia-demo-bank,deposit,approved,,,,1789036001,1789036061,,,
+1789036016,intent_created,CT4a83c6Bwis7Uju,14,poia-demo-bank,deposit,pending,,,,1789036016,1789036076,,,"{""scope"": {""account_id"": 25, ""amount"": 697.0, ""currency"": ""USD""}}"
+1789036016,zt_auto_start,CT4a83c6Bwis7Uju,14,poia-demo-bank,,,,zt_authenticator,,,,1789036016.748,,"{""scenario"": """", ""client_ts"": 1789036016.748}"
+1789036016,intent_loaded,CT4a83c6Bwis7Uju,14,poia-demo-bank,,,,zt_authenticator,,,,1789036016.747,,"{""scenario"": """", ""client_ts"": 1789036016.747}"
+1789036017,pending_served,CT4a83c6Bwis7Uju,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789036016,1789036076,,,
+1789036021,pending_served,CT4a83c6Bwis7Uju,14,poia-demo-bank,deposit,pending,,zt_authenticator,,1789036016,1789036076,,,
+1789036023,intent_approve,CT4a83c6Bwis7Uju,14,poia-demo-bank,deposit,approved,,zt_authenticator,6536,1789036016,1789036076,,,
+1789036023,zt_status_approved,CT4a83c6Bwis7Uju,14,poia-demo-bank,,approved,,zt_authenticator,,,,1789036023.533,,"{""scenario"": """", ""client_ts"": 1789036023.533, ""status"": ""approved""}"
+1789036023,intent_execute,CT4a83c6Bwis7Uju,14,poia-demo-bank,deposit,approved,,,,1789036016,1789036076,,,

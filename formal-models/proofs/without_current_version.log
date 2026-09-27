@@ -1,0 +1,33 @@
+
+==============================================================================
+summary of summaries:
+
+analyzed: formal-models/proofs/without_current_version.spthy
+
+  output:          formal-models/proofs/without_current_version_counterexample.spthy
+  processing time: 3.48s
+  
+  no_execution_after_version_change (all-traces): falsified - found trace (113 steps)
+
+==============================================================================
+maude tool: 'maude'
+ checking version: 3.5.1. OK.
+ checking installation: OK.
+[Theory without_current_version] Theory loaded
+[Theory without_current_version] Theory translated
+[Theory without_current_version] Derivation checks started
+[Theory without_current_version] Derivation checks ended
+[Theory without_current_version] Theory closed
+searching for attacks at depth: 1
+[Saturating Sources] Step 1 (Max 5)
+[Saturating Sources] Done
+searching for attacks at depth: 2
+searching for attacks at depth: 3
+searching for attacks at depth: 4
+searching for attacks at depth: 5
+searching for attacks at depth: 6
+searching for attacks at depth: 7
+searching for attacks at depth: 8
+searching for attacks at depth: 9
+searching for attacks at depth: 10
+attack found at depth: 10

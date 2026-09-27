@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel">
+  <h1>Preparing statement export</h1>
+  <p class="note">Your CSV download will begin shortly. You will return to statements automatically.</p>
+  <p><a class="ghost" href="{{ download_url | safe }}">Download now</a></p>
+</section>
+<script>
+  const downloadUrl = "{{ download_url | safe }}";
+  const redirectUrl = "{{ redirect_url }}";
+  if (downloadUrl) {
+    window.location.href = downloadUrl;
+  }
+  setTimeout(() => {
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  }, 1200);
+</script>
+{% endblock %}

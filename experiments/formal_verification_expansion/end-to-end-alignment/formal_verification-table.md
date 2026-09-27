@@ -1,0 +1,32 @@
+# PoIA Formal Verification Expansion
+
+## Lemma Result Table
+
+| Lemma | Property | Threat Mapping | Result |
+|---|---|---|---|
+| `protocol_executable` | Reachable honest approval and acceptance | Non-vacuity check | verified (10 steps) |
+| `no_execution_without_matching_intent` | No execution without matching intent | Session misuse, missing proof | verified (8 steps) |
+| `end_to_end_semantic_correspondence` | Original, displayed, and executed semantics correspond | Pre-display and post-signature substitution | verified (26 steps) |
+| `nonce_freshness` | Nonce freshness / issued intent existence | Injected or unissued intent | verified (4 steps) |
+| `replay_resistance` | Replay resistance | Proof replay | verified (12 steps) |
+| `intent_non_transferability` | Intent non-transferability | Intent/scope substitution | verified (17 steps) |
+| `context_confinement` | Context confinement | Wrong RP/session/tenant context | verified (6 steps) |
+| `session_compromise_does_not_imply_execution` | Session compromise does not imply execution | Stolen session | verified (9 steps) |
+| `action_substitution_impossibility` | Action substitution impossibility | Cross-action reuse | verified (6 steps) |
+
+## Repository Reproducibility
+
+Run from the repository root:
+
+```bash
+./scripts/run_tamarin_poia.sh
+```
+
+Expanded model:
+
+```text
+tamarin/poia_protocol.spthy
+```
+
+Tamarin status: `proof output written to experiments/formal_verification_expansion/end-to-end-alignment/formal_verification-tamarin-output.txt`
+Wellformedness: `successful`

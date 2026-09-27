@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="participant-shell">
+  {% if not participant_session %}
+    <header class="participant-heading">
+      <p class="kicker">Interactive work session</p>
+      <h1>Banking and cloud tasks</h1>
+      <p>In this session you will complete a sequence of everyday operations using your account and its available authorization tools.</p>
+    </header>
+    <div class="participant-consent">
+      <h2>Before you begin</h2>
+      <p>Your operation choices, authorization decisions, completion times, and system outcomes will be recorded under a pseudonymous participant code. Do not enter real financial or confidential information. You may stop at any time by closing this page.</p>
+      {% if study_readiness.ready %}
+        <p>Signing authorizes the displayed operation, subject to server checks. Declining does not authorize it. A closed passkey window without a signature leaves the choice pending. No real money or personal files are involved. Some study details will be explained after the session.</p>
+        <label>What does signing an operation mean?
+          <select id="sign-meaning"><option value="">Choose one</option><option value="authorize">Authorize the displayed operation</option><option value="dismiss">Only dismiss the message</option></select>
+        </label>
+        <label>What does declining an operation mean?
+          <select id="decline-meaning"><option value="">Choose one</option><option value="later">Authorize it for later</option><option value="do_not_authorize">Do not authorize it</option></select>
+        </label>
+        <label class="consent-check"><input type="checkbox" id="consent-check" /> I understand and agree to take part in this session.</label>
+        <button type="button" id="begin-session" disabled>Begin session</button>
+        <p class="warn" id="begin-error" hidden></p>
+      {% else %}
+        <p class="warn">This account is not ready for the session. Please complete account, passkey, and ZT-Authenticator setup first.</p>
+      {% endif %}
+    </div>
+  {% elif participant_session.status == 'complete' %}
+    <header class="participant-heading">
+      <p class="kicker">Session complete</p>
+      <h1>Thank you</h1>
+      <p>Your work session has been recorded.</p>
+    </header>
+    {% if not participant_session.debrief_shown_at %}
+    <form class="participant-debrief" id="post-session-form" data-session="{{ participant_session.session_id }}">
+      <h2>Final questions</h2>
+      <p>Please answer these questions before the session explanation is shown.</p>
+      <label>What did you think this session was evaluating?
+        <textarea name="purpose_guess" rows="4" maxlength="1000" required></textarea>
+      </label>
+      <label>Did anything about the tasks or authorization requests seem unusual?
+        <select name="noticed_unusual" required><option value="">Choose one</option><option value="no">No</option><option value="yes">Yes</option><option value="unsure">Not sure</option></select>
+      </label>
+      <label>Please briefly explain your answer.
+        <textarea name="unusual_detail" rows="3" maxlength="1000"></textarea>
+      </label>
+      {% if participant_session.design_version in ['2026-09-03-explicit-decisions-v1', '2026-09-04-explicit-decisions-v2', '2026-09-04-diverse-operations-v3', '2026-09-04-participant-beneficiaries-v4'] %}
+      {% for name, question in [('confusion', 'How much confusion did you experience while using the authorization interfaces?'), ('frustration', 'How much frustration did you experience while using the authorization interfaces?')] %}
+      <label>{{ question }}
+        <select name="{{ name }}" required>
+          <option value="">Choose one</option><option value="none">None</option><option value="slight">Slight</option><option value="moderate">Moderate</option><option value="high">High</option><option value="very_high">Very high</option><option value="prefer_not">Prefer not to answer</option>
+        </select>
+      </label>
+      {% endfor %}
+      <label>Did a technical problem affect any of your choices?
+        <select name="technical_difficulty" required><option value="">Choose one</option><option value="no">No</option><option value="yes">Yes</option><option value="unsure">Not sure</option><option value="prefer_not">Prefer not to answer</option></select>
+      </label>
+      <label>Describe a request you signed or declined and what led to that choice. Optional.
+        <textarea name="decision_explanation" rows="3" maxlength="1000"></textarea>
+      </label>
+      {% if participant_session.design_version in ['2026-09-04-explicit-decisions-v2', '2026-09-04-diverse-operations-v3', '2026-09-04-participant-beneficiaries-v4'] %}
+      <label>If this authorization approach were available for sensitive operations, how likely would you be to use it in everyday life?
+        <select name="real_world_use_likelihood" required>
+          <option value="">Choose one</option>
+          <option value="very_unlikely">Very unlikely</option>
+          <option value="unlikely">Unlikely</option>
+          <option value="neither">Neither likely nor unlikely</option>
+          <option value="likely">Likely</option>
+          <option value="very_likely">Very likely</option>
+          <option value="prefer_not">Prefer not to answer</option>
+        </select>
+      </label>
+      <label>What should be changed or improved about the authorization experience? You may write "No changes".
+        <textarea name="improvement_suggestion" rows="3" maxlength="1000" required></textarea>
+      </label>
+      {% endif %}
+      {% endif %}
+      <fieldset class="semantic-field-question">
+        <legend>Which details, if any, did you usually compare between the task and the authorization request? Select all that apply.</legend>
+        <div class="semantic-field-options">
+          <label><input type="checkbox" name="semantic_fields" value="operation" /> Operation or action</label>
+          <label><input type="checkbox" name="semantic_fields" value="amount" /> Amount</label>
+          <label><input type="checkbox" name="semantic_fields" value="destination" /> Recipient or destination account</label>
+          <label><input type="checkbox" name="semantic_fields" value="source_account" /> Source account</label>
+          <label><input type="checkbox" name="semantic_fields" value="dates_filters" /> Statement dates or filters</label>
+          <label><input type="checkbox" name="semantic_fields" value="file_name" /> File name</label>
+          <label><input type="checkbox" name="semantic_fields" value="classification" /> Classification or access level</label>
+          <label><input type="checkbox" name="semantic_fields" value="service_context" /> Service or relying party</label>
+          <label><input type="checkbox" name="semantic_fields" value="authorizing_identity" /> Authorizing account or identity</label>
+          <label><input type="checkbox" name="semantic_fields" value="none" /> I did not compare any details</label>
+          <label><input type="checkbox" name="semantic_fields" value="other" /> Other</label>
+        </div>
+        <label class="semantic-other" hidden>Other detail
+          <input type="text" name="semantic_other" maxlength="500" />
+        </label>
+      </fieldset>
+      <label>How easy or difficult was it to determine whether an authorization request matched your task?
+        <select name="matching_ease" required>
+          <option value="">Choose one</option>
+          <option value="very_easy">Very easy</option>
+          <option value="easy">Easy</option>
+          <option value="neither">Neither easy nor difficult</option>
+          <option value="difficult">Difficult</option>
+          <option value="very_difficult">Very difficult</option>
+          <option value="did_not_check">I did not try to determine this</option>
+        </select>
+      </label>
+      <!--
+        Human-Computer Trust in Automation short scale (Jian, Bisantz &
+        Drury, 2000). These 7 items are the ONLY items in this questionnaire
+        based on a validated psychometric instrument. See the citation
+        comment above TRUST_SCALE_ITEMS in app/human_study.py. Every other
+        question on this page is descriptive self-report, not a validated
+        scale.
+      -->
+      <fieldset class="trust-scale-questionnaire">
+        <legend>Trust in the confirmation screen</legend>
+        <p>For each statement, choose how much you agree or disagree, thinking about the confirmation screen you saw before signing each request.</p>
+        {% for name, question in [
+          ('trust_confident', 'I felt confident relying on the confirmation screen when deciding whether to sign.'),
+          ('trust_secure', 'The confirmation screen made me feel my information was secure.'),
+          ('trust_integrity', 'The confirmation screen was honest about what it was about to do.'),
+          ('trust_dependable', 'I could depend on the confirmation screen to show me accurate information.'),
+          ('trust_reliable', 'The confirmation screen was reliable.'),
+          ('trust_overall', 'Overall, I trusted the confirmation screen.'),
+          ('trust_familiar', 'By the end of the session, I felt familiar with how the confirmation screen worked.'),
+        ] %}
+        <label>{{ question }}
+          <select name="{{ name }}" required>
+            <option value="">Choose one</option>
+            <option value="strongly_disagree">Strongly disagree</option>
+            <option value="disagree">Disagree</option>
+            <option value="somewhat_disagree">Somewhat disagree</option>
+            <option value="neutral">Neither agree nor disagree</option>
+            <option value="somewhat_agree">Somewhat agree</option>
+            <option value="agree">Agree</option>
+            <option value="strongly_agree">Strongly agree</option>
+            <option value="prefer_not">Prefer not to answer</option>
+          </select>
+        </label>
+        {% endfor %}
+      </fieldset>
+      <fieldset class="participant-background-questionnaire">
+        <legend>Final background questions</legend>
+        <label>Age band
+          <select name="age_band" required>
+            <option value="">Choose one</option>
+            <option value="18_24">18-24</option>
+            <option value="25_34">25-34</option>
+            <option value="35_44">35-44</option>
+            <option value="45_54">45-54</option>
+            <option value="55_64">55-64</option>
+            <option value="65_plus">65 or older</option>
+            <option value="prefer_not">Prefer not to say</option>
+          </select>
+        </label>
+        <label>How often do you use online or mobile banking?
+          <select name="banking_frequency" required>
+            <option value="">Choose one</option>
+            <option value="never">Never</option>
+            <option value="less_than_monthly">Less than monthly</option>
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="several_weekly">Several times per week</option>
+            <option value="daily">Daily</option>
+          </select>
+        </label>
+        <label>Before today, how familiar were you with passkeys?
+          <select name="passkey_familiarity" required>
+            <option value="">Choose one</option>
+            <option value="not_familiar">Not familiar</option>
+            <option value="heard_of">Heard of them</option>
+            <option value="used_once_twice">Used once or twice</option>
+            <option value="occasional">Use occasionally</option>
+            <option value="regular">Use regularly</option>
+          </select>
+        </label>
+        <label>Before today, how familiar were you with authenticator apps?
+          <select name="authenticator_familiarity" required>
+            <option value="">Choose one</option>
+            <option value="not_familiar">Not familiar</option>
+            <option value="heard_of">Heard of them</option>
+            <option value="used_once_twice">Used once or twice</option>
+            <option value="occasional">Use occasionally</option>
+            <option value="regular">Use regularly</option>
+          </select>
+        </label>
+        <label>Which best describes your information-technology or security experience?
+          <select name="technical_experience" required>
+            <option value="">Choose one</option>
+            <option value="none">No relevant experience</option>
+            <option value="general_it">General IT experience</option>
+            <option value="security_study">Security study or training</option>
+            <option value="security_professional">Security professional experience</option>
+            <option value="prefer_not">Prefer not to say</option>
+          </select>
+        </label>
+        <label>How easy was it to review the operation details with WebAuthn?
+          <select name="webauthn_review_ease" required>
+            <option value="">Choose one</option>
+            <option value="very_easy">Very easy</option>
+            <option value="easy">Easy</option>
+            <option value="neither">Neither easy nor difficult</option>
+            <option value="difficult">Difficult</option>
+            <option value="very_difficult">Very difficult</option>
+            <option value="unable_to_judge">Unable to judge</option>
+          </select>
+        </label>
+        <label>How easy was it to review the operation details with ZT-Authenticator?
+          <select name="zt_review_ease" required>
+            <option value="">Choose one</option>
+            <option value="very_easy">Very easy</option>
+            <option value="easy">Easy</option>
+            <option value="neither">Neither easy nor difficult</option>
+            <option value="difficult">Difficult</option>
+            <option value="very_difficult">Very difficult</option>
+            <option value="unable_to_judge">Unable to judge</option>
+          </select>
+        </label>
+        <label>Which signing method did you prefer overall?
+          <select name="backend_preference" required>
+            <option value="">Choose one</option>
+            <option value="webauthn">WebAuthn</option>
+            <option value="zt_authenticator">ZT-Authenticator</option>
+            <option value="no_preference">No preference</option>
+            <option value="task_dependent">It depends on the task</option>
+          </select>
+        </label>
+        <label>Briefly explain your preference.
+          <textarea name="preference_reason" rows="3" maxlength="1000" required></textarea>
+        </label>
+        <label>Is there anything else you would like to tell us? <span class="note">Optional</span>
+          <textarea name="final_comment" rows="3" maxlength="1000"></textarea>
+        </label>
+      </fieldset>
+      <button type="submit">Continue</button>
+      <p class="warn" id="post-session-error" hidden></p>
+    </form>
+    {% else %}
+    <div class="participant-debrief" id="participant-debrief">
+      <h2>Study debrief</h2>
+      <p>This study examined whether people notice authorization details during ordinary tasks without first being told that altered requests may appear.</p>
+      <p>Some authorization prompts intentionally differed from the operation entered on the preceding screen. Other prompts were unchanged controls. In post-authorization cases, the attempted execution differed only after authorization. The PoIA server independently compared the original operation, displayed authorization, and requested execution; mismatching operations were rejected even when an altered prompt was approved.</p>
+      <p>All transfers, statements, and cloud files in this environment are synthetic. You may ask the researcher to withdraw your session record after reading this explanation.</p>
+      <label class="consent-check"><input type="checkbox" id="debrief-check" /> I have read the debrief.</label>
+      <button type="button" id="acknowledge-debrief" disabled>Acknowledge</button>
+    </div>
+    {% endif %}
+  {% else %}
+    <header class="participant-heading participant-heading--task">
+      <div>
+        <p class="kicker">Work session</p>
+        <h1>
+          {% if participant_step.family == 'transfer' %}Make a transfer
+          {% elif participant_step.family == 'withdrawal' %}Make a withdrawal
+          {% elif participant_step.family == 'beneficiary' %}Add a beneficiary
+          {% elif participant_step.family == 'statement' %}Export a statement
+          {% else %}Manage a cloud file{% endif %}
+        </h1>
+      </div>
+      <div class="participant-progress" aria-label="Task progress">
+        <strong>{{ participant_progress }} of {{ participant_total }}</strong>
+        <span>tasks</span>
+      </div>
+    </header>
+
+    {% if active_trial %}
+      <section class="participant-wait" data-session="{{ participant_session.session_id }}">
+        <div class="participant-spinner" aria-hidden="true"></div>
+        <h2>Authorization requested</h2>
+        <p>
+          {% if participant_step.backend == 'zt_authenticator' %}
+            Continue on your ZT-Authenticator.
+          {% else %}
+            Sign or decline the operation in the authorization dialog.
+          {% endif %}
+        </p>
+        <p class="note" id="participant-status">Waiting for your response...</p>
+      </section>
+    {% else %}
+      <form id="participant-operation" class="participant-task" data-session="{{ participant_session.session_id }}">
+        {% if participant_step.family == 'transfer' %}
+          <p class="task-prompt">Send a payment to one of the listed recipients. Choose the amount you wish to use for this task.</p>
+          <div class="participant-form-grid">
+            <label>From account
+              <select name="from_account" required>
+                {% for account in accounts %}<option value="{{ account.id }}">{{ account.account_type|title }}</option>{% endfor %}
+              </select>
+            </label>
+            <label>Recipient
+              <select name="external_account" required>
+                <optgroup label="Study recipient directory">
+                  {% for number, name in recipients %}<option value="{{ number }}">{{ name }} · {{ number }}</option>{% endfor %}
+                </optgroup>
+                {% if participant_beneficiaries %}
+                  <optgroup label="Your beneficiaries">
+                    {% for beneficiary in participant_beneficiaries %}
+                      <option value="{{ beneficiary.account_number }}">{{ beneficiary.name }} · {{ beneficiary.bank }} · {{ beneficiary.account_number }}</option>
+                    {% endfor %}
+                  </optgroup>
+                {% endif %}
+              </select>
+            </label>
+            <label>Amount (USD)
+              <input name="amount" type="number" min="0.01" max="1000000000" step="0.01" inputmode="decimal" required />
+            </label>
+          </div>
+          <button type="submit">Continue</button>
+        {% elif participant_step.family == 'withdrawal' %}
+          <p class="task-prompt">Withdraw a synthetic amount from one of your study accounts.</p>
+          <div class="participant-form-grid">
+            <label>Account
+              <select name="account_id" required>
+                {% for account in accounts %}<option value="{{ account.id }}">{{ account.account_type|title }}</option>{% endfor %}
+              </select>
+            </label>
+            <label>Amount (USD)
+              <input name="amount" type="number" min="0.01" max="1000000000" step="0.01" inputmode="decimal" required />
+            </label>
+          </div>
+          <button type="submit">Continue</button>
+        {% elif participant_step.family == 'beneficiary' %}
+          <p class="task-prompt">Add a beneficiary of your choice. Use synthetic information only.</p>
+          <div class="participant-form-grid">
+            <label>Beneficiary name
+              <input name="name" type="text" maxlength="100" autocomplete="off" required />
+            </label>
+            <label>Bank
+              <input name="bank" type="text" maxlength="100" autocomplete="off" required />
+            </label>
+            <label>Account number
+              <input name="account_number" type="text" minlength="4" maxlength="34" pattern="[0-9]+" inputmode="numeric" autocomplete="off" required />
+            </label>
+          </div>
+          <button type="submit">Add beneficiary</button>
+        {% elif participant_step.family == 'statement' %}
+          <p class="task-prompt">Export a statement for an account and date range of your choice.</p>
+          <div class="participant-form-grid">
+            <label>Account
+              <select name="account_id" required>
+                {% for account in accounts %}<option value="{{ account.id }}">{{ account.account_type|title }}</option>{% endfor %}
+              </select>
+            </label>
+            <label>Transaction type
+              <select name="txn_type"><option value="">All transactions</option><option value="transfer">Transfers</option><option value="deposit">Deposits</option><option value="withdrawal">Withdrawals</option></select>
+            </label>
+            <label>Date from <input name="date_from" type="date" required /></label>
+            <label>Date to <input name="date_to" type="date" required /></label>
+          </div>
+          <button type="submit">Export statement</button>
+        {% else %}
+          <p class="task-prompt">
+            {% if participant_step.operation == 'cloud_file_delete' %}Delete one of the available files.
+            {% elif participant_step.operation == 'cloud_file_download' %}Download one of the available files.
+            {% else %}Open one of the available files.{% endif %}
+          </p>
+          <div class="participant-files" role="radiogroup" aria-label="Available files">
+            {% for resource in cloud_resources if resource.status == 'active' %}
+              <label class="participant-file">
+                <input type="radio" name="resource_id" value="{{ resource.resource_id }}" {% if loop.first %}checked{% endif %} />
+                <span><strong>{{ resource.resource_name }}</strong><small>{{ resource.classification|title }} · Version {{ resource.version }}</small></span>
+              </label>
+            {% endfor %}
+          </div>
+          <button type="submit">
+            {% if participant_step.operation == 'cloud_file_delete' %}Delete file
+            {% elif participant_step.operation == 'cloud_file_download' %}Download file
+            {% else %}Open file{% endif %}
+          </button>
+        {% endif %}
+        <p class="warn" id="participant-error" hidden></p>
+      </form>
+    {% endif %}
+  {% endif %}
+</section>
+
+<script>
+(() => {
+  const consent = document.getElementById('consent-check');
+  const begin = document.getElementById('begin-session');
+  if (consent && begin) {
+    const signMeaning = document.getElementById('sign-meaning');
+    const declineMeaning = document.getElementById('decline-meaning');
+    const error = document.getElementById('begin-error');
+    const update = () => { begin.disabled = !consent.checked || !signMeaning.value || !declineMeaning.value; };
+    [consent, signMeaning, declineMeaning].forEach(input => input.addEventListener('change', update));
+    begin.addEventListener('click', async () => {
+      begin.disabled = true;
+      try {
+      const response = await fetch('/api/poia/experiment/participant/begin', { method: 'POST', credentials: 'include', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({consent: consent.checked, sign_meaning: signMeaning.value, decline_meaning: declineMeaning.value}) });
+      const body = await response.json();
+      if (response.ok) window.location.assign(body.next_url);
+      else { error.hidden = false; error.textContent = body.message || 'The session could not be started. Please ask the researcher for help.'; update(); }
+      } catch (_) { error.hidden = false; error.textContent = 'The connection was interrupted. Please try again.'; update(); }
+    });
+  }
+
+  const form = document.getElementById('participant-operation');
+  if (form) {
+    const today = new Date();
+    const earlier = new Date(today); earlier.setDate(today.getDate() - 30);
+    const dateTo = form.elements.date_to;
+    const dateFrom = form.elements.date_from;
+    if (dateTo) dateTo.value = today.toISOString().slice(0, 10);
+    if (dateFrom) dateFrom.value = earlier.toISOString().slice(0, 10);
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = form.querySelector('button[type="submit"]');
+      const error = document.getElementById('participant-error');
+      const amountInput = form.elements.amount;
+      if (amountInput) {
+        const amount = Number(amountInput.value);
+        if (!Number.isFinite(amount) || amount <= 0) {
+          error.textContent = 'Amount must be greater than 0.';
+          error.hidden = false;
+          amountInput.focus();
+          return;
+        }
+      }
+      button.disabled = true; error.hidden = true;
+      const payload = Object.fromEntries(new FormData(form).entries());
+      payload.session_id = form.dataset.session;
+      const response = await fetch('/api/poia/experiment/participant/operate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload)
+      });
+      const body = await response.json();
+      if (response.ok) window.location.assign(body.next_url);
+      else { error.textContent = body.message || 'The operation could not be started.'; error.hidden = false; button.disabled = false; }
+    });
+  }
+
+  const waiting = document.querySelector('.participant-wait');
+  if (waiting) {
+    const poll = async () => {
+      const response = await fetch(`/api/poia/experiment/participant/status?session=${encodeURIComponent(waiting.dataset.session)}`, { credentials: 'include' });
+      const body = await response.json();
+      if (body.status === 'closed' || body.status === 'complete') window.location.assign(body.next_url);
+      else window.setTimeout(poll, 1200);
+    };
+    window.setTimeout(poll, 800);
+  }
+
+  const debrief = document.getElementById('debrief-check');
+  const acknowledge = document.getElementById('acknowledge-debrief');
+  if (debrief && acknowledge) {
+    debrief.addEventListener('change', () => { acknowledge.disabled = !debrief.checked; });
+    acknowledge.addEventListener('click', async () => {
+      acknowledge.disabled = true;
+      await fetch('/api/poia/experiment/participant/debrief', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include',
+        body: JSON.stringify({ session_id: '{{ participant_session.session_id if participant_session else "" }}', phase: 'acknowledge' })
+      });
+      acknowledge.textContent = 'Acknowledged';
+    });
+  }
+
+  const postSession = document.getElementById('post-session-form');
+  if (postSession) {
+    const semanticChecks = [...postSession.querySelectorAll('input[name="semantic_fields"]')];
+    const otherWrap = postSession.querySelector('.semantic-other');
+    semanticChecks.forEach((check) => check.addEventListener('change', () => {
+      if (check.value === 'none' && check.checked) {
+        semanticChecks.forEach((item) => { if (item !== check) item.checked = false; });
+      } else if (check.checked) {
+        const none = semanticChecks.find((item) => item.value === 'none');
+        if (none) none.checked = false;
+      }
+      const other = semanticChecks.find((item) => item.value === 'other');
+      otherWrap.hidden = !other.checked;
+      otherWrap.querySelector('input').required = other.checked;
+    }));
+    postSession.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const formData = new FormData(postSession);
+      const payload = Object.fromEntries(formData.entries());
+      payload.semantic_fields = formData.getAll('semantic_fields');
+      payload.session_id = postSession.dataset.session;
+      payload.phase = 'questions';
+      const button = postSession.querySelector('button');
+      button.disabled = true;
+      const response = await fetch('/api/poia/experiment/participant/debrief', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'include', body: JSON.stringify(payload)
+      });
+      if (response.ok) window.location.reload();
+      else { document.getElementById('post-session-error').hidden = false; button.disabled = false; }
+    });
+  }
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{
+  "experiment": "formal_verification_expansion",
+  "lemmas": [
+    {
+      "lemma": "protocol_executable",
+      "property": "Reachable honest approval and acceptance",
+      "threat_mapping": "Non-vacuity check"
+    },
+    {
+      "lemma": "no_execution_without_matching_intent",
+      "property": "No execution without matching intent",
+      "threat_mapping": "Session misuse, missing proof"
+    },
+    {
+      "lemma": "end_to_end_semantic_correspondence",
+      "property": "Original, displayed, and executed semantics correspond",
+      "threat_mapping": "Pre-display and post-signature substitution"
+    },
+    {
+      "lemma": "nonce_freshness",
+      "property": "Nonce freshness / issued intent existence",
+      "threat_mapping": "Injected or unissued intent"
+    },
+    {
+      "lemma": "replay_resistance",
+      "property": "Replay resistance",
+      "threat_mapping": "Proof replay"
+    },
+    {
+      "lemma": "intent_non_transferability",
+      "property": "Intent non-transferability",
+      "threat_mapping": "Intent/scope substitution"
+    },
+    {
+      "lemma": "context_confinement",
+      "property": "Context confinement",
+      "threat_mapping": "Wrong RP/session/tenant context"
+    },
+    {
+      "lemma": "session_compromise_does_not_imply_execution",
+      "property": "Session compromise does not imply execution",
+      "threat_mapping": "Stolen session"
+    },
+    {
+      "lemma": "action_substitution_impossibility",
+      "property": "Action substitution impossibility",
+      "threat_mapping": "Cross-action reuse"
+    }
+  ],
+  "run_id": null,
+  "tamarin_status": {
+    "available": true,
+    "completed_at": 1788403852,
+    "duration_seconds": 3,
+    "lemma_results": {
+      "action_substitution_impossibility": "verified (6 steps)",
+      "context_confinement": "verified (6 steps)",
+      "end_to_end_semantic_correspondence": "verified (26 steps)",
+      "intent_non_transferability": "verified (17 steps)",
+      "no_execution_without_matching_intent": "verified (8 steps)",
+      "nonce_freshness": "verified (4 steps)",
+      "protocol_executable": "verified (10 steps)",
+      "replay_resistance": "verified (12 steps)",
+      "session_compromise_does_not_imply_execution": "verified (9 steps)"
+    },
+    "note": "proof output written to experiments/formal_verification_expansion/end-to-end-alignment/formal_verification-tamarin-output.txt",
+    "returncode": 0,
+    "started_at": 1788403849,
+    "wellformedness": "successful"
+  }
+}

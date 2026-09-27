@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "experiment": "RQ3_cross_domain",
+  "domains": [
+    {"id": "transactional", "label": "Transactional", "operation": "Transfer value to a specified beneficiary"},
+    {"id": "iam", "label": "Identity / privilege administration", "operation": "Grant a role to a principal in a tenant"},
+    {"id": "cloud", "label": "Cloud / system administration", "operation": "Delete or reconfigure a production resource"},
+    {"id": "data_export", "label": "Sensitive-data export", "operation": "Export a specified dataset to a recipient"}
+  ],
+  "mutations": ["action", "target", "scope", "context", "replay"]
+}

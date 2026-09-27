@@ -1,0 +1,165 @@
+/**
+ * PoIA v2 - Atomic Referent Binding, candidate revision.
+ *
+ * NOT YET RUN BY ME. I have no working tamarin-prover in my environment
+ * (confirmed absent from both the cloud container and the sandboxed Linux
+ * VM this edit was written in). This file is a diagnosis-driven proposal
+ * for atomic_referent_binding.spthy's two non-terminating lemmas
+ * (causal_authorization, no_execution_after_version_change under
+ * --prove --bound=10/15); it changes exactly one thing and is meant to be
+ * run, not trusted, before anything in this header is treated as fact.
+ *
+ * DIAGNOSIS. This project's own referent_state_integrity.spthy documents
+ * three independently-isolated causes of Tamarin non-termination in this
+ * exact family of protocol (persistent-content / mutable-referent /
+ * signed-execution models), found by bisection across ~20 minimal test
+ * theories. atomic_referent_binding.spthy already applies fix (1) of that
+ * bisection (content lives in a persistent !Version(r,v,c) fact; only a
+ * small content-free Current(r,v) pointer is linear) and deliberately does
+ * NOT apply fix (2) (bounding mutation to one exercise per trace) - that is
+ * the whole point of this model, since bounding mutation is exactly the
+ * restriction the "single-action adversary too narrow" critique objects to
+ * in the existing theories. But it also does not apply fix (3) (identity
+ * off the wire), and appears not to have been checked against it:
+ *
+ *   - `u` appears inside Out(<u,n,a,r,v,h(c)>) in Issue - a value that is
+ *     also the SELECTOR for a persistent, single-user keypair fact appears
+ *     directly in a network-visible message.
+ *   - `u` appears inside the argument of sign(<u,n,a,r,v,d>,sk) in both
+ *     Approve and Execute - directly inside the cryptographic term Tamarin
+ *     has to unify against during backward search, for every rule that
+ *     produces or consumes a term shaped like sign(<_,...>,sk).
+ *
+ * The prior theory's header describes this exact pattern - "threading the
+ * same uid variable through both a persistent key-selection fact AND the
+ * network-carried / signed tuple reintroduces the blowup... regardless of
+ * how many users exist" - as independently sufficient to cause the same
+ * non-termination as unbounded mutation, discovered and fixed in isolation
+ * from the mutation-boundedness question. Since this model's two failing
+ * lemmas (causal_authorization, no_execution_after_version_change) are
+ * exactly the two that reason about signed messages across time - the
+ * same shape as the lemmas that motivated fix (3) originally - this is the
+ * most likely single cause to try first, and it is cheap to try -- though,
+ * per the OUTCOME and correspondence-argument notes below, not free of
+ * assumptions and not, on its own, what resolved the two failing lemmas.
+ *
+ * THE ONE CHANGE. `u` still selects which persistent keypair signs/verifies
+ * in every rule (via !Key(u,sk) on the LHS), and still identifies whose
+ * issuance/approval/execution an action fact describes (Issued, Approved,
+ * Executed still all carry u, since causal_authorization's claim is
+ * specifically that issuer, approver, and executor are the same u - that
+ * is what the lemma is FOR, and losing it would make the lemma provable
+ * only vacuously or not at all). What changes is that `u` no longer
+ * appears inside Out()/In() network messages or inside the argument of
+ * sign(...): the local bookkeeping facts !IssuedRecord and Pending still
+ * carry it (they are not network facts, so fix (3) does not apply to
+ * them), and matching !Key(u,sk) against the SAME u already in those local
+ * facts is intended to keep issuer and approver pinned to one principal;
+ * this is an informal argument by construction, not a correspondence proof
+ * against v1 (see the gap noted below), and only the wire format is
+ * claimed to change.
+ *
+ * IF THIS STILL DOES NOT TERMINATE. The remaining, harder candidate cause
+ * is the one this model deliberately keeps: unbounded Mutate combined with
+ * a signature check anywhere in the theory (documented fix (2) in the
+ * prior theory, never lifted there - only bounded around). Bounding is not
+ * an option here without reintroducing exactly the restriction this model
+ * exists to remove. A next step worth trying, which I have not attempted
+ * to write out as working Tamarin syntax because I cannot test it, is to
+ * make the single-mutable-pointer structure of Current(r,-) directly
+ * inspectable to the prover: add a bookkeeping action fact (e.g. HoldsCur)
+ * to Resource/Mutate/Issue/Execute wherever they touch Current(r,v), then
+ * prove a small [reuse] helper lemma stating that a version retired by
+ * Mutate is never Current again, before attempting the two harder lemmas -
+ * mirroring how rsi_accept_uses_committed_version was proved first, as a
+ * plain equality, and then reused rather than proving the negated-
+ * existential form directly. This is a real technique, not a guess about
+ * syntax I am inventing to look useful.
+ *
+ * OUTCOME (recorded after an actual run, not by me -- I have no working
+ * tamarin-prover). executable and single_execution verify. causal_authorization
+ * and no_execution_after_version_change remain incomplete, with the same
+ * outcomes and step counts as the v1 theory at search bound 10. This
+ * establishes only that moving `u` off the wire did not complete either
+ * proof under this exact configuration (Tamarin 1.12.0, --bound=10). It
+ * does NOT establish that identity was not a contributing cause -- a
+ * factor can be necessary without being sufficient -- and it does NOT
+ * establish, by elimination or otherwise, that unbounded Mutate combined
+ * with a signature check (documented fix (2) in referent_state_integrity
+ * .spthy, never lifted there, only bounded around) is the cause here.
+ * That remains the next hypothesis to test, not a diagnosis this run
+ * supports. atomic_referent_binding_diag_bounded_mutation.spthy in this
+ * directory is a controlled variant that isolates exactly that variable
+ * (this file's identity-off-wire change, plus a mutation bound, and
+ * nothing else changed) -- explicitly marked as diagnostic-only, not a
+ * candidate replacement, since bounding Mutate reintroduces the exact
+ * restriction this model exists to remove. Incomplete is not the same as
+ * false; no claim beyond "not yet resolved by this change, under this
+ * bound" is made.
+ *
+ * A separate gap, raised independently of the run above: moving `u` off
+ * the wire while keeping it in local facts (!IssuedRecord, Pending) is
+ * argued informally in the comments above by appeal to matching the same
+ * variable across facts. That is not a correspondence proof -- it does not
+ * by itself demonstrate that every trace of this theory corresponds to a
+ * trace of the v1 theory with the same causal_authorization outcome, only
+ * that the intended binding still holds by construction. Given the outcome
+ * above, resolving that gap would not currently buy anything, but it would
+ * need to be closed before treating any future terminating variant of this
+ * change as equivalent-by-inspection to v1.
+ */
+
+theory Atomic_Referent_Binding_V2 begin
+builtins: signing, hashing
+
+rule Key:
+  [ Fr(u), Fr(sk) ] --> [ !Key(u,sk), Out(pk(sk)) ]
+
+rule Resource:
+  [ Fr(r), Fr(v), In(c) ] --> [ Current(r,v), !Version(r,v,c), Out(<r,v,c>) ]
+
+rule Mutate:
+  [ Current(r,v), Fr(w), In(c) ]
+  --[ Mutated(r,v,w) ]-> [ Current(r,w), !Version(r,w,c), Out(<r,w,c>) ]
+
+// CHANGED: u no longer travels on the wire. Out() carries only the
+// content the relying party and the network legitimately need.
+rule Issue:
+  [ !Key(u,sk), Current(r,v), !Version(r,v,c), Fr(n), In(a) ]
+  --[ Issued(u,n,a,r,v,h(c)) ]->
+  [ Current(r,v), Pending(u,n,a,r,v,h(c)),
+    !IssuedRecord(u,n,a,r,v,h(c)),
+    Out(<n,a,r,v,h(c)>) ]
+
+// CHANGED: u no longer appears inside the signed tuple. Approve still
+// requires the SAME u's key and the SAME u's issued record (via matching
+// the u variable across !Key and !IssuedRecord, both local facts), so the
+// binding of "who issued it" to "who approved it" is unchanged.
+rule Approve:
+  [ !Key(u,sk), !IssuedRecord(u,n,a,r,v,d) ]
+  --[ Approved(u,n,a,r,v,d) ]->
+  [ Out(sign(<n,a,r,v,d>,sk)) ]
+
+// CHANGED: verifies a signature over the wire-format tuple (no u inside
+// it); u is still pinned by matching Pending(u,...) and !Key(u,sk).
+rule Execute:
+  [ !Key(u,sk), Pending(u,n,a,r,v,h(c)), Current(r,v), !Version(r,v,c),
+    In(sign(<n,a,r,v,h(c)>,sk)) ]
+  --[ Executed(u,n,a,r,v,h(c)) ]-> [ Current(r,v) ]
+
+lemma executable:
+  exists-trace "Ex u n a r v d #i. Executed(u,n,a,r,v,d) @ i"
+
+lemma causal_authorization [use_induction]:
+  "All u n a r v d #e. Executed(u,n,a,r,v,d) @ e ==>
+   Ex #i #s. Issued(u,n,a,r,v,d) @ i & Approved(u,n,a,r,v,d) @ s & i < s & s < e"
+
+lemma single_execution [use_induction]:
+  "All u n a r v d #i #j.
+   Executed(u,n,a,r,v,d) @ i & Executed(u,n,a,r,v,d) @ j ==> #i = #j"
+
+lemma no_execution_after_version_change [use_induction]:
+  "All u n a r v d w #i #m #e.
+   Issued(u,n,a,r,v,d) @ i & Mutated(r,v,w) @ m & Executed(u,n,a,r,v,d) @ e
+   & i < m & m < e ==> F"
+end

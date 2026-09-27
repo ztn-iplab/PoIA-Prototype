@@ -1,0 +1,221 @@
+{
+  "aggregates": [
+    {
+      "display_name": "Baseline session authorization",
+      "metrics": {
+        "canonicalization_ms": {
+          "max": 0.411291,
+          "mean": 0.005466307366666667,
+          "median": 0.003875,
+          "n": 30000,
+          "p95": 0.011041,
+          "p99": 0.020166009999999998,
+          "stdev": 0.004466539452218656
+        },
+        "end_to_end_latency_ms": {
+          "max": 10.821459,
+          "mean": 0.0144931257,
+          "median": 0.010709,
+          "n": 30000,
+          "p95": 0.022958,
+          "p99": 0.03291740999999994,
+          "stdev": 0.08037525753537403
+        },
+        "intent_construction_ms": {
+          "max": 0.029291,
+          "mean": 0.0005190987,
+          "median": 0.000333,
+          "n": 30000,
+          "p95": 0.001084,
+          "p99": 0.001167,
+          "stdev": 0.0005464788929973813
+        },
+        "server_side_latency_ms": {
+          "max": 10.821459,
+          "mean": 0.0144931257,
+          "median": 0.010709,
+          "n": 30000,
+          "p95": 0.022958,
+          "p99": 0.03291740999999994,
+          "stdev": 0.08037525753537403
+        },
+        "signature_generation_ms": {
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "n": 30000,
+          "p95": 0.0,
+          "p99": 0.0,
+          "stdev": 0.0
+        },
+        "verification_ms": {
+          "max": 10.815667,
+          "mean": 0.007517517866666667,
+          "median": 0.00575,
+          "n": 30000,
+          "p95": 0.009417,
+          "p99": 0.012541009999999998,
+          "stdev": 0.08017649639983371
+        }
+      },
+      "mode": "baseline",
+      "modeled_user_interaction_ms": 0.0,
+      "operations": 30000,
+      "ops_per_user": 150,
+      "server_side_throughput_ops_per_second": 21076.223993529842,
+      "users": 200,
+      "wall_clock_seconds": 1.423404875997221
+    },
+    {
+      "display_name": "PoIA with WebAuthn",
+      "metrics": {
+        "canonicalization_ms": {
+          "max": 0.143834,
+          "mean": 0.0224989795,
+          "median": 0.0225,
+          "n": 30000,
+          "p95": 0.029666,
+          "p99": 0.038250409999999936,
+          "stdev": 0.004653535222596517
+        },
+        "end_to_end_latency_ms": {
+          "max": 5677.658209,
+          "mean": 5506.822379844,
+          "median": 5502.2779165,
+          "n": 30000,
+          "p95": 5525.64056695,
+          "p99": 5552.4396375,
+          "stdev": 11.274517243347491
+        },
+        "intent_construction_ms": {
+          "max": 0.050292,
+          "mean": 0.0021464091333333333,
+          "median": 0.002125,
+          "n": 30000,
+          "p95": 0.002584,
+          "p99": 0.003375,
+          "stdev": 0.0009201893328784293
+        },
+        "server_side_latency_ms": {
+          "max": 177.658209,
+          "mean": 6.822379844,
+          "median": 2.2779165,
+          "n": 30000,
+          "p95": 25.64056695,
+          "p99": 52.4396374999996,
+          "stdev": 11.274517243347491
+        },
+        "signature_generation_ms": {
+          "max": 177.479708,
+          "mean": 4.5384496917,
+          "median": 1.759646,
+          "n": 30000,
+          "p95": 16.469823549999955,
+          "p99": 38.39505916999917,
+          "stdev": 7.915347395767416
+        },
+        "verification_ms": {
+          "max": 147.634458,
+          "mean": 2.2562530205333333,
+          "median": 0.309166,
+          "n": 30000,
+          "p95": 10.281317,
+          "p99": 28.312339259996676,
+          "stdev": 5.9872191695044155
+        }
+      },
+      "mode": "poia_webauthn",
+      "modeled_user_interaction_ms": 5500.0,
+      "operations": 30000,
+      "ops_per_user": 150,
+      "server_side_throughput_ops_per_second": 5415.056928705507,
+      "users": 200,
+      "wall_clock_seconds": 5.540107961001922
+    },
+    {
+      "display_name": "PoIA with ZT-Authenticator",
+      "metrics": {
+        "canonicalization_ms": {
+          "max": 1.851875,
+          "mean": 0.022773594966666665,
+          "median": 0.022083,
+          "n": 30000,
+          "p95": 0.0355,
+          "p99": 0.045917,
+          "stdev": 0.012280323636185163
+        },
+        "end_to_end_latency_ms": {
+          "max": 3760.952875,
+          "mean": 3421.6606492848,
+          "median": 3414.9274585,
+          "n": 30000,
+          "p95": 3471.2062604000002,
+          "p99": 3516.383726339999,
+          "stdev": 24.005258356785035
+        },
+        "intent_construction_ms": {
+          "max": 0.030166,
+          "mean": 0.0019489998333333334,
+          "median": 0.001833,
+          "n": 30000,
+          "p95": 0.002458,
+          "p99": 0.003667,
+          "stdev": 0.00115756998332713
+        },
+        "server_side_latency_ms": {
+          "max": 360.952875,
+          "mean": 21.6606492848,
+          "median": 14.9274585,
+          "n": 30000,
+          "p95": 71.2062604,
+          "p99": 116.38372633999938,
+          "stdev": 24.005258356785035
+        },
+        "signature_generation_ms": {
+          "max": 255.133916,
+          "mean": 13.823727131266667,
+          "median": 6.410603999999999,
+          "n": 30000,
+          "p95": 45.9791649,
+          "p99": 86.4679475,
+          "stdev": 17.032873895525633
+        },
+        "verification_ms": {
+          "max": 229.483084,
+          "mean": 7.809212395733334,
+          "median": 3.927646,
+          "n": 30000,
+          "p95": 35.709339899999996,
+          "p99": 71.61623284,
+          "stdev": 14.764416444372454
+        }
+      },
+      "mode": "poia_zt_authenticator",
+      "modeled_user_interaction_ms": 3400.0,
+      "operations": 30000,
+      "ops_per_user": 150,
+      "server_side_throughput_ops_per_second": 5804.741224561612,
+      "users": 200,
+      "wall_clock_seconds": 5.168189043994062
+    }
+  ],
+  "configurations": {
+    "baseline": {
+      "display_name": "Baseline session authorization",
+      "modeled_user_interaction_ms": 0.0
+    },
+    "poia_webauthn": {
+      "display_name": "PoIA with WebAuthn",
+      "modeled_user_interaction_ms": 5500.0
+    },
+    "poia_zt_authenticator": {
+      "display_name": "PoIA with ZT-Authenticator",
+      "modeled_user_interaction_ms": 3400.0
+    }
+  },
+  "experiment": "performance_scalability",
+  "loads": [
+    200
+  ],
+  "ops_per_user": 150
+}

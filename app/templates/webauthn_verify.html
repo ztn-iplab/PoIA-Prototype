@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel auth-card auth-shell">
+  <div class="stepper">
+    <div class="step done">1. Login</div>
+    <div class="step active">2. Passkey</div>
+    <div class="step">3. Complete</div>
+  </div>
+  <h1>Verify with passkey</h1>
+  <p class="note">Use your device passkey to complete MFA.</p>
+  {% if no_passkey %}
+    <p class="warn">No passkey is registered for this account. Finish login with TOTP, then add a passkey in Settings.</p>
+  {% endif %}
+  <button id="start-passkey" class="primary" type="button" {% if no_passkey %}disabled{% endif %}>Use passkey</button>
+  <p id="passkey-status" class="note"></p>
+  <div class="note">
+    <a href="/reset-passkey">Reset passkey</a>
+  </div>
+</section>
+<script>
+  function base64urlToBuffer(value) {
+    const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+    const pad = base64.length % 4 ? '='.repeat(4 - (base64.length % 4)) : '';
+    const binary = atob(base64 + pad);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  function bufferToBase64url(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let str = '';
+    for (const byte of bytes) {
+      str += String.fromCharCode(byte);
+    }
+    return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  const statusEl = document.getElementById('passkey-status');
+  const startBtn = document.getElementById('start-passkey');
+  const parseJson = (text) => {
+    try {
+      return text ? JSON.parse(text) : {};
+    } catch (err) {
+      const snippet = text ? text.slice(0, 200) : 'Empty response';
+      return { error: `Server error: ${snippet}` };
+    }
+  };
+
+  if (!window.PublicKeyCredential || !window.isSecureContext) {
+    const reason = !window.isSecureContext
+      ? `Passkeys require HTTPS. Open ${window.location.origin.replace('http://', 'https://')}`
+      : 'Passkeys are not supported in this browser.';
+    statusEl.textContent = reason;
+    statusEl.style.color = '#c24b41';
+    startBtn.disabled = true;
+  }
+
+  if (startBtn) {
+    startBtn.addEventListener('click', async () => {
+      try {
+        statusEl.textContent = 'Waiting for passkey...';
+        statusEl.style.color = '#2c2c2c';
+        const beginRes = await fetch('/webauthn/assertion-begin', {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Accept': 'application/json' },
+        });
+        const beginText = await beginRes.text();
+        const beginData = parseJson(beginText);
+        if (!beginRes.ok) {
+          if (beginData.error && beginData.detail) {
+            statusEl.textContent = `${beginData.error}: ${beginData.detail}`;
+          } else {
+            statusEl.textContent = beginData.detail || beginData.error || 'Unable to start passkey verification.';
+          }
+          statusEl.style.color = '#c24b41';
+          return;
+        }
+        const publicKey = beginData.public_key;
+        if (!publicKey) {
+          statusEl.textContent = beginData.error || beginData.detail || 'Missing WebAuthn options from server.';
+          statusEl.style.color = '#c24b41';
+          return;
+        }
+        publicKey.challenge = base64urlToBuffer(publicKey.challenge);
+        if (publicKey.allowCredentials) {
+          publicKey.allowCredentials = publicKey.allowCredentials.map(cred => ({
+            ...cred,
+            id: base64urlToBuffer(cred.id),
+          }));
+        }
+        const assertion = await navigator.credentials.get({ publicKey });
+        const authData = {
+          credentialId: bufferToBase64url(assertion.rawId),
+          clientDataJSON: bufferToBase64url(assertion.response.clientDataJSON),
+          authenticatorData: bufferToBase64url(assertion.response.authenticatorData),
+          signature: bufferToBase64url(assertion.response.signature),
+          userHandle: assertion.response.userHandle ? bufferToBase64url(assertion.response.userHandle) : null,
+        };
+        const completeRes = await fetch('/webauthn/assertion-complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(authData),
+        });
+        const completeText = await completeRes.text();
+        const completeData = parseJson(completeText);
+        if (!completeRes.ok) {
+          if (completeData.error && completeData.detail) {
+            statusEl.textContent = `${completeData.error}: ${completeData.detail}`;
+          } else {
+            statusEl.textContent = completeData.detail || completeData.error || 'Passkey verification failed.';
+          }
+          statusEl.style.color = '#c24b41';
+          return;
+        }
+        window.location.href = completeData.redirect_url || '/dashboard';
+      } catch (err) {
+        statusEl.textContent = err.message || 'Passkey verification failed.';
+        statusEl.style.color = '#c24b41';
+      }
+    });
+  }
+</script>
+{% endblock %}

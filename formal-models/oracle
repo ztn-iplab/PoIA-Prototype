@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""Rank goals only; Tamarin still checks every proof obligation."""
+import sys
+
+lemma = sys.argv[1] if len(sys.argv) > 1 else ""
+goals = []
+for line in sys.stdin:
+    identifier, separator, goal = line.partition(":")
+    if not separator or not identifier.strip().isdigit():
+        continue
+    if "~~>" in goal:
+        priority = -1
+    elif any(event in goal for event in ("ReadVersion(", "KeyCreated(", "NewVersion(", "ResourceCreated(", "Approved(", "Issued(", "Executed(", "Mutated(")):
+        priority = 0
+    elif "retired_version" in lemma or "version_change" in lemma or "version_origin" in lemma or "resource_origin" in lemma:
+        priority = 1 if "Current(" in goal and "#t" in goal else 2 if "Current(" in goal else 3
+    else:
+        priority = 0 if "!Key(" in goal else 1 if "!KU( sign(" in goal else 2 if "!KU( ~" in goal else 3 if "IssuedRecord(" in goal else 4 if "Pending(" in goal else 6 if "Current(" in goal else 5
+    goals.append((priority, int(identifier)))
+for _, identifier in sorted(goals):
+    print(identifier)
