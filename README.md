@@ -72,7 +72,7 @@ cp .env.example .env
 # POIA_ADMIN_PASSWORD. No default administrator credential is shipped.
 ```
 
-## Reproducing the paper
+## Reproducibity
 
 `docs/experiments/REPRODUCTION.md` is the single entry point. It maps each
 reported result to its retained inputs, its runner, and its recorded output, and
