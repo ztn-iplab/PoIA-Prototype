@@ -2,8 +2,8 @@
 
 Research artifact for:
 
-> **Proof-of-Intent Authorization (PoIA): Referent-Stable, Commitment-Confined
-> Intent Integrity Across the Authorization Lifecycle**
+> **Proof-of-Intent Authorization (PoIA): Enforcing
+Intent Integrity from Commitment to Execution**
 > Patrick Mutabazi, Festus Edward Ndalama, Yuzo Taenaka, and Youki Kadobayashi
 > Laboratory for Cyber Resilience, Nara Institute of Science and Technology (NAIST)
 
@@ -72,7 +72,7 @@ cp .env.example .env
 # POIA_ADMIN_PASSWORD. No default administrator credential is shipped.
 ```
 
-## Reproducing the paper
+## Reproducibity
 
 `docs/experiments/REPRODUCTION.md` is the single entry point. It maps each
 reported result to its retained inputs, its runner, and its recorded output, and
