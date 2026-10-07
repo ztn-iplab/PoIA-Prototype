@@ -1,10 +1,23 @@
-"""Two-function consistency check within one trusted server.
+"""The 2-of-2 commitment gate, in either of two root configurations.
 
-The functions share inputs, a database, normalization, and a process. Agreement
-is not evidence of independent trust roots or secure display integrity. This
-control can detect divergent reads; execution-time referent enforcement is
-separate. Only the 2-of-2 configuration is implemented. Experiment hooks inject
-function outputs, not complete component compromises.
+``inprocess`` (default, unchanged): both roots are functions in this process,
+reading the same database over separate connections and separate queries. They
+share inputs, a store, normalization, and a process, so agreement is a check on
+read-path defects -- divergent queries, parser differences, stale or corrupted
+reads, single-path coding errors -- and not evidence of independent trust roots.
+Experiment hooks in this mode inject function outputs, not source compromises.
+
+``service``: Root B is a separate OS process (``app.root_b_service``) reading
+its own append-only referent journal, reached over a loopback request. Rewriting
+a row in the primary store changes what Root A reports and leaves Root B's
+answer intact, so the gate refuses to commit. This is the configuration the
+k-of-n property actually assumes, and the one whose compromise behaviour can be
+measured rather than asserted. It is still one host under one administrator;
+separate hosts and separate administrative control remain deployment concerns.
+
+Either way the gate is conjunctive and fails closed: a root that cannot be
+reached, or cannot source its value, counts as disagreement. Only 2-of-2 is
+implemented.
 """
 
 from __future__ import annotations
@@ -12,11 +25,19 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from typing import Any, Dict, Optional
+import urllib.error
+import urllib.request
+from typing import Any, Dict, Optional, Tuple
 
 from .db import db_connect
 from .intent_codec import canonical_json
-from .settings import KOFN_ENABLED, POIA_EXPERIMENT_MODE
+from .settings import (
+    KOFN_ENABLED,
+    KOFN_ROOT_B_MODE,
+    KOFN_ROOT_B_TIMEOUT_S,
+    KOFN_ROOT_B_URL,
+    POIA_EXPERIMENT_MODE,
+)
 
 
 def _digest(canonical: Dict[str, Any]) -> str:
@@ -168,6 +189,39 @@ def _experiment_override(root: str, action: str, scope: Dict[str, Any]) -> Optio
     return {"__adversarial_value_injected_by_experiment_harness__": f"{root}:{action}"}
 
 
+def _root_b_from_service(
+    action: str, scope: Dict[str, Any], context: Dict[str, Any]
+) -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
+    """Ask the separate Root B process for its own derivation.
+
+    Any failure to obtain an answer is returned as a reason, never as an empty
+    or default canonical value: a silent fallback to Root A's value would turn
+    the second root off exactly when an attacker wants it off.
+    """
+    payload = canonical_json({"action": action, "scope": scope, "context": context})
+    request = urllib.request.Request(
+        f"{KOFN_ROOT_B_URL.rstrip('/')}/derive",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=KOFN_ROOT_B_TIMEOUT_S) as response:
+            body = json.loads(response.read())
+    except urllib.error.HTTPError as exc:
+        try:
+            detail = json.loads(exc.read()).get("error", "root_b_error")
+        except (ValueError, OSError):
+            detail = "root_b_error"
+        return None, f"commitment_root_b_{detail}"
+    except (urllib.error.URLError, OSError, ValueError, TimeoutError):
+        return None, "commitment_root_b_unavailable"
+    canonical = body.get("canonical")
+    if not isinstance(canonical, dict):
+        return None, "commitment_root_b_malformed"
+    return canonical, None
+
+
 def confine_commitment(*, action: str, scope: Dict[str, Any], context: Dict[str, Any]) -> Optional[str]:
     """Returns None if the roots agree (including when KOFN is disabled), otherwise
     a rejection reason. Called once, at intent-commit time, before anything is ever
@@ -175,7 +229,14 @@ def confine_commitment(*, action: str, scope: Dict[str, Any], context: Dict[str,
     if not KOFN_ENABLED:
         return None
     root_a = _experiment_override("root_a", action, scope) or _root_a_canonical(action, scope, context)
-    root_b = _experiment_override("root_b", action, scope) or _root_b_canonical(action, scope, context)
+
+    if KOFN_ROOT_B_MODE == "service":
+        root_b, reason = _root_b_from_service(action, scope, context)
+        if reason is not None:
+            return reason
+    else:
+        root_b = _experiment_override("root_b", action, scope) or _root_b_canonical(action, scope, context)
+
     if _digest(root_a) != _digest(root_b):
         return "commitment_root_disagreement"
     return None

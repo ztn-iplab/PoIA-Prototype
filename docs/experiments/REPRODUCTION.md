@@ -31,6 +31,7 @@ the numbers:
 | Comparative configurations | `experiments/track_b/scenarios/`, `app/authorization_baselines.py` | `scripts/run_track_b_comparative.py` |
 | Retained-original safeguard | `app/core.py` | `scripts/run_original_request_binding_experiment.py`; independent check: `scripts/check_original_binding_evidence.py` |
 | Referent and commitment gate checks | `app/core.py`, `app/commitment_confinement.py` | `scripts/run_lifecycle_resilience_harness.py` |
+| Independent commitment roots | `app/root_b_service.py`, `app/referent_journal.py`, `app/commitment_confinement.py` | `scripts/run_independent_root_harness.py` |
 | Component sensitivity | Declared CLI parameters | `scripts/run_sensitivity_analysis.py` |
 | Verifier throughput | Declared CLI parameters | `scripts/run_verifier_scalability_summary.py` |
 | Distributed workflow | `app/downstream_client.py`, `downstream/main.py` | `scripts/run_track_c_distributed.py` |
@@ -77,7 +78,7 @@ python3 scripts/check_journal_evidence.py    # the register below against the tr
 ```json
 {
   "empirical_status": "remeasured_2026_09_10",
-  "empirical_note": "Results regenerated 2026-09-10. Runs differ in scope: referent-integrity and commitment-confinement trials call those gate functions directly; canonicalization, state-machine, robustness and cross-domain experiments instantiate the in-memory state machine without the strengthened gates; component and throughput measurements are standalone cryptographic benchmarks. Approval latency is measured over 100 approvals per backend, the selection being recorded in experiments/live_approval_20260910/final_latency_table.json.",
+  "empirical_note": "Results regenerated 2026-09-10. Runs differ in scope: referent-integrity and commitment-confinement trials call those gate functions directly; canonicalization, state-machine, robustness and cross-domain experiments instantiate the in-memory state machine without the strengthened gates; component and throughput measurements are standalone cryptographic benchmarks. Approval latency is measured over 100 approvals per backend, the selection being recorded in experiments/live_approval_20260910/final_latency_table.json. The independent-root trials in experiments/independent_root/ differ in kind: they start a second commitment root as a separate process reading its own append-only referent journal, and compromise the primary store directly rather than injecting a root's output.",
   "sources": [
     {"source": "formal-models/proofs/verification_manifest.json", "sha256": "3722c84d713a4720030b6f08d990692874554f12f66f852b57af65eafde1c3b2", "manifest": true}
   ]

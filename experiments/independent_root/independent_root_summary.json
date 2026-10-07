@@ -1,0 +1,65 @@
+{
+  "compromise_model": "primary store row rewritten; no root output injected",
+  "evidence_level": "gate-level: no signatures obtained, no protected operation executed",
+  "gate_cost_by_configuration": {
+    "both_configurations_accepted": true,
+    "measured_on": "uncorrupted commitments, both configurations accepted",
+    "median_gate_latency_ms_inprocess": 0.7243334994200268,
+    "median_gate_latency_ms_separate_process": 1.4136879999568919,
+    "per_repetition_median_ms_inprocess": [
+      0.724,
+      0.725,
+      0.72
+    ],
+    "per_repetition_median_ms_separate_process": [
+      1.422,
+      1.392,
+      1.414
+    ],
+    "repetitions": 3,
+    "trials_per_repetition": 300
+  },
+  "generated_at": 1791285592,
+  "harness_controls": {
+    "forced_agreement": {
+      "acceptance_rate": 1.0,
+      "attempts": 50,
+      "expected_acceptance_rate": 1.0
+    },
+    "forced_disagreement": {
+      "acceptance_rate": 0.0,
+      "attempts": 50,
+      "expected_acceptance_rate": 0.0
+    },
+    "root_b_offline": {
+      "decision": "reject",
+      "fails_closed": true,
+      "reason": "commitment_root_b_unavailable"
+    }
+  },
+  "independent_sourcing_arm": {
+    "arm": "independent",
+    "attack_acceptance_rate": 0.0,
+    "attempts": 300,
+    "median_gate_latency_ms_attack": 1.6131669999595033,
+    "median_gate_latency_ms_control": 1.5633544990123482,
+    "paired_control_acceptance_rate": 1.0,
+    "rejection_reasons": {
+      "commitment_root_disagreement": 300
+    },
+    "root_b_separate_process": true,
+    "root_b_source": "journal"
+  },
+  "python": "3.10.12",
+  "shared_dependency_arm": {
+    "arm": "shared",
+    "attack_acceptance_rate": 1.0,
+    "attempts": 300,
+    "median_gate_latency_ms_attack": 1.8175620007241378,
+    "median_gate_latency_ms_control": 1.7378750007992494,
+    "paired_control_acceptance_rate": 1.0,
+    "rejection_reasons": {},
+    "root_b_separate_process": true,
+    "root_b_source": "primary"
+  }
+}

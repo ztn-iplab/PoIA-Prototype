@@ -23,6 +23,7 @@ from ..core import (
 )
 from ..db import db_connect, begin_immediate
 from ..execution_grants import consume_grant
+from .. import referent_journal
 from ..mfa_utils import build_statement_filters, parse_date_to_epoch
 from ..model import ChallengeRecord, IntentRecord
 
@@ -783,13 +784,14 @@ def execute_transfer(request: Request, user, intent_body: Dict[str, Any], *, ver
 def execute_beneficiary_add(request: Request, user, intent_body: Dict[str, Any]) -> HTMLResponse:
     scope = intent_body["scope"]
     with db_connect() as conn:
-        conn.execute(
+        new_beneficiary_id = conn.execute(
             """
             INSERT INTO beneficiaries (user_id, name, bank, account_number, version, updated_at, created_at)
             VALUES (?, ?, ?, ?, 1, ?, ?)
             """,
             (user["id"], scope["name"], scope["bank"], scope["account_number"], int(time.time()), int(time.time())),
-        )
+        ).lastrowid
+        referent_journal.record_beneficiary(conn, new_beneficiary_id)
 
     log_audit(user["id"], "beneficiary_add", f"Added {scope['name']} at {scope['bank']}")
     return render(request, "result.html", {"status": "Approved", "message": "Beneficiary added.", "intent": intent_body})
@@ -813,6 +815,7 @@ def execute_beneficiary_edit(request: Request, user, intent_body: Dict[str, Any]
             """,
             (scope["name"], scope["bank"], scope["account_number"], int(time.time()), beneficiary_id),
         )
+        referent_journal.record_beneficiary(conn, beneficiary_id)
 
     log_audit(
         user["id"],
@@ -912,6 +915,7 @@ def execute_limit_change(request: Request, user, intent_body: Dict[str, Any], *,
             "UPDATE accounts SET daily_transfer_limit = ?, version = version + 1, updated_at = ? WHERE id = ?",
             (new_limit, int(time.time()), account_id),
         )
+        referent_journal.record_account(conn, account_id)
 
     log_audit(user["id"], "limit_change", f"Account #{account_id} daily limit -> {new_limit}")
     return render(
@@ -947,6 +951,7 @@ def execute_account_recovery(request: Request, user, intent_body: Dict[str, Any]
             "UPDATE accounts SET status = 'active', version = version + 1, updated_at = ? WHERE id = ?",
             (int(time.time()), account_id),
         )
+        referent_journal.record_account(conn, account_id)
 
     log_audit(user["id"], "account_recovery", f"Account #{account_id} recovered from {previous_status}")
     return render(

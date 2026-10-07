@@ -104,6 +104,20 @@ mismatch:
 python3 formal-models/verify_restricted_theories.py
 ```
 
+Re-measure the lifecycle and independent-root experiments. The runner creates a
+virtual environment, installs the pinned requirements into it, and invokes the
+harnesses with that interpreter by path, so a moved or empty environment cannot
+silently fall back to the system Python:
+
+```bash
+./scripts/run_experiments.sh
+```
+
+The independent-root arms need no extra setup: the harness starts the second
+commitment root (`app/root_b_service.py`) as its own process on a free loopback
+port and stops it afterwards. `TRIALS=50 ./scripts/run_experiments.sh` is a
+quick check; the released figures use the default 300.
+
 The harness controls are in
 `experiments/functional_correctness_stress/_harness_validation/` and
 `experiments/protocol_vectors/attack_outcomes/_harness_validation/`: deliberate

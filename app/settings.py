@@ -4,7 +4,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = Path(os.getenv("POIA_DATA_DIR", str(BASE_DIR / "data")))
 DATA_DIR.mkdir(exist_ok=True)
-DB_PATH = DATA_DIR / "bank.db"
+DB_PATH = Path(os.getenv("POIA_DB_PATH", str(DATA_DIR / "bank.db")))
 
 APP_RP_ID = "poia-demo-bank"
 INTENT_TTL_SECONDS = 60
@@ -53,7 +53,20 @@ KOFN_ENABLED = os.getenv("KOFN_ENABLED", "true").lower() == "true"
 KOFN_K = int(os.getenv("KOFN_K", "2"))
 KOFN_N = int(os.getenv("KOFN_N", "2"))
 if (KOFN_K, KOFN_N) != (2, 2):
-    raise ValueError("Only the two-function consistency check (KOFN_K=2, KOFN_N=2) is implemented.")
+    raise ValueError("Only the 2-of-2 configuration (KOFN_K=2, KOFN_N=2) is implemented.")
+
+# Where the second commitment root lives.
+#   inprocess  two functions in this process over the same database: a
+#              consistency check against read-path defects, and the
+#              configuration the earlier evaluation used.
+#   service    a separate OS process (app.root_b_service) reading its own
+#              append-only referent journal, so rewriting a row in the primary
+#              store changes only Root A's report and the gate refuses.
+KOFN_ROOT_B_MODE = os.getenv("KOFN_ROOT_B_MODE", "inprocess").lower()
+if KOFN_ROOT_B_MODE not in {"inprocess", "service"}:
+    raise ValueError("KOFN_ROOT_B_MODE must be 'inprocess' or 'service'.")
+KOFN_ROOT_B_URL = os.getenv("KOFN_ROOT_B_URL", "http://127.0.0.1:8613")
+KOFN_ROOT_B_TIMEOUT_S = float(os.getenv("KOFN_ROOT_B_TIMEOUT_S", "2.0"))
 MFA_ENROLL_SECRET = os.getenv("MFA_ENROLL_SECRET", SESSION_SECRET)
 MFA_ENROLL_TTL_MINUTES = 10
 TOTP_INTERVAL_SECONDS = 30
