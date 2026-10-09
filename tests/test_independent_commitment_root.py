@@ -53,12 +53,26 @@ class IndependentCommitmentRootTest(unittest.TestCase):
             (commitment_confinement, "KOFN_ENABLED"): commitment_confinement.KOFN_ENABLED,
             (commitment_confinement, "KOFN_ROOT_B_MODE"): commitment_confinement.KOFN_ROOT_B_MODE,
             (commitment_confinement, "KOFN_ROOT_B_URL"): commitment_confinement.KOFN_ROOT_B_URL,
+            (commitment_confinement, "KOFN_ROOT_B_PUBLIC_KEY"): commitment_confinement.KOFN_ROOT_B_PUBLIC_KEY,
         }
         db.DB_PATH = self.db_path
         referent_journal.JOURNAL_ENABLED = True
         referent_journal.JOURNAL_PATH = self.journal_path
         self.db.init_db()
         self.journal.init_journal()
+
+        # Root B signs its replies; the gate verifies with the public half.
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.asymmetric import ec
+        key = ec.generate_private_key(ec.SECP256R1())
+        self.signing_key = tmp / "root_b_signing_key.pem"
+        self.public_key = tmp / "root_b_public_key.pem"
+        self.signing_key.write_bytes(key.private_bytes(
+            serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+            serialization.NoEncryption()))
+        self.public_key.write_bytes(key.public_key().public_bytes(
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo))
+        commitment_confinement._ROOT_B_PUBLIC_KEY = None
 
         with self.db.db_connect() as conn:
             self.user_id = conn.execute(
@@ -100,6 +114,7 @@ class IndependentCommitmentRootTest(unittest.TestCase):
         env["POIA_DB_PATH"] = str(self.db_path)
         env["POIA_REFERENT_JOURNAL_PATH"] = str(self.journal_path)
         env["POIA_REFERENT_JOURNAL_ENABLED"] = "true"
+        env["POIA_ROOT_B_SIGNING_KEY"] = str(self.signing_key)
         if source == "primary":
             env["POIA_ROOT_B_ALLOW_PRIMARY"] = "true"
         proc = subprocess.Popen(
@@ -123,6 +138,8 @@ class IndependentCommitmentRootTest(unittest.TestCase):
             self.gate.KOFN_ENABLED = True
             self.gate.KOFN_ROOT_B_MODE = "service"
             self.gate.KOFN_ROOT_B_URL = f"http://{HOST}:{port}"
+            self.gate.KOFN_ROOT_B_PUBLIC_KEY = str(self.public_key)
+            self.gate._ROOT_B_PUBLIC_KEY = None
             yield port
         finally:
             if proc.poll() is None:
@@ -160,6 +177,7 @@ class IndependentCommitmentRootTest(unittest.TestCase):
         self.gate.KOFN_ENABLED = True
         self.gate.KOFN_ROOT_B_MODE = "service"
         self.gate.KOFN_ROOT_B_URL = f"http://{HOST}:{free_port()}"
+        self.gate.KOFN_ROOT_B_PUBLIC_KEY = str(self.public_key)
         reason = self.gate.confine_commitment(action="transfer", scope=self.scope, context=self.context)
         self.assertEqual(reason, "commitment_root_b_unavailable")
 
@@ -195,3 +213,111 @@ class IndependentCommitmentRootTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RootBReplyBindingTest(unittest.TestCase):
+    """Root B's reply must answer *this* request and come from *that* root.
+
+    These use a stand-in server rather than the real service, so the gate's
+    verification is exercised against replies an honest root would never send:
+    a replayed one, an unsigned one, one signed by someone else, and one whose
+    value was edited after signing.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        from cryptography.hazmat.primitives import serialization
+        from cryptography.hazmat.primitives.asymmetric import ec
+        cls.ec = ec
+        cls.key = ec.generate_private_key(ec.SECP256R1())
+        cls.other = ec.generate_private_key(ec.SECP256R1())
+        cls.tmp = __import__("tempfile").TemporaryDirectory()
+        cls.pub = Path(cls.tmp.name) / "pub.pem"
+        cls.pub.write_bytes(cls.key.public_key().public_bytes(
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo))
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def setUp(self):
+        from app import commitment_confinement
+        self.gate = commitment_confinement
+        self._saved = {k: getattr(commitment_confinement, k) for k in
+                       ("KOFN_ENABLED", "KOFN_ROOT_B_MODE", "KOFN_ROOT_B_URL", "KOFN_ROOT_B_PUBLIC_KEY")}
+        commitment_confinement._ROOT_B_PUBLIC_KEY = None
+        commitment_confinement.KOFN_ENABLED = True
+        commitment_confinement.KOFN_ROOT_B_MODE = "service"
+        commitment_confinement.KOFN_ROOT_B_PUBLIC_KEY = str(self.pub)
+
+    def tearDown(self):
+        for k, v in self._saved.items():
+            setattr(self.gate, k, v)
+        self.gate._ROOT_B_PUBLIC_KEY = None
+
+    @contextlib.contextmanager
+    def stub_root_b(self, mode):
+        """A stand-in Root B whose replies are deliberately wrong."""
+        import json as _json, threading
+        from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+        from cryptography.hazmat.primitives import hashes
+        from app.intent_codec import canonical_json
+        key, other, ec = self.key, self.other, self.ec
+
+        class H(BaseHTTPRequestHandler):
+            protocol_version = "HTTP/1.1"
+            def log_message(self, *a): pass
+            def do_POST(self):
+                req = _json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+                value = {"action": req["action"], "rp_id": None, "amount": "1.00",
+                         "currency": "USD", "from_account": 0, "to": {"name": "A", "bank": "B",
+                                                                     "account_number": "1"}}
+                nonce = req["nonce"]
+                signer, out_nonce, out_value = key, nonce, value
+                if mode == "replay":
+                    out_nonce = "0" * 32                      # answer to an older request
+                elif mode == "forged":
+                    signer = other                            # not this root's key
+                body = {"canonical": out_value, "nonce": out_nonce}
+                if mode != "unsigned":
+                    msg = canonical_json({"nonce": out_nonce, "canonical": out_value})
+                    body["signature"] = signer.sign(msg, ec.ECDSA(hashes.SHA256())).hex()
+                if mode == "tampered":
+                    body["canonical"] = {**out_value, "to": {"name": "ATTACKER", "bank": "B",
+                                                            "account_number": "999"}}
+                raw = canonical_json(body)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", str(len(raw)))
+                self.end_headers()
+                self.wfile.write(raw)
+
+        srv = ThreadingHTTPServer((HOST, 0), H)
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+        self.gate.KOFN_ROOT_B_URL = f"http://{HOST}:{srv.server_address[1]}"
+        try:
+            yield
+        finally:
+            srv.shutdown(); srv.server_close()
+
+    def _call(self):
+        return self.gate.confine_commitment(
+            action="transfer",
+            scope={"from_account": 0, "amount": 1.0, "currency": "USD", "external_account": "x"},
+            context={"rp_id": None})
+
+    def test_replayed_reply_rejected(self):
+        with self.stub_root_b("replay"):
+            self.assertEqual(self._call(), "commitment_root_b_nonce_mismatch")
+
+    def test_unsigned_reply_rejected(self):
+        with self.stub_root_b("unsigned"):
+            self.assertEqual(self._call(), "commitment_root_b_unsigned")
+
+    def test_reply_signed_by_another_key_rejected(self):
+        with self.stub_root_b("forged"):
+            self.assertEqual(self._call(), "commitment_root_b_bad_signature")
+
+    def test_value_edited_after_signing_rejected(self):
+        with self.stub_root_b("tampered"):
+            self.assertEqual(self._call(), "commitment_root_b_bad_signature")

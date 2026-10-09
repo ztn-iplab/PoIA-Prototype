@@ -25,8 +25,13 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import secrets
 import urllib.error
 import urllib.request
+
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec
 from typing import Any, Dict, Optional, Tuple
 
 from .db import db_connect
@@ -34,10 +39,23 @@ from .intent_codec import canonical_json
 from .settings import (
     KOFN_ENABLED,
     KOFN_ROOT_B_MODE,
+    KOFN_ROOT_B_PUBLIC_KEY,
     KOFN_ROOT_B_TIMEOUT_S,
     KOFN_ROOT_B_URL,
     POIA_EXPERIMENT_MODE,
 )
+
+_ROOT_B_PUBLIC_KEY = None
+
+
+def _root_b_public_key():
+    """The gate holds only Root B's public half: enough to check an answer,
+    not to manufacture one."""
+    global _ROOT_B_PUBLIC_KEY
+    if _ROOT_B_PUBLIC_KEY is None:
+        with open(KOFN_ROOT_B_PUBLIC_KEY, "rb") as handle:
+            _ROOT_B_PUBLIC_KEY = serialization.load_pem_public_key(handle.read())
+    return _ROOT_B_PUBLIC_KEY
 
 
 def _digest(canonical: Dict[str, Any]) -> str:
@@ -198,7 +216,8 @@ def _root_b_from_service(
     or default canonical value: a silent fallback to Root A's value would turn
     the second root off exactly when an attacker wants it off.
     """
-    payload = canonical_json({"action": action, "scope": scope, "context": context})
+    nonce = secrets.token_hex(16)
+    payload = canonical_json({"action": action, "nonce": nonce, "scope": scope, "context": context})
     request = urllib.request.Request(
         f"{KOFN_ROOT_B_URL.rstrip('/')}/derive",
         data=payload,
@@ -219,6 +238,23 @@ def _root_b_from_service(
     canonical = body.get("canonical")
     if not isinstance(canonical, dict):
         return None, "commitment_root_b_malformed"
+
+    # The reply must be this root's, and must answer this request: a replayed
+    # or reordered answer carries the wrong nonce, and an answer from anyone
+    # else fails the signature.
+    if body.get("nonce") != nonce:
+        return None, "commitment_root_b_nonce_mismatch"
+    signature = body.get("signature")
+    if not isinstance(signature, str):
+        return None, "commitment_root_b_unsigned"
+    try:
+        _root_b_public_key().verify(
+            bytes.fromhex(signature),
+            canonical_json({"nonce": nonce, "canonical": canonical}),
+            ec.ECDSA(hashes.SHA256()),
+        )
+    except (InvalidSignature, ValueError, OSError):
+        return None, "commitment_root_b_bad_signature"
     return canonical, None
 
 

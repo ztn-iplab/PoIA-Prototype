@@ -51,6 +51,26 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 ROOT_B_HOST = "127.0.0.1"
 
 
+def make_root_b_keypair(directory: Path):
+    """Root B's own key. The gate gets only the public half."""
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+
+    key = ec.generate_private_key(ec.SECP256R1())
+    private_path = directory / "root_b_signing_key.pem"
+    public_path = directory / "root_b_public_key.pem"
+    private_path.write_bytes(key.private_bytes(
+        serialization.Encoding.PEM,
+        serialization.PrivateFormat.PKCS8,
+        serialization.NoEncryption(),
+    ))
+    public_path.write_bytes(key.public_key().public_bytes(
+        serialization.Encoding.PEM,
+        serialization.PublicFormat.SubjectPublicKeyInfo,
+    ))
+    return private_path, public_path
+
+
 def write_json(path: Path, data: Any) -> None:
     path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
 
@@ -84,10 +104,13 @@ def median(values: List[float]) -> Optional[float]:
 class RootBProcess:
     """Root B, started as a genuinely separate OS process."""
 
-    def __init__(self, *, port: int, source: str, journal_path: Path, db_path: Path):
+    def __init__(self, *, port: int, source: str, journal_path: Path, db_path: Path,
+                 signing_key: Optional[Path] = None):
         self.port = port
         self.source = source
         env = dict(os.environ)
+        if signing_key is not None:
+            env["POIA_ROOT_B_SIGNING_KEY"] = str(signing_key)
         env["PYTHONPATH"] = str(REPO_ROOT)
         env["POIA_REFERENT_JOURNAL_ENABLED"] = "true"
         env["POIA_REFERENT_JOURNAL_PATH"] = str(journal_path)
@@ -186,10 +209,12 @@ def run_sourcing_arm(*, arm: str, trials: int, db_module, journal, cc_module,
             (f"e6b-{arm}-{os.getpid()}@example.invalid", "unused", int(time.time())),
         ).lastrowid
 
-    with RootBProcess(port=port, source=source, journal_path=journal_path, db_path=db_path) as root_b:
+    with RootBProcess(port=port, source=source, journal_path=journal_path, db_path=db_path,
+                      signing_key=journal_path.parent / 'root_b_signing_key.pem') as root_b:
         cc_module.KOFN_ENABLED = True
         cc_module.KOFN_ROOT_B_MODE = "service"
         cc_module.KOFN_ROOT_B_URL = f"http://{ROOT_B_HOST}:{port}"
+        cc_module.KOFN_ROOT_B_PUBLIC_KEY = str(journal_path.parent / "root_b_public_key.pem")
 
         for index in range(trials):
             # Paired control first: nothing corrupted, the roots must agree.
@@ -277,7 +302,8 @@ def run_cost_arm(*, trials: int, db_module, journal, cc_module,
       port = free_port()
       inprocess_ms: List[float] = []
       service_ms: List[float] = []
-      with RootBProcess(port=port, source="journal", journal_path=journal_path, db_path=db_path):
+      with RootBProcess(port=port, source='journal', journal_path=journal_path, db_path=db_path,
+                     signing_key=journal_path.parent / 'root_b_signing_key.pem'):
         cc_module.KOFN_ENABLED = True
         for index in range(trials):
             target = make_beneficiary(db_module, journal, user_id,
@@ -295,6 +321,7 @@ def run_cost_arm(*, trials: int, db_module, journal, cc_module,
 
             cc_module.KOFN_ROOT_B_MODE = "service"
             cc_module.KOFN_ROOT_B_URL = f"http://{ROOT_B_HOST}:{port}"
+            cc_module.KOFN_ROOT_B_PUBLIC_KEY = str(journal_path.parent / "root_b_public_key.pem")
             started = time.perf_counter()
             reason = cc_module.confine_commitment(action="transfer", scope=scope, context=context)
             service_ms.append((time.perf_counter() - started) * 1000.0)
@@ -328,10 +355,12 @@ def run_mutation_controls(*, trials: int, db_module, journal, cc_module,
             (f"e6b-mutation-{os.getpid()}@example.invalid", "unused", int(time.time())),
         ).lastrowid
 
-    with RootBProcess(port=port, source="journal", journal_path=journal_path, db_path=db_path):
+    with RootBProcess(port=port, source='journal', journal_path=journal_path, db_path=db_path,
+                     signing_key=journal_path.parent / 'root_b_signing_key.pem'):
         cc_module.KOFN_ENABLED = True
         cc_module.KOFN_ROOT_B_MODE = "service"
         cc_module.KOFN_ROOT_B_URL = f"http://{ROOT_B_HOST}:{port}"
+        cc_module.KOFN_ROOT_B_PUBLIC_KEY = str(journal_path.parent / "root_b_public_key.pem")
 
         for label, stub in (
             ("forced_agreement", lambda canonical: "identical"),
@@ -405,6 +434,7 @@ def main() -> None:
         journal.JOURNAL_PATH = journal_path
         db_module.init_db()
         journal.init_journal()
+        make_root_b_keypair(Path(tmp))
 
         independent = run_sourcing_arm(
             arm="independent", trials=args.trials, db_module=db_module, journal=journal,

@@ -36,10 +36,39 @@ import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Dict, Optional, Tuple
 
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec
+
 from .intent_codec import canonical_json  # pure codec; no database access
 from .referent_journal import reconstruct
 
 SOURCE = os.getenv("POIA_ROOT_B_SOURCE", "journal")
+
+# Root B answers under a key of its own. The gate holds only the public half,
+# so it can tell that a reply came from this root and belongs to the request it
+# just made, but cannot produce one. Where the two roots run under separate
+# accounts, that makes a relying party which has been taken over unable to
+# forge Root B's answer; under the single account the evaluation uses, the key
+# file is readable by both, so the binding is to the request, not against that
+# adversary.
+_SIGNING_KEY = None
+
+
+def load_signing_key():
+    global _SIGNING_KEY
+    path = os.getenv("POIA_ROOT_B_SIGNING_KEY", "")
+    if not path:
+        raise SystemExit("POIA_ROOT_B_SIGNING_KEY must name this root's private key")
+    with open(path, "rb") as handle:
+        _SIGNING_KEY = serialization.load_pem_private_key(handle.read(), password=None)
+    if not isinstance(_SIGNING_KEY, ec.EllipticCurvePrivateKey):
+        raise SystemExit("Root B's signing key must be an EC private key")
+
+
+def sign_reply(nonce: str, canonical: Dict[str, Any]) -> str:
+    """Sign the nonce together with the value, so neither can be swapped."""
+    message = canonical_json({"nonce": nonce, "canonical": canonical})
+    return _SIGNING_KEY.sign(message, ec.ECDSA(hashes.SHA256())).hex()
 
 _MAX_BODY_BYTES = 64 * 1024
 
@@ -163,9 +192,11 @@ class RootBHandler(BaseHTTPRequestHandler):
         try:
             request = json.loads(self.rfile.read(length))
             action = request["action"]
+            nonce = request["nonce"]
             scope = request.get("scope") or {}
             context = request.get("context") or {}
-            if not isinstance(action, str) or not isinstance(scope, dict) or not isinstance(context, dict):
+            if (not isinstance(action, str) or not isinstance(scope, dict)
+                    or not isinstance(context, dict) or not isinstance(nonce, str) or not nonce):
                 raise TypeError("malformed derive request")
         except (ValueError, KeyError, TypeError):
             self._send(400, {"error": "bad_request"})
@@ -182,7 +213,7 @@ class RootBHandler(BaseHTTPRequestHandler):
         if error is not None:
             self._send(409, {"error": error})
             return
-        self._send(200, {"canonical": canonical})
+        self._send(200, {"canonical": canonical, "nonce": nonce, "signature": sign_reply(nonce, canonical)})
 
 
 def main() -> None:
@@ -206,6 +237,7 @@ def main() -> None:
             "experiment's shared-dependency control; set POIA_ROOT_B_ALLOW_PRIMARY=true."
         )
 
+    load_signing_key()
     server = ThreadingHTTPServer((args.host, args.port), RootBHandler)
     try:
         server.serve_forever()

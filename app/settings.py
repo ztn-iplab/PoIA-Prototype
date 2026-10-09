@@ -67,6 +67,8 @@ if KOFN_ROOT_B_MODE not in {"inprocess", "service"}:
     raise ValueError("KOFN_ROOT_B_MODE must be 'inprocess' or 'service'.")
 KOFN_ROOT_B_URL = os.getenv("KOFN_ROOT_B_URL", "http://127.0.0.1:8613")
 KOFN_ROOT_B_TIMEOUT_S = float(os.getenv("KOFN_ROOT_B_TIMEOUT_S", "2.0"))
+# Root B signs its replies; the gate verifies with this public half only.
+KOFN_ROOT_B_PUBLIC_KEY = os.getenv("KOFN_ROOT_B_PUBLIC_KEY", "")
 MFA_ENROLL_SECRET = os.getenv("MFA_ENROLL_SECRET", SESSION_SECRET)
 MFA_ENROLL_TTL_MINUTES = 10
 TOTP_INTERVAL_SECONDS = 30

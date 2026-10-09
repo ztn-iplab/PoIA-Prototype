@@ -4,22 +4,22 @@
   "gate_cost_by_configuration": {
     "both_configurations_accepted": true,
     "measured_on": "uncorrupted commitments, both configurations accepted",
-    "median_gate_latency_ms_inprocess": 0.7243334994200268,
-    "median_gate_latency_ms_separate_process": 1.4136879999568919,
+    "median_gate_latency_ms_inprocess": 0.7556665004813112,
+    "median_gate_latency_ms_separate_process": 1.7839165011537261,
     "per_repetition_median_ms_inprocess": [
-      0.724,
-      0.725,
-      0.72
+      0.778,
+      0.756,
+      0.734
     ],
     "per_repetition_median_ms_separate_process": [
-      1.422,
-      1.392,
-      1.414
+      1.813,
+      1.784,
+      1.753
     ],
     "repetitions": 3,
     "trials_per_repetition": 300
   },
-  "generated_at": 1791285592,
+  "generated_at": 1791340919,
   "harness_controls": {
     "forced_agreement": {
       "acceptance_rate": 1.0,
@@ -41,8 +41,8 @@
     "arm": "independent",
     "attack_acceptance_rate": 0.0,
     "attempts": 300,
-    "median_gate_latency_ms_attack": 1.6131669999595033,
-    "median_gate_latency_ms_control": 1.5633544990123482,
+    "median_gate_latency_ms_attack": 1.9752290008909767,
+    "median_gate_latency_ms_control": 1.9717494997166796,
     "paired_control_acceptance_rate": 1.0,
     "rejection_reasons": {
       "commitment_root_disagreement": 300
@@ -55,8 +55,8 @@
     "arm": "shared",
     "attack_acceptance_rate": 1.0,
     "attempts": 300,
-    "median_gate_latency_ms_attack": 1.8175620007241378,
-    "median_gate_latency_ms_control": 1.7378750007992494,
+    "median_gate_latency_ms_attack": 2.181687501433771,
+    "median_gate_latency_ms_control": 2.177792001020862,
     "paired_control_acceptance_rate": 1.0,
     "rejection_reasons": {},
     "root_b_separate_process": true,
